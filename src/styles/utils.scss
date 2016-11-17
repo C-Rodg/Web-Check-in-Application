@@ -1,0 +1,76 @@
+.clearfix:after {
+     visibility: hidden;
+     display: block;
+     font-size: 0;
+     content: " ";
+     clear: both;
+     height: 0;
+}
+.clearfix { display: inline-block; }
+
+* html .clearfix { height: 1%; }
+.clearfix { display: block; }
+
+.text-center {
+	text-align:center;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.flex-align-center {
+	align-items: center;
+}
+
+.offset-xs-0-1 {
+	margin-left: 4.333333%;
+}
+
+.mi-38 {
+     font-size: 38px !important;
+}
+
+.col-white {
+     color: #fff;
+}
+
+.bg-validar {
+     background-color: #005958;
+     transition: background-color 0.3s ease-out;
+}
+
+.bg-validar:hover, .bg-validar:active, .bg-validar:focus {
+     background-color: #1F8080;
+}
+
+.btn-flat {
+     background-color: #fff;
+     transition: background-color 0.3s ease-out;
+     color: #343434;
+}
+
+.btn-flat:hover, .btn-flat:active, .btn-flat:focus {
+     background-color: rgba(0,0,0,0.1);
+}
+
+.btn {
+     cursor: pointer;
+}
+
+.btn-full {
+     width: 100%;
+}
+
+.btn-norm {
+     border: 0;
+     border-radius: 2px;
+     padding: 0 30px;
+     font-size: 16px;
+     line-height:36px;
+}
+
+.btn-norm:focus,
+.btn-norm:active {
+     outline: none;
+}

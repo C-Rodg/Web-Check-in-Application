@@ -43,7 +43,7 @@ module.exports = {
 			},
 			{
 				test : /\.scss$/,
-				loader : ExtractTextPlugin('style', 'css!postcss!sass')
+				loader : ExtractTextPlugin.extract('style', 'css!postcss!sass')
 			},
 			{
 				test : /\.woff(2)?(\?[a-z0-9#=&.]+)?$/,
