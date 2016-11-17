@@ -7,6 +7,10 @@
     "url": "https://github.com/C-Rodg/Web-Check-in-Application.git",
     "type": "git"
   },
+  "scripts" : {
+  	"watch" : "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors --watch",
+  	"build" : "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors"
+  },
   "author": "C-Rodg <rodgersbc@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -30,7 +34,9 @@
     "babel-preset-react": "^6.16.0",
     "babel-preset-stage-0": "^6.16.0",
     "css-loader": "^0.26.0",
+    "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.24.1",
     "json-loader": "^0.5.4",
     "node-sass": "^3.13.0",
     "postcss-loader": "^1.1.1",
