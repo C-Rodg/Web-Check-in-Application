@@ -8,6 +8,10 @@ import Root from './containers/Root';
 import configureStore from './store/configureStore';
 import './styles/core.scss';
 
+// Web.Config that points to Launch.html
+require('file-loader?name=[name].config!./web.config');
+
+
 const store = configureStore();
 const history = syncHistoryWithStore(hashHistory, store);
 

@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 
+import AdminHeader from '../components/AdminHeader';
+import AdminControls from './AdminControls';
+import AdminFooter from '../components/AdminFooter';
+
 export default class RootAdmin extends Component {
 	render(){
 		return (
 			<div className="root-admin">
-				<div>Header</div>
-				<div className="admin-body">
+				<AdminHeader eventName={"Tableau Conference 2016"} checkedInNum={129} registeredNum={1035} eventDate={"01/24/17"} eventLocation={"Seattle, WA"}/>
+				<div className="admin-body container-fluid">
+					<AdminControls />
 					{this.props.children}
 				</div>
-				<div>Footer</div>
+				<AdminFooter username={"bsimmons@validar.com"} />
 			</div>
 		);
 	}

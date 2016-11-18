@@ -15,6 +15,10 @@
 	text-align:center;
 }
 
+.text-left {
+     text-align: left;
+}
+
 .text-right {
 	text-align: right;
 }
@@ -25,6 +29,10 @@
 
 .offset-xs-0-1 {
 	margin-left: 4.333333%;
+}
+
+.mi-26 {
+     font-size: 26px !important;
 }
 
 .mi-38 {
@@ -56,6 +64,15 @@
 
 .btn {
      cursor: pointer;
+     white-space: nowrap;
+     user-select: none;
+     touch-action: manipulation;
+}
+
+.btn:focus,
+.btn:active {
+     outline: none;
+     outline-color: transparent;
 }
 
 .btn-full {
@@ -70,7 +87,9 @@
      line-height:36px;
 }
 
-.btn-norm:focus,
-.btn-norm:active {
-     outline: none;
+
+
+.split {
+     font-size: 21px;
+     opacity: 0.8;
 }
