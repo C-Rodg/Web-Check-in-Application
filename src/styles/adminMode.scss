@@ -1,6 +1,6 @@
 .root-admin {
 	.admin-footer {
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		width: 100%;
 		padding-top: 5px;
@@ -28,7 +28,7 @@
 			cursor: pointer;
 			background-color: #fff;
 			border-radius: 50%;
-			color: $primary-bg;
+			color: $light-black;
 			width: 44px;
 			height: 44px;
 			line-height:44px;
@@ -40,23 +40,30 @@
 		.change-mode-btn:hover i,
 		.change-mode-btn:active i,
 		.change-mode-btn:focus i {
-			background-color: rgba(255,255,255,0.8);
+			
+			background-color: $white-hover;
 		}
 
 		.event-name {
 			color: #fff;
 			display:inline-block;
 			line-height: 44px;
-			font-family: 'roboto_condensedlight', 'robotoregular', Helvetica, Arial, san-serif;
+			font-family: 'roboto_condensedlight', 'robotoregular', Helvetica, Arial, sans-serif;
 		}
 	}
 
 	.admin-body {
 		margin-top: 15px;
+		margin-bottom: 45px;
 		background-color: #fff;
 		max-width: 96%;
 		border-radius:2px;
 		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+
+		.card-body {
+			padding-top: 10px;
+			padding-bottom: 10px;
+		}
 
 		.admin-controls {
 			padding-top: 12px;
@@ -75,6 +82,8 @@
 				padding: 5px 15px;
 				min-height: 40px;
 				box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
+				color: $light-black;
+				transition: background-color 0.3s ease-out;
 
 				i {
 					vertical-align: middle;
@@ -84,6 +93,10 @@
 					margin-left: 6px;
 					vertical-align: middle;
 				}
+			}
+
+			.controls-btn:hover, .controls-btn:active, .controls-btn:focus {
+				background-color: $white-hover;
 			}
 
 			.controls-search-form {
@@ -111,6 +124,7 @@
 					border: 0;
 					display: inline-block;
 					background-color: transparent;
+					width: 100%;
 				}
 
 				.controls-search-btn {
@@ -125,6 +139,60 @@
 					border-radius:2px;								
 				}
 			}			
+		}
+	}
+
+	.results-table {
+		table {			
+			text-align: left;
+			border-color: grey;
+			border-spacing: 2px;
+			color: $light-black;
+		}
+
+		thead {						
+			opacity: 0.75;
+
+			th {
+				color: $grey-text;	
+				font-weight: normal;
+				font-family: 'robotomedium', 'robotoregular', Helvetica, Arial, sans-serif;
+			}
+		}
+
+		tbody {
+			vertical-align: middle;
+		}
+
+		td {
+			border-top: 1px solid rgba(189,193,193,0.2);
+		}
+
+		th, td {
+			padding: 10px 8px;
+			vertical-align: middle;			
+		}
+
+		tr td:last-child,
+		tr th:last-child {
+			text-align: center;
+		}
+
+		tr td:last-child {
+			color: $green-bg;
+		}
+
+		tr td:last-child i {
+			vertical-align: middle;
+		}
+
+		tbody tr {
+			background-color: #fff;
+			transition: background-color 0.3s ease-out;
+		}
+		
+		tbody tr:hover, tbody tr:focus, tbody tr:active {
+			background-color: $white-hover;
 		}
 	}
 }
