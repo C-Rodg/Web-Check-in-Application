@@ -87,9 +87,22 @@
      line-height:36px;
 }
 
-
-
 .split {
      font-size: 21px;
      opacity: 0.8;
+}
+
+
+@media (max-width: 767px) {
+	.text-right-xs {
+		text-align: right !important;
+	}
+
+     .text-center-xs {
+          text-align: center !important;
+     }
+
+     .m-t-15-xs {
+          margin-top: 15px;
+     }
 }

@@ -164,14 +164,17 @@
 			vertical-align: middle;
 		}
 
+		th, td {
+			padding: 10px 8px;
+			vertical-align: middle;
+			border: 0;			
+		}
+
 		td {
 			border-top: 1px solid rgba(189,193,193,0.2);
 		}
 
-		th, td {
-			padding: 10px 8px;
-			vertical-align: middle;			
-		}
+		
 
 		tr td:last-child,
 		tr th:last-child {

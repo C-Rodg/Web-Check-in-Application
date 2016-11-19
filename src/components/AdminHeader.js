@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 const AdminHeader = (props) => {
 	return (
@@ -6,17 +7,19 @@ const AdminHeader = (props) => {
 			<div className="row">
 				<div className="col-xs-12 text-center title-row">
 					<p className="event-name mi-38">{props.eventName}</p>
-					<span className="change-mode-btn">
-						<i className="material-icons mi-26">transfer_within_a_station</i>
-					</span>
+					<Link to="/attendee">
+						<span className="change-mode-btn">
+							<i className="material-icons mi-26">transfer_within_a_station</i>
+						</span>
+					</Link>
 				</div>
 			</div>
 			<div className="row">
 				<div className="col-xs-6 text-left">
-					Checked In: {props.checkedInNum} <span className="split">||</span> Registered: {props.registeredNum}
+					Checked In: {props.checkedInNum} <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span> Registered: {props.registeredNum}
 				</div>
 				<div className="col-xs-6 text-right">
-					{props.eventLocation} <span className="split">||</span> {props.eventDate}
+					{props.eventLocation} <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span> {props.eventDate}
 				</div>
 			</div>			
 		</div>
