@@ -53,6 +53,7 @@ export function getEventInformation(data) {
 }
 
 function getEventInformationSuccess(response) {
+	console.log(response);
 	return {
 		type : GET_EVENT_INFORMATION_SUCCESS,
 		payload : response.data.d

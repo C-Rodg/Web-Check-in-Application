@@ -1,0 +1,29 @@
+<manifest>
+	<features>
+		<feature name="CanAccessAccessListMethods" />
+		<feature name="CanAccessDerivedAccessListMethods" />
+		<feature name="CanAccessEventSettings" />
+		<feature name="CanCreateRegistranIdTracking" />
+		<feature name="CanLoadRegistrantWithBadgeId" />
+		<feature name="CanLoadRegistrantWithRegistrantId" />
+		<feature name="CanLoadRegistrantWithAttendeeGuid" />
+		<feature name="CanSearchRegistrants" />
+		<feature name="CanSearchRegistrantsXml" />
+		<feature name="CanUpsertRegistrant" />
+		<feature name="CanListRandomRegistrant" />
+		<feature name="CanGetRegistrationStats" />
+		<feature name="CanListSessions" />
+		<feature name="CanCreateSessionScan" />
+		<feature name="CanGetSessionScanStats" />
+		<feature name="CanIsScanPresent" />
+		<feature name="CanSendSmsMessage" />
+		<feature name="CanAccessLeadSources" />
+		<feature name="CanGetEventHubLink" />
+		<feature name="CanGetSeatUsage" />
+		<feature name="CanRelinquishSeat" />
+		<feature name="CanAccessPrintSettings" />
+		<feature name="CanAccessEvaluationMethods" />
+	</features>
+</manifest>
+
+

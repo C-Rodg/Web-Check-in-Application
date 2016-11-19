@@ -1,10 +1,22 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import AdminHeader from '../components/AdminHeader';
 import AdminControls from './AdminControls';
 import AdminFooter from '../components/AdminFooter';
 
-export default class RootAdmin extends Component {
+import { getEventInformation } from '../actions/cc_settings';
+
+class RootAdmin extends Component {
+	constructor(props) {
+		super(props);
+	}
+
+	componentDidMount() {
+		console.log("GETTING EVENT INFO");
+		this.props.getEventInformation();
+	}
+
 	render(){
 		return (
 			<div className="root-admin">
@@ -20,3 +32,17 @@ export default class RootAdmin extends Component {
 		);
 	}
 }
+
+// const mapStateToProps = (state) => {
+// 	return {
+// 		eventName 
+// 	}
+// }
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		getEventInformation : data => dispatch(getEventInformation(data))
+	};
+};
+
+export default connect(null, mapDispatchToProps)(RootAdmin);

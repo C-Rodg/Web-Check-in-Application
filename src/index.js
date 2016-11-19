@@ -8,8 +8,9 @@ import Root from './containers/Root';
 import configureStore from './store/configureStore';
 import './styles/core.scss';
 
-// Web.Config that points to Launch.html
+// Web.Config that points to Launch.html and Features Configuration
 require('file-loader?name=[name].config!./web.config');
+require('file-loader?name=[name].manifest!./features.manifest');
 
 
 const store = configureStore();
