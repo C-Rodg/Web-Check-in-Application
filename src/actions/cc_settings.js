@@ -1,4 +1,5 @@
 import { axios } from './utilities_httpRequest';
+import * as moment from 'moment';
 
 //------------------------- TYPES -------------------------//
 
@@ -44,7 +45,7 @@ export function getEventInformation(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetEventInformation`, {})
 			.then((response) => {
-				dispatch(getEventInformationSuccess(response));
+				dispatch(getEventInformationSuccess(response.data.d.EventInformation));
 			})
 			.catch((err) => {
 				dispatch(getEventInformationError(err));
@@ -53,10 +54,23 @@ export function getEventInformation(data) {
 }
 
 function getEventInformationSuccess(response) {
-	console.log(response);
+	let eventInfo = Object.assign({}, {
+		eventName : response.EventName
+	});
+
+	// Convert location to full string
+	let locArr = [response.City, response.StateProvince, response.Country];
+	eventInfo.Location = locArr.filter((str) => { return str; }).join(', ');
+
+	eventInfo.eventStartDate = "";
+	if(response.hasOwnProperty('StartDate') && response.StartDate !== null && response.StartDate.indexOf("/Date") === 0 ){
+		let sDate = response.StartDate.slice(6, -2);
+		eventInfo.eventStartDate = moment(sDate, 'x').format("MM/DD/YY");
+	}
+
 	return {
 		type : GET_EVENT_INFORMATION_SUCCESS,
-		payload : response.data.d
+		payload : eventInfo
 	};
 }
 

@@ -7,15 +7,16 @@
     "url": "https://github.com/C-Rodg/Web-Check-in-Application.git",
     "type": "git"
   },
-  "scripts" : {
-  	"watch" : "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors --watch",
-  	"build" : "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors"
+  "scripts": {
+    "watch": "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors --watch",
+    "build": "rimraf dist && webpack --config ./webpack.production.config.js --progress --profile --colors"
   },
   "author": "C-Rodg <rodgersbc@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.15.2",
     "bootstrap-grid": "file:node_modules/bootstrap-grid",
+    "moment": "^2.16.0",
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
     "react-redux": "^4.4.6",

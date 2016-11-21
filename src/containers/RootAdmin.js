@@ -12,15 +12,14 @@ class RootAdmin extends Component {
 		super(props);
 	}
 
-	componentDidMount() {
-		console.log("GETTING EVENT INFO");
+	componentDidMount() {		
 		this.props.getEventInformation();
 	}
 
 	render(){
 		return (
 			<div className="root-admin">
-				<AdminHeader eventName={"Tableau Conference 2016"} checkedInNum={129} registeredNum={1035} eventDate={"01/24/17"} eventLocation={"Seattle, WA"}/>
+				<AdminHeader eventName={this.props.eventName} checkedInNum={129} registeredNum={1035} eventDate={this.props.eventDate} eventLocation={this.props.eventLocation}/>
 				<div className="admin-body container-fluid">
 					<AdminControls />
 					<div className="card-body row">
@@ -33,11 +32,13 @@ class RootAdmin extends Component {
 	}
 }
 
-// const mapStateToProps = (state) => {
-// 	return {
-// 		eventName 
-// 	}
-// }
+const mapStateToProps = (state) => {
+	return {
+		eventName : state.settings.eventName,
+		eventDate : state.settings.eventDate,
+		eventLocation : state.settings.eventLocation
+	};
+}
 
 const mapDispatchToProps = (dispatch) => {
 	return {
