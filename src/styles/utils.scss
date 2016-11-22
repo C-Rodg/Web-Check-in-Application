@@ -93,6 +93,18 @@
      margin: 0 5px;
 }
 
+.v-middle {
+     vertical-align: middle;
+}
+
+.hidden {
+     display: none;
+}
+
+.invisible {
+     visibility: hidden;
+}
+
 
 @media (max-width: 767px) {
 	.text-right-xs {

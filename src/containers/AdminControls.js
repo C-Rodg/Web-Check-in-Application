@@ -2,13 +2,35 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 export default class AdminControls extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = { searchQuery : "" };
+
+		this.handleInputChange = this.handleInputChange.bind(this);
+		this.onSearchRegistrant = this.onSearchRegistrant.bind(this);
+	}
+
+	onSearchRegistrant(event){
+		event.preventDefault();		
+		this.props.handleSearchRegistrants(this.state.searchQuery);
+	}
+
+	handleInputChange(event){
+		this.setState({ searchQuery : event.target.value });
+	}
+
 	render() {
 		return (
 			<div className="admin-controls row">
 				<div className="col-xs-12 col-sm-6">
-					<form className="controls-search-form">
+					<form className="controls-search-form" onSubmit={this.onSearchRegistrant}>
 						<div className="form-group">
-							<input type="text" className="controls-search-box" placeholder="Find a registrant..."/>
+							<input type="text" className="controls-search-box" 
+								placeholder="Find a registrant..." 
+								value={this.state.searchQuery}
+								onChange={this.handleInputChange}
+							/>
 						</div>
 						<button type="submit" className="controls-search-btn btn">
 							<i className="material-icons">search</i>

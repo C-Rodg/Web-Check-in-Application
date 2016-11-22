@@ -108,11 +108,46 @@ function loadRegistrantByAttendeeGuidError(err) {
 }
 
 
-export function searchRegistrants(data) {
+export function searchRegistrants(searchText, filter) {
+	let query;
+	if (filter === 'all') {
+		query = {
+			Operator : "OR",
+			Expressions : [{
+				Column : "LastName",
+				Comparison : "Contains",
+				Value : searchText
+			}, {
+				Column : "Company",
+				Comparison : "Contains",
+				Value : searchText
+			}, {
+				Column : "Email",
+				Comparison : "Contains",
+				Value : searchText
+			}, {
+				Column : "FirstName",
+				Comparison : "Contains",
+				Value : searchText
+			}, {
+				Column : "RegistrantId",
+				Comparison : "Contains",
+				Value : searchText
+			}]
+		};
+	}
+	// TODO: support for other filters
+
+	let inputArg = {
+		"top" : null,
+		"searchGroup" : query,
+		"orderBy" : [{Column : "Firstname", OrderByDirection : "Ascending"}]
+	};
+
 	return function(dispatch) {
-		axios.post(`methods.asmx/SearchRegistrants`, {})
+		axios.post(`methods.asmx/SearchRegistrants`, inputArg)
 			.then((response) => {
-				dispatch(searchRegistrantsSuccess(response));
+				dispatch(searchRegistrantsSuccess(response.data.d.Registrants));
 			})
 			.catch((err) => {
 				dispatch(searchRegistrantsError(err));
@@ -123,7 +158,7 @@ export function searchRegistrants(data) {
 function searchRegistrantsSuccess(response) {
 	return {
 		type : SEARCH_REGISTRANTS_SUCCESS,
-		payload : response.data.d
+		payload : response
 	};
 }
 

@@ -3,10 +3,12 @@ import { combineReducers } from 'redux';
 
 // Import Reducers
 import { settings } from './reducer_settings';
+import { registrant } from './reducer_registrant';
 
 // Send to Store
 const rootReducer = combineReducers({
 	settings,
+	registrant,
 	routing
 });
 

@@ -1,11 +1,20 @@
 import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR, GET_EVENT_INFORMATION_SUCCESS, GET_EVENT_INFORMATION_ERROR, GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR } from '../actions/cc_settings';
 
+const INITIAL_STATS_STATE = {
+	totalAttended : 0,
+	totalRegistered : 0,
+	totalMissing : 0,
+	preRegisteredAttended : 0,
+	walkInsRegistered : 0,
+	walkInsAttended : 0
+};
+
 const INITIAL_STATE = {
 	configuration : null,
 	eventName : "",
 	eventLocation : "",
 	eventDate : "",
-	stats : null
+	stats : INITIAL_STATS_STATE
 };
 
 export const settings = ( state = INITIAL_STATE, action ) => {
