@@ -19,7 +19,7 @@ export function getRegistrationStats(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetRegistrationStats`, {})
 			.then((response) => {
-				dispatch(getRegistrationStatsSuccess(response));
+				dispatch(getRegistrationStatsSuccess(response.data.d));
 			})
 			.catch((err) => {
 				dispatch(getRegistrationStatsError(err));
@@ -28,9 +28,20 @@ export function getRegistrationStats(data) {
 }
 
 function getRegistrationStatsSuccess(response) {
+	let stats = Object.assign({}, {
+		totalAttended : response.TotalAttended,
+		totalRegistered : response.TotalRegistrants,
+		walkInsRegistered : response.TotalWalkIn,
+		walkInsAttended : response.TotalWalkInAttended
+	});
+
+	// Include calculated statistics
+	stats.totalMissing = (stats.totalRegistered - stats.totalAttended) || 0;
+	stats.preRegisteredAttended  = (stats.totalAttended - stats.walkInsAttended) || 0;
+	
 	return {
 		type : GET_REGISTRATION_STATS_SUCCESS,
-		payload : response.data.d
+		payload : stats
 	};
 }
 

@@ -19,7 +19,7 @@ class RootAdmin extends Component {
 	render(){
 		return (
 			<div className="root-admin">
-				<AdminHeader eventName={this.props.eventName} checkedInNum={129} registeredNum={1035} eventDate={this.props.eventDate} eventLocation={this.props.eventLocation}/>
+				<AdminHeader eventName={this.props.eventName} checkedInNum={this.props.statsCheckedIn || 0} registeredNum={this.props.statsRegistered || 0} eventDate={this.props.eventDate} eventLocation={this.props.eventLocation}/>
 				<div className="admin-body container-fluid">
 					<AdminControls />
 					<div className="card-body row">
@@ -36,7 +36,9 @@ const mapStateToProps = (state) => {
 	return {
 		eventName : state.settings.eventName,
 		eventDate : state.settings.eventDate,
-		eventLocation : state.settings.eventLocation
+		eventLocation : state.settings.eventLocation,
+		statsCheckedIn : state.settings.stats.totalAttended,
+		statsRegistered : state.settings.stats.totalRegistered
 	};
 }
 

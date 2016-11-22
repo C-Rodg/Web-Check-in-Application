@@ -16,10 +16,14 @@ const AdminHeader = (props) => {
 			</div>
 			<div className="row">
 				<div className="col-xs-6 text-left">
-					Checked In: {props.checkedInNum} <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span> Registered: {props.registeredNum}
+					Checked In: {props.checkedInNum} 
+					<span><span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span></span>
+					Registered: {props.registeredNum}
 				</div>
 				<div className="col-xs-6 text-right">
-					{props.eventLocation} <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span> {props.eventDate}
+					{props.eventLocation} 
+					{ (props.eventLocation && props.eventDate) ? <span> <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span></span> : "" } 
+					{props.eventDate}
 				</div>
 			</div>			
 		</div>

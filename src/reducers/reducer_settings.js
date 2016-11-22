@@ -4,13 +4,16 @@ const INITIAL_STATE = {
 	configuration : null,
 	eventName : "",
 	eventLocation : "",
-	eventDate : ""
+	eventDate : "",
+	stats : null
 };
 
 export const settings = ( state = INITIAL_STATE, action ) => {
 	switch(action.type) {
 		case GET_REGISTRATION_STATS_SUCCESS:
-			return state;
+			return {...state, 
+				stats : statsReducer(state.stats, action)
+			};
 		case GET_REGISTRATION_STATS_ERROR:
 			return state;
 
@@ -20,15 +23,27 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			return state;
 
 		case GET_EVENT_INFORMATION_SUCCESS:
-			return Object.assign({}, state, { 
+			return {...state, 
 				eventName : action.payload.eventName, 
 				eventLocation : action.payload.eventLocation, 
 				eventDate : action.payload.eventDate 
-			});
+			};
 		case GET_EVENT_INFORMATION_ERROR:
 			return state;
 
 		default:
 			return state;
 	}
+}
+
+function statsReducer(state = {}, action){
+	const { totalAttended, totalRegistered, walkInsRegistered, walkInsAttended, totalMissing, preRegisteredAttended } = action.payload;
+	return {...state,
+		totalAttended,
+		totalRegistered,
+		totalMissing,
+		preRegisteredAttended,
+		walkInsRegistered,
+		walkInsAttended
+	};
 }
