@@ -43,6 +43,15 @@
      color: #fff;
 }
 
+.btn-col-green {
+     color: #00897b;
+     transition: color 0.3s ease-out;
+}
+
+.btn-col-green:active, .btn-col-green:active, .btn-col-green:hover {
+     color: #38A99D;
+}
+
 .bg-validar {
      background-color: #005958;
      transition: background-color 0.3s ease-out;
@@ -50,6 +59,15 @@
 
 .bg-validar:hover, .bg-validar:active, .bg-validar:focus {
      background-color: #1F8080;
+}
+
+.bg-green {
+     background-color: #00897b;
+     transition: background-color 0.3s ease-out;
+}
+
+.bg-green:hover, .bg-green:active, .bg-green:focus {
+     background-color: #005958;
 }
 
 .btn-flat {
@@ -67,6 +85,7 @@
      white-space: nowrap;
      user-select: none;
      touch-action: manipulation;
+     border-radius: 2px;
 }
 
 .btn:focus,
@@ -87,6 +106,15 @@
      line-height:36px;
 }
 
+.btn-large {
+     font-size: 28px;
+}
+
+.btn-none {
+     background: #fff;
+     border: 0;
+}
+
 .split {
      font-size: 21px;
      opacity: 0.8;
@@ -105,6 +133,29 @@
      visibility: hidden;
 }
 
+.m-t-10 {
+     margin-top: 10px;
+}
+
+.m-t-15 {
+     margin-top: 15px;
+}
+
+.m-b-15 {
+     margin-bottom: 15px;
+}
+
+.b-t-light {
+     border-top: 1px solid rgba(160,160,160,0.2);
+}
+
+.f-s-44 {
+     font-size:44px;
+}
+
+.f-s-24 {
+     font-size: 24px;
+}
 
 @media (max-width: 767px) {
 	.text-right-xs {

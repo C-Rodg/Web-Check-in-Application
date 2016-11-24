@@ -23,6 +23,8 @@ export const UPSERT_REGISTRANT_ERROR = 'UPSERT_REGISTRANT_ERROR';
 export const LIST_RANDOM_REGISTRANTS_SUCCESS = 'LIST_RANDOM_REGISTRANT_SUCCESS';
 export const LIST_RANDOM_REGISTRANTS_ERROR = 'LIST_RANDOM_REGISTRANT_ERROR';
 
+export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
+
 
 //-------------------- ACTION CREATORS --------------------//
 
@@ -81,11 +83,11 @@ function loadRegistrantByRegIdError(err) {
 }
 
 
-export function loadRegistrantByAttendeeGuid(atGuid) {
+export function loadRegistrantByAttendeeGuid(attendeeGuid) {
 	return function(dispatch) {
-		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {})
+		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {attendeeGuid})
 			.then((response) => {
-				dispatch(loadRegistrantByAttendeeGuidSuccess(response));
+				dispatch(loadRegistrantByAttendeeGuidSuccess(response.data.d.Registrant));
 			})
 			.catch((err) => {
 				dispatch(loadRegistrantByAttendeeGuidError(err));
@@ -96,7 +98,7 @@ export function loadRegistrantByAttendeeGuid(atGuid) {
 function loadRegistrantByAttendeeGuidSuccess(response) {
 	return {
 		type : LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS,
-		payload : response.data.d
+		payload : response
 	};
 }
 
@@ -245,5 +247,12 @@ function listRandomRegistrantsError(err) {
 	return {
 		type : LIST_RANDOM_REGISTRANTS_ERROR,
 		payload : err
+	};
+}
+
+export function clearCurrentRegistrant() {
+	return {
+		type : CLEAR_CURRENT_REGISTRANT,
+		payload : null
 	};
 }

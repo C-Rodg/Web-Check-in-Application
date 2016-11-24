@@ -19,7 +19,7 @@ export default (
 			<Route path="stats" component={AdminStats} />
 			<Route path="walkin" component={AdminWalkIn} />
 			<Route path="scan" component={AdminScan} />
-			<Route path="registrant" component={AdminRegistrant} />
+			<Route path="registrant/:atGuid" component={AdminRegistrant} />
 		</Route>
 		<Route path="attendee" component={RootAttendee} />
 	</Route>

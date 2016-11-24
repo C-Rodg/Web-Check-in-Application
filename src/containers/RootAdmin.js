@@ -5,7 +5,7 @@ import AdminHeader from '../components/AdminHeader';
 import AdminControls from './AdminControls';
 import AdminFooter from '../components/AdminFooter';
 
-import { getEventInformation } from '../actions/cc_settings';
+import { getEventInformation, getRegistrationStats } from '../actions/cc_settings';
 import { searchRegistrants } from '../actions/cc_registrant';
 
 class RootAdmin extends Component {
@@ -17,6 +17,7 @@ class RootAdmin extends Component {
 
 	componentDidMount() {		
 		this.props.getEventInformation();
+		this.props.getRegistrationStats();
 	}
 
 	handleSearchRegistrants(val) {
@@ -40,7 +41,7 @@ class RootAdmin extends Component {
 						{this.props.children}
 					</div>
 				</div>
-				<AdminFooter username={"bsimmons@validar.com"} />
+				<AdminFooter />
 			</div>
 		);
 	}
@@ -58,8 +59,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		getEventInformation : data => dispatch(getEventInformation(data)),
-		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f))
+		getEventInformation : () => dispatch(getEventInformation()),
+		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f)),
+		getRegistrationStats : () => dispatch(getRegistrationStats())
 	};
 };
 

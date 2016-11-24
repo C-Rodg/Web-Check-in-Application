@@ -3,17 +3,17 @@ import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR, GET_EVENT
 const INITIAL_STATS_STATE = {
 	totalAttended : 0,
 	totalRegistered : 0,
-	totalMissing : 0,
 	preRegisteredAttended : 0,
+	preRegisteredTotal : 0,
 	walkInsRegistered : 0,
 	walkInsAttended : 0
 };
 
 const INITIAL_STATE = {
 	configuration : null,
-	eventName : "",
-	eventLocation : "",
-	eventDate : "",
+	eventName : "Validar Web Check In",
+	eventLocation : "Seattle, WA, USA",
+	eventDate : "01/01/01",
 	stats : INITIAL_STATS_STATE
 };
 
@@ -35,7 +35,7 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			return {...state, 
 				eventName : action.payload.eventName, 
 				eventLocation : action.payload.eventLocation, 
-				eventDate : action.payload.eventDate 
+				eventDate : action.payload.eventStartDate 
 			};
 		case GET_EVENT_INFORMATION_ERROR:
 			return state;
@@ -46,12 +46,12 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 }
 
 function statsReducer(state = {}, action){
-	const { totalAttended, totalRegistered, walkInsRegistered, walkInsAttended, totalMissing, preRegisteredAttended } = action.payload;
+	const { totalAttended, totalRegistered, walkInsRegistered, walkInsAttended, preRegisteredAttended, preRegisteredTotal } = action.payload;
 	return {...state,
 		totalAttended,
 		totalRegistered,
-		totalMissing,
 		preRegisteredAttended,
+		preRegisteredTotal,
 		walkInsRegistered,
 		walkInsAttended
 	};

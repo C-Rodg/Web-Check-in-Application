@@ -1,0 +1,36 @@
+.donut-chart-track {
+	fill : transparent;
+	stroke : #DAE2E5;
+	stroke-width: 26;
+}
+
+.donut-chart-indicator {
+	fill: transparent;
+	stroke: #00897b;
+	stroke-width: 26;
+	stroke-dasharray : 0 10000;
+	transition: stroke-dasharray 0.3s ease;
+}
+
+.donut-chart {
+	margin: 0 auto;
+	border-radius: 50%;
+	display: block;
+	text-align: center;
+}
+
+.donut-chart-text {
+	fill: #00897b;
+}
+
+.donut-chart-text-val {
+	font-size: 44px;
+}
+
+.donut-chart-text-percent {
+	font-size: 21px;
+}
+
+.donut-chart-text-label {
+	font-size: 19px;
+}

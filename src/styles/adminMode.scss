@@ -77,9 +77,9 @@
 			.controls-btn {
 				display: inline-block;
 				background-color: #fff;
-				margin-left: 15px;
+				margin-left: 10px;
 				border-radius: 2px;
-				padding: 5px 15px;
+				padding: 5px 10px;
 				min-height: 40px;
 				box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 				color: $light-black;
@@ -148,6 +148,7 @@
 			border-color: grey;
 			border-spacing: 2px;
 			color: $light-black;
+			margin-bottom: 0;
 		}
 
 		thead {						
@@ -157,6 +158,11 @@
 				color: $grey-text;	
 				font-weight: normal;
 				font-family: 'robotomedium', 'robotoregular', Helvetica, Arial, sans-serif;
+				cursor: pointer;
+			}
+
+			th:only-child {
+				cursor : auto;
 			}
 		}
 
@@ -174,28 +180,84 @@
 			border-top: 1px solid rgba(189,193,193,0.2);
 		}
 
-		
+		.table-a-row {
+			display: table-row;
+		}
 
+		.table-a-row:hover, .table-a-row:focus {
+			text-decoration: none;
+			color: inherit;
+		}
+
+		.table-a-row td:last-child,
+		.table-a-row th:last-child,
 		tr td:last-child,
 		tr th:last-child {
 			text-align: center;
 		}
 
+		.table-a-row td:last-child,
 		tr td:last-child {
 			color: $green-bg;
 		}
-
+		
+		.table-a-row td:last-child i,
 		tr td:last-child i {
 			vertical-align: middle;
 		}
 
+		tbody .table-a-row,
 		tbody tr {
 			background-color: #fff;
 			transition: background-color 0.3s ease-out;
 		}
 		
+		tbody .table-a-row:hover, tbody .table-a-row:focus, tbody .table-a-row:active,
 		tbody tr:hover, tbody tr:focus, tbody tr:active {
 			background-color: $white-hover;
+		}
+	}
+
+	.admin-stats {
+		.stats-label {
+			font-family: 'robotomedium', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
+		}
+		.stats-number {
+			font-family: 'roboto_condensedregular', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
+		}
+		.total .stats-number {
+			font-size: 40px;			
+		}
+		.total .stats-label {
+			font-size: 24px;
+		}
+
+		.sub-number .stats-number {
+			font-size: 24px;
+		}
+	}
+
+	.admin-registrant {
+		.registrant-checkin-btn {
+			padding: 10px 0 0 24px;
+			text-transform: uppercase;
+			cursor: pointer;
+
+			i {
+				font-size: 28px;
+				line-height: 28px;
+			}
+		}
+
+		.other-info {
+			color: #313534;
+			opacity: 0.75;
+			font-family: 'robotolight', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
+		}
+
+		.registrant-checkin-btn:hover, .registrant-checkin-btn:focus, .registrant-checkin-btn:active {
+			outline: 0;
+			outline-color: transparent;
 		}
 	}
 }

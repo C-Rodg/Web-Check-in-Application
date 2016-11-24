@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
 export default class AdminControls extends Component {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
 
 		this.state = { searchQuery : "" };
@@ -14,6 +14,12 @@ export default class AdminControls extends Component {
 	onSearchRegistrant(event){
 		event.preventDefault();		
 		this.props.handleSearchRegistrants(this.state.searchQuery);
+		if(!this.context.router.isActive('/admin/results')){
+			this.context.router.push('/admin/results');
+		}
+		this.setState({
+			searchQuery : ""
+		});
 	}
 
 	handleInputChange(event){
@@ -57,3 +63,7 @@ export default class AdminControls extends Component {
 		);
 	}
 }
+
+AdminControls.contextTypes = {
+	router : PropTypes.func.isRequired
+};

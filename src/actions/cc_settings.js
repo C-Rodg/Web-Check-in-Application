@@ -1,5 +1,7 @@
 import { axios } from './utilities_httpRequest';
-import * as moment from 'moment';
+//import moment from 'moment/src/moment';
+const moment = require('moment');
+
 
 //------------------------- TYPES -------------------------//
 
@@ -15,7 +17,7 @@ export const GET_EVENT_SETTINGS_ERROR = 'GET_EVENT_SETTINGS_ERROR';
 
 //-------------------- ACTION CREATORS --------------------//
 
-export function getRegistrationStats(data) {
+export function getRegistrationStats() {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetRegistrationStats`, {})
 			.then((response) => {
@@ -36,9 +38,10 @@ function getRegistrationStatsSuccess(response) {
 	});
 
 	// Include calculated statistics
-	stats.totalMissing = (stats.totalRegistered - stats.totalAttended) || 0;
+	//stats.totalMissing = (stats.totalRegistered - stats.totalAttended) || 0;
 	stats.preRegisteredAttended  = (stats.totalAttended - stats.walkInsAttended) || 0;
-	
+	stats.preRegisteredTotal = (stats.totalRegistered - stats.walkInsRegistered) || 0;
+
 	return {
 		type : GET_REGISTRATION_STATS_SUCCESS,
 		payload : stats
@@ -52,13 +55,14 @@ function getRegistrationStatsError(err) {
 	};
 }
 
-export function getEventInformation(data) {
+export function getEventInformation() {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetEventInformation`, {})
 			.then((response) => {
 				dispatch(getEventInformationSuccess(response.data.d.EventInformation));
 			})
 			.catch((err) => {
+				console.log(err);
 				dispatch(getEventInformationError(err));
 			});
 	};
@@ -66,19 +70,18 @@ export function getEventInformation(data) {
 
 function getEventInformationSuccess(response) {
 	let eventInfo = Object.assign({}, {
-		eventName : response.EventName
+		eventName : response.Name
 	});
 
 	// Convert location to full string
 	let locArr = [response.City, response.StateProvince, response.Country];
-	eventInfo.Location = locArr.filter((str) => { return str; }).join(', ');
+	eventInfo.eventLocation = locArr.filter((str) => { return str; }).join(', ');
 
 	eventInfo.eventStartDate = "";
 	if(response.hasOwnProperty('StartDate') && response.StartDate !== null && response.StartDate.indexOf("/Date") === 0 ){
 		let sDate = response.StartDate.slice(6, -2);
 		eventInfo.eventStartDate = moment(sDate, 'x').format("MM/DD/YY");
 	}
-
 	return {
 		type : GET_EVENT_INFORMATION_SUCCESS,
 		payload : eventInfo

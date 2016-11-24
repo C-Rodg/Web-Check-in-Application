@@ -4,6 +4,19 @@ import { connect } from 'react-redux';
 import AttendeeTile from '../components/AttendeeTile';
 import TableSort from '../components/TableSort';
 
+// NOTE - reverse true = A-Z, reverse false = Z-A
+function advancedSort(field, reverse, primer){
+	let key = function(x) {
+		return primer ? primer(x[field]) : x[field];
+	};
+
+	return function(a, b) {
+		let A = key(a),
+			B = key(b);
+		return ( (A<B) ? -1 : ((A>B) ? 1 : 0) ) * [-1,1][+!!reverse];
+	}
+}
+
 class AdminResults extends Component {
 	constructor(props) {
 		super(props);
@@ -16,10 +29,45 @@ class AdminResults extends Component {
 		this.handleChangeSortDirection = this.handleChangeSortDirection.bind(this);
 	}
 
+	componentWillReceiveProps(nextProps) {
+		if(this.props.registrantList !== nextProps.registrantList){			
+			this.setState({
+				sort : "First Name",
+				sortDirection : "down"
+			});
+		}
+	}
+
+	componentWillUnmount(){
+		// TODO: should I clear out the list of registrants??
+	}
+
 	getRegistrantList(){
-		return this.registrantList.map((registrant) => {
+		let dir = (this.state.sortDirection === 'down' ? true : false);
+		let field;
+		if(this.state.sort === 'First Name'){
+			field = "FirstName";
+		} else if (this.state.sort === 'Last Name') {
+			field = "LastName"
+		} else if (this.state.sort === 'Type') {
+			field = "AttendeeType";
+		} else if (this.state.sort === 'Checked In'){
+			field = "Attended";
+		} else {
+			field = this.state.sort;
+		}
+		let sortedArray = this.props.registrantList.concat().sort(advancedSort(field, dir, (a) => { return String(a).toUpperCase(); }));
+		return sortedArray.map((registrant) => {
 			return (
-				<AttendeeTile />
+				<AttendeeTile key={registrant.AttendeeGuid} 
+					firstName={registrant.FirstName}
+					lastName={registrant.LastName}
+					company={registrant.Company}
+					email={registrant.Email}
+					attendeeType={registrant.AttendeeType}
+					checkedIn={registrant.Attended}
+					guid={registrant.AttendeeGuid}
+				/>
 			);
 		});
 	}
@@ -65,7 +113,7 @@ class AdminResults extends Component {
 						<thead>
 							{this.getTableTitleText()}
 						</thead>
-						{ (this.registrantList && this.registrantList.length > 0) 
+						{ (this.props.registrantList && this.props.registrantList.length > 0) 
 						? 
 							<tbody>
 								{this.getRegistrantList()}
