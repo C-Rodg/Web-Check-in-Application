@@ -19,10 +19,10 @@ class AdminStats extends Component {
 				<div className="m-t-15 total">
 					<span className="stats-number">{this.props.totalAttended}/{this.props.totalRegistered}</span><span className="stats-label"> attended</span>
 				</div>				
-				<div className="m-t-10 sub-number">
+				<div className="sub-number">
 					<span className="stats-number">{this.props.preRegisteredAttended}/{this.props.preRegisteredTotal}</span><span className="stats-label"> registered</span>
 				</div>
-				<div className="m-t-10 sub-number">
+				<div className="sub-number">
 					<span className="stats-number">{this.props.walkInsAttended}/{this.props.walkInsRegistered}</span><span className="stats-label"> walk ins</span>
 				</div>
 			</div>

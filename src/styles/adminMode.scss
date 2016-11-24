@@ -218,13 +218,12 @@
 		}
 	}
 
-	.admin-stats {
-		.stats-label {
-			font-family: 'robotomedium', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
-		}
-		.stats-number {
-			font-family: 'roboto_condensedregular', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
-		}
+	.admin-stats {	
+
+		.total {
+			line-height: 40px;
+		}	
+
 		.total .stats-number {
 			font-size: 40px;			
 		}
@@ -234,6 +233,12 @@
 
 		.sub-number .stats-number {
 			font-size: 24px;
+		}
+
+		.sub-number {
+			margin-bottom: 3px;
+			opacity: 0.8;
+			font-family: 'robotolight', 'robotoregular', Helvetica, Arial, sans-serif;
 		}
 	}
 
@@ -251,7 +256,7 @@
 
 		.other-info {
 			color: #313534;
-			opacity: 0.75;
+			opacity: 0.8;
 			font-family: 'robotolight', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
 		}
 
