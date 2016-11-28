@@ -11,6 +11,7 @@ export const LOAD_REGISTRANT_REGID_ERROR   = 'LOAD_REGISTRANT_REGID_ERROR';
 export const LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS = 'LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS';
 export const LOAD_REGISTRANT_ATTENDEEGUID_ERROR   = 'LOAD_REGISTRANT_ATTENDEEGUID_ERROR';
 
+export const SEARCH_REGISTRANTS_START = 'SEARCH_REGISTRANTS_START';
 export const SEARCH_REGISTRANTS_SUCCESS = 'SEARCH_REGISTRANTS_SUCCESS';
 export const SEARCH_REGISTRANTS_ERROR = 'SEARCH_REGISTRANTS_ERROR';
 
@@ -147,6 +148,9 @@ export function searchRegistrants(searchText, filter) {
 	};
 
 	return function(dispatch) {
+
+		dispatch(startSearchRegistrants());
+
 		axios.post(`methods.asmx/SearchRegistrants`, inputArg)
 			.then((response) => {
 				dispatch(searchRegistrantsSuccess(response.data.d.Registrants));
@@ -157,7 +161,15 @@ export function searchRegistrants(searchText, filter) {
 	};
 }
 
+function startSearchRegistrants(){
+	return {
+		type : SEARCH_REGISTRANTS_START,
+		payload : null
+	};
+}
+
 function searchRegistrantsSuccess(response) {
+	console.log('SUCCESS!', response);
 	return {
 		type : SEARCH_REGISTRANTS_SUCCESS,
 		payload : response
@@ -165,6 +177,7 @@ function searchRegistrantsSuccess(response) {
 }
 
 function searchRegistrantsError(err) {
+	console.log('ERROR!', err);
 	return {
 		type : SEARCH_REGISTRANTS_ERROR,
 		payload : err

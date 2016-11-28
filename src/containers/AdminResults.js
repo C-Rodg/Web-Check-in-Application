@@ -87,6 +87,9 @@ class AdminResults extends Component {
 	}
 
 	getTableTitleText(){
+		if(this.props.searchLoading) {
+			return (<tr><th>Loading.... icon here</th></tr>);
+		}
 		if(this.props.searchError) {
 			return (<tr><th>Uh-oh! There was an issue searching...</th></tr>);
 		}
@@ -132,7 +135,8 @@ const mapStateToProps = (state) => {
 	return {
 		registrantList : state.registrant.registrantList,
 		searching : state.registrant.searching,
-		searchError : state.registrant.searchError
+		searchError : state.registrant.searchError,
+		searchLoading : state.registrant.searchLoading
 	};
 };
 

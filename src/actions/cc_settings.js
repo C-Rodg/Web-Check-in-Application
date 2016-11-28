@@ -62,7 +62,6 @@ export function getEventInformation() {
 				dispatch(getEventInformationSuccess(response.data.d.EventInformation));
 			})
 			.catch((err) => {
-				console.log(err);
 				dispatch(getEventInformationError(err));
 			});
 	};
