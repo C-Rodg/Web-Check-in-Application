@@ -8,6 +8,7 @@ export const LOAD_REGISTRANT_BADGEID_ERROR   = 'LOAD_REGISTRANT_BADGEID_ERROR';
 export const LOAD_REGISTRANT_REGID_SUCCESS = 'LOAD_REGISTRANT_REGID_SUCCESS';
 export const LOAD_REGISTRANT_REGID_ERROR   = 'LOAD_REGISTRANT_REGID_ERROR';
 
+export const LOAD_REGISTRANT_ATTENDEEGUID_START = 'LOAD_REGISTRANT_ATTENDEEGUID_START';
 export const LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS = 'LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS';
 export const LOAD_REGISTRANT_ATTENDEEGUID_ERROR   = 'LOAD_REGISTRANT_ATTENDEEGUID_ERROR';
 
@@ -29,7 +30,7 @@ export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
 
 //-------------------- ACTION CREATORS --------------------//
 
-
+// Not Implemented
 export function loadRegistrantByBadgeId(badgeId) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/LoadRegistrantWithBadgeId`, {})
@@ -56,7 +57,7 @@ function loadRegistrantByBadgeIdError(err) {
 	};
 }
 
-
+// Not Implemented
 export function loadRegistrantByRegId(regId) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/LoadRegistrantWithRegistrantId`, {})
@@ -86,6 +87,9 @@ function loadRegistrantByRegIdError(err) {
 
 export function loadRegistrantByAttendeeGuid(attendeeGuid) {
 	return function(dispatch) {
+
+		dispatch(loadRegistrantByAttendeeGuidStart());
+
 		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {attendeeGuid})
 			.then((response) => {
 				dispatch(loadRegistrantByAttendeeGuidSuccess(response.data.d.Registrant));
@@ -96,7 +100,17 @@ export function loadRegistrantByAttendeeGuid(attendeeGuid) {
 	};
 }
 
+function loadRegistrantByAttendeeGuidStart() {
+	return {
+		type : LOAD_REGISTRANT_ATTENDEEGUID_START,
+		payload : null
+	};
+}
+
 function loadRegistrantByAttendeeGuidSuccess(response) {
+	
+	delete response.__type;
+
 	return {
 		type : LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS,
 		payload : response
@@ -169,7 +183,6 @@ function startSearchRegistrants(){
 }
 
 function searchRegistrantsSuccess(response) {
-	console.log('SUCCESS!', response);
 	return {
 		type : SEARCH_REGISTRANTS_SUCCESS,
 		payload : response
@@ -177,14 +190,13 @@ function searchRegistrantsSuccess(response) {
 }
 
 function searchRegistrantsError(err) {
-	console.log('ERROR!', err);
 	return {
 		type : SEARCH_REGISTRANTS_ERROR,
 		payload : err
 	};
 }
 
-
+// Not Implemented
 export function searchRegistrantsXml(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/SearchRegistrantsXml`, {})
@@ -212,10 +224,15 @@ function searchRegistrantsXmlError(err) {
 }
 
 export function upsertRegistrant(registrant) {
+
+	let inputArg = {
+		registrant
+	};
+
 	return function(dispatch) {
-		axios.post(`methods.asmx/UpsertRegistrant`, {})
+		axios.post(`methods.asmx/UpsertRegistrant`, inputArg)
 			.then((response) => {
-				dispatch(upsertRegistrantSuccess(response));
+				dispatch(upsertRegistrantSuccess(response.data.d.AttendeeGuid));
 			})
 			.catch((err) => {
 				dispatch(upsertRegistrantError(err));
@@ -223,10 +240,11 @@ export function upsertRegistrant(registrant) {
 	};
 }
 
-function upsertRegistrantSuccess(response) {
+function upsertRegistrantSuccess(guid) {
+	console.log(guid);
 	return {
 		type : UPSERT_REGISTRANT_SUCCESS,
-		payload : response.data.d
+		payload : guid
 	};
 }
 
@@ -237,6 +255,7 @@ function upsertRegistrantError(err) {
 	};
 }
 
+// Not Implemented
 export function listRandomRegistrants(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/ListRandomRegistrants`, {})

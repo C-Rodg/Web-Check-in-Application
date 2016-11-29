@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 
 const AdminHeader = (props) => {
 	return (
-		<div className="admin-header container-fluid">
+		<div className="admin-header container-fluid clearfix">
 			<div className="row">
 				<div className="col-xs-12 text-center title-row">
 					<p className="event-name mi-38">{props.eventName}</p>

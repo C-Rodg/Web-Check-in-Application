@@ -265,4 +265,13 @@
 			outline-color: transparent;
 		}
 	}
+
+	.error-text {
+		text-align: center;
+		padding: 10px 8px;
+		opacity: 0.8;
+		color: #313534;
+		font-weight: 400;
+		font-family : 'robotomedium', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
+	}
 }

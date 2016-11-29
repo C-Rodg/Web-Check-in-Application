@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import AttendeeTile from '../components/AttendeeTile';
 import TableSort from '../components/TableSort';
+import Loading from '../components/Loading';
 
 // NOTE - reverse true = A-Z, reverse false = Z-A
 function advancedSort(field, reverse, primer){
@@ -88,15 +89,15 @@ class AdminResults extends Component {
 
 	getTableTitleText(){
 		if(this.props.searchLoading) {
-			return (<tr><th>Loading.... icon here</th></tr>);
+			return (<tr><th><Loading height={112} width={112} /></th></tr>);
 		}
 		if(this.props.searchError) {
 			return (<tr><th>Uh-oh! There was an issue searching...</th></tr>);
 		}
-		if(!this.props.searching) {
+		if(!this.props.hasSearched) {
 			return (<tr><th>Ready to begin searching...</th></tr>);
 		}
-		if(this.props.searching && this.props.registrantList.length === 0){
+		if(this.props.hasSearched && this.props.registrantList.length === 0){
 			return (<tr><th>No registrants found...</th></tr>);
 		}
 		return (
@@ -134,7 +135,7 @@ class AdminResults extends Component {
 const mapStateToProps = (state) => {
 	return {
 		registrantList : state.registrant.registrantList,
-		searching : state.registrant.searching,
+		hasSearched : state.registrant.hasSearched,
 		searchError : state.registrant.searchError,
 		searchLoading : state.registrant.searchLoading
 	};

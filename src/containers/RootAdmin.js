@@ -35,7 +35,7 @@ class RootAdmin extends Component {
 					eventDate={this.props.eventDate} 
 					eventLocation={this.props.eventLocation}
 				/>
-				<div className="admin-body container-fluid">
+				<div className="admin-body container-fluid clearfix">
 					<AdminControls handleSearchRegistrants={this.handleSearchRegistrants} />
 					<div className="card-body row">
 						{this.props.children}
