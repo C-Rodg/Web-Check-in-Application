@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 import { 
 	LOAD_REGISTRANT_BADGEID_SUCCESS, LOAD_REGISTRANT_BADGEID_ERROR, 
 	LOAD_REGISTRANT_REGID_SUCCESS, LOAD_REGISTRANT_REGID_ERROR, 
@@ -5,8 +7,12 @@ import {
 	SEARCH_REGISTRANTS_START, SEARCH_REGISTRANTS_SUCCESS, SEARCH_REGISTRANTS_ERROR, 
 	SEARCH_REGISTRANTS_XML_SUCCESS, SEARCH_REGISTRANTS_XML_ERROR, 
 	UPSERT_REGISTRANT_SUCCESS, UPSERT_REGISTRANT_ERROR, 
+	CHECKIN_REGISTRANT_SUCCESS, CHECKIN_REGISTRANT_ERROR,
+	CHECKOUT_REGISTRANT_SUCCESS, CHECKOUT_REGISTRANT_ERROR,
+	UPDATE_REGISTRANT_LIST,
 	LIST_RANDOM_REGISTRANTS_SUCCESS, LIST_RANDOM_REGISTRANTS_ERROR, 
-	CLEAR_CURRENT_REGISTRANT 
+	CLEAR_CURRENT_REGISTRANT,
+	SEND_NOTIFICATION
 } from '../actions/cc_registrant';
 
 const INITIAL_STATE = {
@@ -17,23 +23,45 @@ const INITIAL_STATE = {
 	hasSearched : false,
 	searchLoading : false,
 	walkInMode : false,
+	returnToList : false,
+	notificationCount : 0,
+	notificationText : ""
 };
 
 export const registrant = ( state = INITIAL_STATE, action ) => {
-	switch(action.type) {
+	switch(action.type) {	
 
-		case LOAD_REGISTRANT_BADGEID_SUCCESS:
-			return state;
-		case LOAD_REGISTRANT_BADGEID_ERROR:
-			return state;
+		case SEND_NOTIFICATION:
+			return {...state, 
+				notificationCount : (state.notificationCount + 1),
+				notificationText : action.payload };
 
-		case LOAD_REGISTRANT_REGID_SUCCESS:
+		case CLEAR_CURRENT_REGISTRANT: 
+			return {...state, currentRegistrant : null};
+
+		case UPDATE_REGISTRANT_LIST:
+			return {
+				...state,
+				returnToList : true,
+				registrantList : registrantListReducer(state.registrantList, action)
+			};
+
+		case CHECKIN_REGISTRANT_SUCCESS:			
 			return state;
-		case LOAD_REGISTRANT_REGID_ERROR:
-			return state;
+		case CHECKIN_REGISTRANT_ERROR:
+			return {...state, returnToList : false, 
+				notificationCount : (state.notificationCount + 1), 
+				notificationText : "Sorry, we're having some issues checking this registrant in..."};
+
+		case CHECKOUT_REGISTRANT_SUCCESS:
+			return state;//{...state, returnToList : true};
+		case CHECKOUT_REGISTRANT_ERROR:
+			return {...state, returnToList : false, 
+				notificationCount : (state.notificationCount + 1), 
+				notificationText : "Sorry, we're having some issues checking this registrant out..."};	
 
 		case LOAD_REGISTRANT_ATTENDEEGUID_START: 
-			return {...state, currentRegistrant : null, currentError : false};
+			return {...state, currentRegistrant : null, currentError : false, returnToList : false};
 		case LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS:
 			return {...state, currentRegistrant : action.payload, currentError : false};
 		case LOAD_REGISTRANT_ATTENDEEGUID_ERROR:
@@ -45,6 +73,16 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 			return {...state, registrantList : action.payload, currentRegistrant : null, searchError : false, hasSearched : true, searchLoading : false};
 		case SEARCH_REGISTRANTS_ERROR:
 			return {...state, registrantList : [], currentRegistrant : null, searchError : true, hasSearched : true, searchLoading : false};
+
+		case LOAD_REGISTRANT_BADGEID_SUCCESS:
+			return state;
+		case LOAD_REGISTRANT_BADGEID_ERROR:
+			return state;
+
+		case LOAD_REGISTRANT_REGID_SUCCESS:
+			return state;
+		case LOAD_REGISTRANT_REGID_ERROR:
+			return state;
 
 		case SEARCH_REGISTRANTS_XML_SUCCESS:
 			return state;
@@ -59,11 +97,24 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 		case LIST_RANDOM_REGISTRANTS_SUCCESS:
 			return state;
 		case LIST_RANDOM_REGISTRANTS_ERROR:
+			return state;		
+
+		default : 
 			return state;
+	}
+}
 
-		case CLEAR_CURRENT_REGISTRANT: 
-			return {...state, currentRegistrant : null};
-
+function registrantListReducer(state = [], action) {
+	switch(action.type) {
+		case UPDATE_REGISTRANT_LIST:
+			const newList = _.cloneDeep(state)
+			for(let el of newList){
+				if(el.AttendeeGuid === action.guid){
+					el.Attended = action.attended;
+					break;
+				}
+			}
+			return newList;
 		default : 
 			return state;
 	}

@@ -39,10 +39,6 @@ class AdminResults extends Component {
 		}
 	}
 
-	componentWillUnmount(){
-		// TODO: should I clear out the list of registrants??
-	}
-
 	getRegistrantList(){
 		let dir = (this.state.sortDirection === 'down' ? true : false);
 		let field;
@@ -61,12 +57,12 @@ class AdminResults extends Component {
 		return sortedArray.map((registrant) => {
 			return (
 				<AttendeeTile key={registrant.AttendeeGuid} 
+					checkedIn={registrant.Attended}
 					firstName={registrant.FirstName}
 					lastName={registrant.LastName}
 					company={registrant.Company}
 					email={registrant.Email}
-					attendeeType={registrant.AttendeeType}
-					checkedIn={registrant.Attended}
+					attendeeType={registrant.AttendeeType}					
 					guid={registrant.AttendeeGuid}
 				/>
 			);

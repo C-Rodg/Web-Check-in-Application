@@ -1,8 +1,9 @@
-@import 'base';
-@import '~bootstrap-grid/bootstrap.min';
-@import 'utils';
 @import './fonts/roboto/roboto';
 @import './fonts/material-design-icons/material-icons';
+@import '~bootstrap-grid/bootstrap.min';
+@import 'utils';
+@import 'base';
+
 
 html {
 	box-sizing: border-box;
@@ -46,5 +47,6 @@ input:focus, input:hover, input:active {
 	outline: 0;
 }
 
+@import 'forms';
 @import 'donutChart';
 @import 'adminMode';

@@ -5,7 +5,7 @@ import AdminHeader from '../components/AdminHeader';
 import AdminControls from './AdminControls';
 import AdminFooter from '../components/AdminFooter';
 
-import { getEventInformation, getRegistrationStats } from '../actions/cc_settings';
+import { getEventSettings, getEventInformation, getRegistrationStats } from '../actions/cc_settings';
 import { searchRegistrants } from '../actions/cc_registrant';
 
 class RootAdmin extends Component {
@@ -15,7 +15,9 @@ class RootAdmin extends Component {
 		this.handleSearchRegistrants = this.handleSearchRegistrants.bind(this);
 	}
 
-	componentDidMount() {		
+	componentDidMount() {	
+		console.log("Mounting Root Admin");
+		this.props.getEventSettings();	
 		this.props.getEventInformation();
 		this.props.getRegistrationStats();
 	}
@@ -41,7 +43,7 @@ class RootAdmin extends Component {
 						{this.props.children}
 					</div>
 				</div>
-				<AdminFooter />
+				<AdminFooter notifyText={this.props.notifyText} notifyCounter={this.props.notifyCounter} />
 			</div>
 		);
 	}
@@ -53,12 +55,15 @@ const mapStateToProps = (state) => {
 		eventDate : state.settings.eventDate,
 		eventLocation : state.settings.eventLocation,
 		statsCheckedIn : state.settings.stats.totalAttended,
-		statsRegistered : state.settings.stats.totalRegistered
+		statsRegistered : state.settings.stats.totalRegistered,
+		notifyText : state.registrant.notificationText,
+		notifyCounter : state.registrant.notificationCount
 	};
 }
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		getEventSettings : () => dispatch(getEventSettings()),
 		getEventInformation : () => dispatch(getEventInformation()),
 		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f)),
 		getRegistrationStats : () => dispatch(getRegistrationStats())

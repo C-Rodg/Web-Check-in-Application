@@ -25,10 +25,27 @@ export const UPSERT_REGISTRANT_ERROR = 'UPSERT_REGISTRANT_ERROR';
 export const LIST_RANDOM_REGISTRANTS_SUCCESS = 'LIST_RANDOM_REGISTRANT_SUCCESS';
 export const LIST_RANDOM_REGISTRANTS_ERROR = 'LIST_RANDOM_REGISTRANT_ERROR';
 
+export const CHECKIN_REGISTRANT_SUCCESS = 'CHECKIN_REGISTRANT_SUCCESS';
+export const CHECKIN_REGISTRANT_ERROR = 'CHECKIN_REGISTRANT_ERROR';
+
+export const CHECKOUT_REGISTRANT_SUCCESS = 'CHECKOUT_REGISTRANT_SUCCESS';
+export const CHECKOUT_REGISTRANT_ERROR = 'CHECKOUT_REGISTRANT_ERROR';
+
+export const UPDATE_REGISTRANT_LIST = 'UPDATE_REGISTRANT_LIST';
+
 export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
+
+export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 
 
 //-------------------- ACTION CREATORS --------------------//
+
+export function sendNotification(msg) {
+	return {
+		type : SEND_NOTIFICATION,
+		payload : msg
+	};
+}
 
 // Not Implemented
 export function loadRegistrantByBadgeId(badgeId) {
@@ -223,6 +240,86 @@ function searchRegistrantsXmlError(err) {
 	};
 }
 
+export function checkInRegistrant(registrant) {
+	const checkedInRegistrant = Object.assign({}, registrant, {
+		Attended : true,
+		FirstCheckInDateTime : (new Date()),
+		OnSiteModifiedDateTime : (new Date())
+	});
+
+	const inputArg = {
+		registrant : checkedInRegistrant
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));					
+			})
+			.catch((err) => {
+				dispatch(checkInRegistrantError(err));
+			});
+	};
+}
+
+function checkInRegistrantSuccess(guid) {
+	return {
+		type : CHECKIN_REGISTRANT_SUCCESS,
+		payload : guid
+	};
+}
+
+function checkInRegistrantError(err) {
+	return {
+		type : CHECKIN_REGISTRANT_ERROR,
+		payload : err
+	};
+}
+
+export function checkOutRegistrant(registrant) {
+	const checkedOutRegistrant = Object.assign({}, registrant, {
+		Attended : false,
+		FirstCheckInDateTime : null,
+		OnSiteModifiedDateTime : (new Date())
+	});
+
+	const inputArg = {
+		registrant : checkedOutRegistrant
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, false));				
+			})
+			.catch((err) => {
+				dispatch(checkOutRegistrantError(err));
+			});
+	};
+}
+
+function checkOutRegistrantSuccess(guid) {
+	return {
+		type : CHECKOUT_REGISTRANT_SUCCESS,
+		payload : guid
+	};
+}
+
+function checkOutRegistrantError(err) {
+	return {
+		type : CHECKOUT_REGISTRANT_ERROR,
+		payload : err
+	};
+}
+
+function updateRegistrantList(guid, attended) {
+	return {
+		type : UPDATE_REGISTRANT_LIST,
+		guid,
+		attended
+	};
+}
+
 export function upsertRegistrant(registrant) {
 
 	let inputArg = {
@@ -287,4 +384,31 @@ export function clearCurrentRegistrant() {
 		type : CLEAR_CURRENT_REGISTRANT,
 		payload : null
 	};
+}
+
+export function Registrant() {
+	this.Attended = false;
+	this.AttendeeGuid = null;
+	this.AttendeeId = null;
+	this.AttendeeType = null;
+	this.BadgeId = null;
+	this.Company = null;
+	this.Email = null;
+	this.FirstCheckInDateTime = null;
+	this.FirstName = null;
+	this.FirstPrintDateTime = null;
+	this.LastName = null;
+	this.OnSiteModifiedDateTime = null;
+	this.PrePrint = false;
+	this.PreRegistrantionDateTime = null;
+	this.Printed = false;
+	this.RegistrantId = null;
+	this.ScanKey = null;
+	this.ServerGuid = null;
+	this.ServerName = null;
+	this.StationName = null;
+	this.SurveyDate = null;
+	this.UploadGuid = null;
+	this.Uploaded = false;
+	this.WalkIn = true;
 }

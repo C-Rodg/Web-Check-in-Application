@@ -3,10 +3,15 @@
 		position: fixed;
 		bottom: 0;
 		width: 100%;
-		padding-top: 5px;
-		padding-bottom:5px;
-		background-color: $primary-bg;
-		color: $primary-bg-text-subtle;
+		
+		
+
+		.branding {
+			background-color: $primary-bg;
+			color: $primary-bg-text-subtle;
+			padding-top: 5px;
+			padding-bottom:5px;
+		}
 	}
 
 	.admin-header {
@@ -68,7 +73,7 @@
 		.admin-controls {
 			padding-top: 12px;
 			padding-bottom: 12px;
-			background-color: $green-bg;
+			background-color: $green-bg;			
 
 			.controls-btn-active {
 				display: none !important;
@@ -84,6 +89,8 @@
 				box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.33);
 				color: $light-black;
 				transition: background-color 0.3s ease-out;
+				max-width: 140px;
+				width: 140px;
 
 				i {
 					vertical-align: middle;
@@ -97,6 +104,10 @@
 
 			.controls-btn:hover, .controls-btn:active, .controls-btn:focus {
 				background-color: $white-hover;
+			}
+
+			.controls-btn:not(.controls-btn-active) + .controls-btn:not(.controls-btn-active) + .controls-btn:not(.controls-btn-active) + .controls-btn:not(.controls-btn-active) {
+				display: none;
 			}
 
 			.controls-search-form {
@@ -189,20 +200,22 @@
 			color: inherit;
 		}
 
-		.table-a-row td:last-child,
-		.table-a-row th:last-child,
-		tr td:last-child,
-		tr th:last-child {
+		.table-a-row td:first-child,
+		.table-a-row th:first-child,
+		tr td:first-child,
+		tr th:first-child {
 			text-align: center;
+			padding-left: 0;
+			padding-right: 0;
 		}
 
-		.table-a-row td:last-child,
-		tr td:last-child {
+		.table-a-row td:first-child,
+		tr td:first-child {
 			color: $green-bg;
 		}
 		
-		.table-a-row td:last-child i,
-		tr td:last-child i {
+		.table-a-row td:first-child i,
+		tr td:first-child i {
 			vertical-align: middle;
 		}
 
@@ -264,6 +277,25 @@
 			outline: 0;
 			outline-color: transparent;
 		}
+
+		.confirm-checkin {
+			max-height: 0;
+			overflow : hidden;
+			transition: max-height 0.3s ease-in-out;
+
+			p {
+				padding: 5px 0 2px 0;
+			}
+			button {
+				color: #00897b;
+				font-size: 24px;
+				letter-spacing: 1px;
+			}
+		}
+
+		.confirm-checkin.confirm-checkin-yes {
+			max-height: 200px;
+		}
 	}
 
 	.error-text {
@@ -273,5 +305,11 @@
 		color: #313534;
 		font-weight: 400;
 		font-family : 'robotomedium', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
+	}
+}
+
+@media (max-width: 991px) {
+	.root-admin .admin-body .controls-btn {
+		max-width: 65px !important;
 	}
 }

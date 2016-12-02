@@ -1,5 +1,4 @@
 import { axios } from './utilities_httpRequest';
-//import moment from 'moment/src/moment';
 const moment = require('moment');
 
 
@@ -69,11 +68,12 @@ export function getEventInformation() {
 
 function getEventInformationSuccess(response) {
 	let eventInfo = Object.assign({}, {
-		eventName : response.Name
+		eventName : response.Name,
+		eventGuid : response.EventGuid
 	});
 
 	// Convert location to full string
-	let locArr = [response.City, response.StateProvince, response.Country];
+	let locArr = [response.City, response.StateProvince || response.Country];
 	eventInfo.eventLocation = locArr.filter((str) => { return str; }).join(', ');
 
 	eventInfo.eventStartDate = "";
@@ -98,18 +98,32 @@ export function getEventSettings(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetEventSettings`, {})
 			.then((response) => {
-				dispatch(getEventSettingsSuccess(response));
+				dispatch(getEventSettingsSuccess(response.data.d.EventSettings.Configuration));
 			})
-			.catch((err) => {
-				dispatch(getEventSettingsError(err));
+			.catch((err) => {				
+				let guid = getGuidFromURL();
+				let configStr = window.localStorage.getItem(`config_${guid}`);				
+				if(guid && configStr){					
+					dispatch(getEventSettingsSuccess(configStr));										
+				} else {
+					dispatch(getEventSettingsError(err));
+				}				
 			});
 	};
 }
 
 function getEventSettingsSuccess(response) {
+	let guid = getGuidFromURL();
+	let config;
+	window.localStorage.setItem(`config_${guid}`, JSON.stringify(response));
+	try {
+		config = JSON.parse(response);
+	} catch(e) {
+		return getEventSettingsError(e);
+	}
 	return {
 		type : GET_EVENT_SETTINGS_SUCCESS,
-		payload : response.data.d
+		payload : config
 	};
 }
 
@@ -118,4 +132,13 @@ function getEventSettingsError(err) {
 		type : GET_EVENT_SETTINGS_ERROR,
 		payload : err
 	};
+}
+
+function getGuidFromURL(){
+	let guid;
+	let path = window.location.pathname;
+	path = path.slice(0, -1);
+	let idx = path.lastIndexOf('/');
+	guid = path.slice(idx + 1);
+	return guid;
 }

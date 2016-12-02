@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TableHeaders = ["First Name", "Last Name", "Company", "Email", "Type", "Checked In"];
+const TableHeaders = ["Checked In", "First Name", "Last Name", "Company", "Email", "Type"];
 
 const TableSort = (props) => {
 	const arrowDirection = `keyboard_arrow_${props.sortDirection}`;

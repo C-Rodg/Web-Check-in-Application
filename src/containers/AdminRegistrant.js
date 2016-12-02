@@ -1,14 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { loadRegistrantByAttendeeGuid, clearCurrentRegistrant, upsertRegistrant } from '../actions/cc_registrant';
+import { loadRegistrantByAttendeeGuid, clearCurrentRegistrant, checkInRegistrant, checkOutRegistrant } from '../actions/cc_registrant';
 import Loading from '../components/Loading';
 
 class AdminRegistrant extends Component {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
 
-		this.checkInOutRegistrant = this.checkInOutRegistrant.bind(this);
+		this.state = {
+			showConfirm : false
+		};
+
+		this.checkOutRegistrant = this.checkOutRegistrant.bind(this);
+		this.checkInRegistrant = this.checkInRegistrant.bind(this);
+		this.getButtonActions = this.getButtonActions.bind(this);
+		this.showConfirmMenu = this.showConfirmMenu.bind(this);
 	}
 
 	componentDidMount(){		
@@ -19,15 +26,59 @@ class AdminRegistrant extends Component {
 		this.props.clearCurrentRegistrant();
 	}
 
-	checkInOutRegistrant(){
-		const Attended = this.props.registrant.Attended ? false : true;
-		const FirstCheckInDateTime = Attended ? new Date() : null;
-		const registrant = Object.assign({}, this.props.registrant, {
-			Attended,
-			FirstCheckInDateTime
+	componentDidUpdate(){
+		if(this.props.returnToList){
+			this.context.router.push('/admin/results');
+		}
+	}
+
+	checkInRegistrant(){
+		this.props.checkInRegistrant(this.props.registrant);
+	}
+
+	checkOutRegistrant(){
+		this.props.checkOutRegistrant(this.props.registrant);
+	}
+
+	getButtonActions(){
+		if(this.props.registrant.Attended){
+			return (
+				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
+					onClick={this.checkOutRegistrant}
+					>Check-out <i className="material-icons v-a-sub">close</i>
+				</button>
+			);
+		}
+		if(this.props.cancelledCheck){
+			const surveyData = this.props.registrant.SurveyData;
+			let isCancelled = false;
+			this.props.cancelledCheck.forEach((check) => {
+				if(surveyData.indexOf(check) > -1){
+					isCancelled = true;
+				}
+			});
+			if(isCancelled){
+				return (
+					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub p-l-0"
+						onClick={this.showConfirmMenu}
+					>
+						Cancelled
+					</button>
+				);
+			}
+		}
+		return (
+			<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
+				onClick={this.checkInRegistrant}
+				>Check-in <i className="material-icons">done</i>
+			</button>
+		);		
+	}
+
+	showConfirmMenu() {
+		this.setState({
+			showConfirm : true
 		});
-		console.log(registrant);
-		this.props.upsertCurrentRegistrant(registrant);
 	}
 
 	render(){
@@ -46,27 +97,27 @@ class AdminRegistrant extends Component {
 					<div className="registrant-atType f-s-24 other-info">{this.props.registrant.AttendeeType}</div>
 				</div>
 				<div className="registrant-checkin">
-					{ !this.props.registrant.Attended ? 
-						<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
-							onClick={this.checkInOutRegistrant}
-							>Check-in <i className="material-icons">done</i>
-						</button>
-						:
-						<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
-							onClick={this.checkInOutRegistrant}
-							>Check-out <i className="material-icons v-a-sub">close</i>
-						</button>
-					}
+					{ this.getButtonActions() }					
+				</div>
+				<div className={"confirm-checkin " + (!this.state.showConfirm ? '' : 'confirm-checkin-yes')}>
+					<p>Continue checking in?</p>
+					<button className="btn btn-flat uppercase btn-col-green" onClick={this.checkInRegistrant}>Check-In</button>
 				</div>
 			</div>
 		);
 	}
 }
 
+AdminRegistrant.contextTypes = {
+	router : PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => {
 	return {
 		registrantError : state.registrant.currentError,
-		registrant : state.registrant.currentRegistrant
+		registrant : state.registrant.currentRegistrant,
+		returnToList : state.registrant.returnToList,
+		cancelledCheck : state.settings.configuration.CancelledStrings
 	};
 }
 
@@ -74,7 +125,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid)),
 		clearCurrentRegistrant : () => dispatch(clearCurrentRegistrant()),
-		upsertCurrentRegistrant : (registrant) => dispatch(upsertRegistrant(registrant))
+		checkInRegistrant : (registrant) => dispatch(checkInRegistrant(registrant)),
+		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant))
 	};
 };
 

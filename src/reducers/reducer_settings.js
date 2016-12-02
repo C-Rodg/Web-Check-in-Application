@@ -9,8 +9,20 @@ const INITIAL_STATS_STATE = {
 	walkInsAttended : 0
 };
 
+const INITIAL_CONFIG_STATE = {
+	CancelledStrings : [],
+	WalkInFields : [],
+	AttendeeMode : {
+		Search : "email",
+		Camera : false,
+		WalkIns : true
+	}
+};
+
 const INITIAL_STATE = {
-	configuration : null,
+	configuration : INITIAL_CONFIG_STATE,
+	configurationError : false,
+	eventGuid : null,
 	eventName : "Validar Web Check In",
 	eventLocation : "Seattle, WA, USA",
 	eventDate : "01/01/01",
@@ -27,15 +39,16 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			return state;
 
 		case GET_EVENT_SETTINGS_SUCCESS: 
-			return state;
+			return {...state, configurationError : false, configuration : action.payload};
 		case GET_EVENT_SETTINGS_ERROR:
-			return state;
+			return {...state, configurationError : true};
 
 		case GET_EVENT_INFORMATION_SUCCESS:
 			return {...state, 
+				eventGuid : action.payload.eventGuid,
 				eventName : action.payload.eventName, 
 				eventLocation : action.payload.eventLocation, 
-				eventDate : action.payload.eventStartDate 
+				eventDate : action.payload.eventStartDate
 			};
 		case GET_EVENT_INFORMATION_ERROR:
 			return state;
