@@ -36,7 +36,7 @@ export default class InputSelect extends Component {
 	render() {
 		const options = this.props.options.map((response) => {
 			return (
-				<option value={response.id} disabled={response.disabled}>{response.prompt}</option>
+				<option value={response.rTag} disabled={response.disabled}>{response.rLabel}</option>
 			);
 		})
 		return (

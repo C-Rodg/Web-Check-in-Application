@@ -6,9 +6,7 @@ export default class InputText extends Component {
 		this.handleChange = this.handleChange.bind(this);
 	}
 
-	handleChange(event) {
-		console.log(event);
-		console.log(this.props.tagName);
+	handleChange(event) {		
 		this.props.onUpdateFormData(event.target.value, this.props.tagName);
 	}
 

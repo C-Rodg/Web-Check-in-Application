@@ -45,7 +45,7 @@ class AdminRegistrant extends Component {
 			return (
 				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
 					onClick={this.checkOutRegistrant}
-					>Check-out <i className="material-icons v-a-sub">close</i>
+					>Check-out
 				</button>
 			);
 		}
@@ -70,7 +70,7 @@ class AdminRegistrant extends Component {
 		return (
 			<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
 				onClick={this.checkInRegistrant}
-				>Check-in <i className="material-icons">done</i>
+				>Check-in
 			</button>
 		);		
 	}

@@ -255,17 +255,7 @@
 		}
 	}
 
-	.admin-registrant {
-		.registrant-checkin-btn {
-			padding: 10px 0 0 24px;
-			text-transform: uppercase;
-			cursor: pointer;
-
-			i {
-				font-size: 28px;
-				line-height: 28px;
-			}
-		}
+	.admin-registrant {		
 
 		.other-info {
 			color: #313534;
@@ -273,10 +263,7 @@
 			font-family: 'robotolight', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
 		}
 
-		.registrant-checkin-btn:hover, .registrant-checkin-btn:focus, .registrant-checkin-btn:active {
-			outline: 0;
-			outline-color: transparent;
-		}
+		
 
 		.confirm-checkin {
 			max-height: 0;
@@ -297,6 +284,24 @@
 			max-height: 200px;
 		}
 	}
+
+	.registrant-checkin-btn {
+		padding: 10px 0 0 0;
+		text-transform: uppercase;
+		cursor: pointer;
+
+		i {
+			font-size: 28px;
+			line-height: 28px;
+		}
+	}
+
+	.registrant-checkin-btn:hover, .registrant-checkin-btn:focus, .registrant-checkin-btn:active {
+		outline: 0;
+		outline-color: transparent;
+	}
+
+
 
 	.error-text {
 		text-align: center;

@@ -386,6 +386,37 @@ export function clearCurrentRegistrant() {
 	};
 }
 
+export function generateSurveyDataXML(form) {
+	let xmlDoc = document.implementation.createDocument(null, "result");
+	let docEl = xmlDoc.getElementsByTagName('result');
+	let responsesEl = xmlDoc.createElement('responses');
+	docEl[0].appendChild(responsesEl);
+	if(form){
+		Object.keys(form).forEach((field) => {
+			if(!Array.isArray(form[field])){
+				// Generate text response
+				if(field) {
+					let xmlField = xmlDoc.createElement(field);
+					responsesEl.appendChild(xmlField);
+					let textNode = xmlDoc.createTextNode(form[field]);
+					xmlField.appendChild(textNode);
+				}				
+			} else {
+				// Generate pickone/many
+				form[field].forEach((pickResponse) => {
+					if(pickResponse){
+						let xmlPick = xmlDoc.createElement(pickResponse);
+						responsesEl.appendChild(xmlPick);
+					}					
+				});
+			}
+		});
+	}
+	const serializer = new XMLSerializer();
+	const xmlString = serializer.serializeToString(xmlDoc);
+	return xmlString;
+}
+
 export function Registrant() {
 	this.Attended = false;
 	this.AttendeeGuid = null;

@@ -3,37 +3,47 @@ const config = [
 			"type" : "T",
 			"label" : "First Name",
 			"tag" : "qrFirstName",
-			"req" : true
+			"req" : true,
+			"disabled" : false,
+			"hint" : "FIRSTNAME"
 		},
 		{
 			"type" : "T",
 			"label" : "Last Name",
 			"tag" : "qrLastName",
-			"req" : true
+			"req" : true,
+			"disabled" : false,
+			"hint" : "LASTNAME"
 		},
 		{
 			"type" : "T",
 			"label" : "Attendee Type",
 			"tag" : "qrAttendeeType",
-			"req" : true
+			"req" : true,
+			"disabled" : false
 		},
 		{
 			"type" : "T",
 			"label" : "Email",
 			"tag" : "qrEmail",
-			"req" : true
+			"req" : true,
+			"disabled" : false,
+			"hint" : "EMAIL"
 		},
 		{
 			"type" : "T",
 			"label" : "Company",
 			"tag" : "qrCompany",
-			"req" : false
+			"req" : false,
+			"disabled" : false,
+			"hint" : "COMPANY"
 		},
 		{
 			"type" : "T",
 			"label" : "Title",
 			"tag" : "qrTitle",
-			"req" : false
+			"req" : false,
+			"disabled" : true
 		},
 		{
 			"type" : "M",
@@ -42,19 +52,24 @@ const config = [
 			"req" : true,
 			"responses" : [{
 				"rTag" : "qrBands_1",
-				"rLabel" : "Beatles"
+				"rLabel" : "Beatles",
+				"disabled" : false
 			}, {
 				"rTag" : "qrBands_2",
-				"rLabel" : "ACDC"
+				"rLabel" : "ACDC",
+				"disabled" : false
 			}, {
 				"rTag" : "qrBands_3",
-				"rLabel" : "Bob Dylan"
+				"rLabel" : "Bob Dylan",
+				"disabled" : true
 			}, {
 				"rTag" : "qrBands_4",
-				"rLabel" : "Led Zeplin"
+				"rLabel" : "Led Zeplin",
+				"disabled" : false
 			}, {
 				"rTag" : "qrBands_5",
-				"rLabel" : "Katy Perry"
+				"rLabel" : "Katy Perry",
+				"disabled" : false
 			}]
 		},
 		{
@@ -85,7 +100,8 @@ const config = [
 			"type" : "T",
 			"label" : "Zip Code",
 			"tag" : "qrZip",
-			"req" : false
+			"req" : false,
+			"disabled" : false
 		},
 		{
 			"type" : "T",
@@ -97,19 +113,23 @@ const config = [
 			"type" : "O",
 			"label" : "What is your favorite color?",
 			"tag" : "qrColor",
-			"req" : true,
+			"req" : true,			
+			"hint" : "ATTENDEETYPE",
 			"responses" : [{
 				"rTag" : "qrColor_1",
-				"rLabel" : "Blue"
+				"rLabel" : "Blue",
+				"disabled" : false
 			}, {
 				"rTag" : "qrColor_2",
 				"rLabel" : "Green"
 			}, {
 				"rTag" : "qrColor_3",
-				"rLabel" : "Red"
+				"rLabel" : "Red",
+				"disabled" : false
 			}, {
 				"rTag" : "qrColor_4",
-				"rLabel" : "Yellow"
+				"rLabel" : "Yellow",
+				"disabled" : true
 			}, {
 				"rTag" : "qrColor_5",
 				"rLabel" : "Pink"
