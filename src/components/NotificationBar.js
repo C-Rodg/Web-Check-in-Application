@@ -25,10 +25,8 @@ export default class NotificationBar extends Component {
 
 	render() {
 		return (
-			<div className="row error-notification" 
-				ref="errorBox" 
-				style={{backgroundColor : this.props.bgColor, color: this.props.textColor}}
-			>
+			<div className={"row error-notification " + (this.props.typeSuccess ? 'notify-success' : 'notify-fail')}
+				ref="errorBox">
 				<div className="col-xs-12 text-center error-notify-text">{this.props.text}</div>
 			</div>
 		);
@@ -37,8 +35,7 @@ export default class NotificationBar extends Component {
 
 NotificationBar.defaultProps = {
 	text : 'Something seems to be wrong...',
-	time : 5000,
-	bgColor : "#e74c3c",
-	textColor : "#ffffff",
-	counter : 0
+	time : 5000,	
+	counter : 0,
+	typeSuccess : false
 };

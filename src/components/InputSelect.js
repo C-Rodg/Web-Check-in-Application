@@ -11,7 +11,6 @@ export default class InputSelect extends Component {
 	}
 
 	handlePickOne(event) {
-		console.log(event.target.value);
 		this.props.onUpdateFormData([event.target.value], this.props.tagName);
 		this.setState({
 			selectVal : [event.target.value]
@@ -30,11 +29,10 @@ export default class InputSelect extends Component {
 		this.setState({
 			selectVal : value
 		});
-		console.log(value);
 	}
 
 	render() {
-		const options = this.props.options.map((response) => {
+		const options = this.props.options && this.props.options.map((response) => {
 			return (
 				<option value={response.rTag} disabled={response.disabled}>{response.rLabel}</option>
 			);

@@ -36,14 +36,16 @@ export const UPDATE_REGISTRANT_LIST = 'UPDATE_REGISTRANT_LIST';
 export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
+export const RETURN_TO_LIST = 'RETURN_TO_LIST';
 
 
 //-------------------- ACTION CREATORS --------------------//
 
-export function sendNotification(msg) {
+export function sendNotification(msg, isSuccess) {
 	return {
 		type : SEND_NOTIFICATION,
-		payload : msg
+		msg,
+		isSuccess
 	};
 }
 
@@ -240,6 +242,37 @@ function searchRegistrantsXmlError(err) {
 	};
 }
 
+export function createWalkIn(registrant) {
+
+	const checkedInRegistrant = Object.assign({}, registrant, {
+		Attended : true,
+		FirstCheckInDateTime : (new Date()),
+		OnSiteModifiedDateTime : (new Date())
+	});
+
+	const inputArg = {
+		registrant : checkedInRegistrant
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				dispatch(sendNotification("Walk-in Created!", true));
+				dispatch(createWalkInSuccess());							
+			})
+			.catch((err) => {
+				dispatch(checkInRegistrantError(err));
+			});
+	};
+}
+
+function createWalkInSuccess(guid) {
+	return {
+		type : RETURN_TO_LIST,
+		payload : null
+	};
+}
+
 export function checkInRegistrant(registrant) {
 	const checkedInRegistrant = Object.assign({}, registrant, {
 		Attended : true,
@@ -254,7 +287,8 @@ export function checkInRegistrant(registrant) {
 	return function(dispatch) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
-				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));					
+				dispatch(sendNotification("Registrant checked-in!", true));
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));											
 			})
 			.catch((err) => {
 				dispatch(checkInRegistrantError(err));
@@ -290,7 +324,8 @@ export function checkOutRegistrant(registrant) {
 	return function(dispatch) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
-				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, false));				
+				dispatch(sendNotification("Registrant checked out!", true));
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, false));
 			})
 			.catch((err) => {
 				dispatch(checkOutRegistrantError(err));
@@ -338,7 +373,6 @@ export function upsertRegistrant(registrant) {
 }
 
 function upsertRegistrantSuccess(guid) {
-	console.log(guid);
 	return {
 		type : UPSERT_REGISTRANT_SUCCESS,
 		payload : guid

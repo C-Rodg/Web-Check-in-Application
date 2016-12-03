@@ -15,7 +15,8 @@ class AdminRegistrant extends Component {
 		this.checkOutRegistrant = this.checkOutRegistrant.bind(this);
 		this.checkInRegistrant = this.checkInRegistrant.bind(this);
 		this.getButtonActions = this.getButtonActions.bind(this);
-		this.showConfirmMenu = this.showConfirmMenu.bind(this);
+		this.toggleConfirmMenu = this.toggleConfirmMenu.bind(this);
+		this.checkCancelled = this.checkCancelled.bind(this);
 	}
 
 	componentDidMount(){		
@@ -26,8 +27,8 @@ class AdminRegistrant extends Component {
 		this.props.clearCurrentRegistrant();
 	}
 
-	componentDidUpdate(){
-		if(this.props.returnToList){
+	componentDidUpdate(prevProps, prevState){
+		if(this.props.returnToList !== prevProps.returnToList){
 			this.context.router.push('/admin/results');
 		}
 	}
@@ -40,7 +41,20 @@ class AdminRegistrant extends Component {
 		this.props.checkOutRegistrant(this.props.registrant);
 	}
 
-	getButtonActions(){
+	checkCancelled() {
+		let isCancelled = false;
+		if (this.props.cancelledCheck && this.props.registrant) {
+			const surveyData = this.props.registrant.SurveyData;			
+			this.props.cancelledCheck.forEach((check) => {
+				if(surveyData.indexOf(check) > -1) {
+					isCancelled = true;
+				}
+			});
+		}
+		return isCancelled;
+	}
+
+	getButtonActions(cancelled){
 		if(this.props.registrant.Attended){
 			return (
 				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
@@ -49,24 +63,15 @@ class AdminRegistrant extends Component {
 				</button>
 			);
 		}
-		if(this.props.cancelledCheck){
-			const surveyData = this.props.registrant.SurveyData;
-			let isCancelled = false;
-			this.props.cancelledCheck.forEach((check) => {
-				if(surveyData.indexOf(check) > -1){
-					isCancelled = true;
-				}
-			});
-			if(isCancelled){
-				return (
-					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub p-l-0"
-						onClick={this.showConfirmMenu}
-					>
-						Cancelled
-					</button>
-				);
-			}
-		}
+		if(cancelled) {
+			return (
+				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub p-l-0"
+					onClick={this.toggleConfirmMenu}
+				>
+					Check-In
+				</button>
+			);
+		}		
 		return (
 			<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
 				onClick={this.checkInRegistrant}
@@ -75,9 +80,9 @@ class AdminRegistrant extends Component {
 		);		
 	}
 
-	showConfirmMenu() {
+	toggleConfirmMenu() {
 		this.setState({
-			showConfirm : true
+			showConfirm : !this.state.showConfirm
 		});
 	}
 
@@ -88,20 +93,27 @@ class AdminRegistrant extends Component {
 		if(this.props.registrantError){
 			return (<div className="error-text">Uh-oh! There was an issue loading that record...</div>);
 		}
+		let isCancelled = this.checkCancelled();
 		return (
-			<div className="admin-registrant text-center">
+			<div className={"admin-registrant text-center " + ((isCancelled  && !this.props.registrant.Attended) ? 'admin-registrant-cancelled' : '')}>
 				<div className="admin-info col-xs-12">
 					<div className="registrant-name f-s-44">{this.props.registrant.FirstName + " " + this.props.registrant.LastName}</div>
 					<div className="registrant-company f-s-24 other-info">{this.props.registrant.Company}</div>
 					<div className="registrant-email f-s-24 other-info">{this.props.registrant.Email}</div>
 					<div className="registrant-atType f-s-24 other-info">{this.props.registrant.AttendeeType}</div>
+					{ isCancelled ? 
+						<p className="cancelled-text">This registration is marked as cancelled. Are you sure you want to continue checking in?</p>
+						: 
+						""
+					}
 				</div>
 				<div className="registrant-checkin">
-					{ this.getButtonActions() }					
+					{ this.getButtonActions(isCancelled) }					
 				</div>
 				<div className={"confirm-checkin " + (!this.state.showConfirm ? '' : 'confirm-checkin-yes')}>
 					<p>Continue checking in?</p>
-					<button className="btn btn-flat uppercase btn-col-green" onClick={this.checkInRegistrant}>Check-In</button>
+					<button className="btn btn-flat uppercase btn-col-green" onClick={this.checkInRegistrant}>Yes</button>
+					<button className="btn btn-flat uppercase btn-col-black" onClick={this.toggleConfirmMenu}>No</button>
 				</div>
 			</div>
 		);

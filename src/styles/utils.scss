@@ -62,8 +62,22 @@
      padding-bottom: 5px;
 }
 
+.error-notification.notify-success {
+     background-color: #16a085;
+     color: #f5f5f5;
+}
+
+.error-notification.notify-fail {
+     background-color: #e74c3c;
+     color: #f5f5f5;
+}
+
 .col-white {
      color: #fff;
+}
+
+.btn-col-red {
+     color: #e74c3c;
 }
 
 .btn-col-green {
@@ -75,10 +89,14 @@
      color: #38A99D;
 }
 
+.btn-col-black {
+	color : #333 !important;
+}
+
 .btn-col-grey {
-     color: #313534;
+     color: #313534 !important;
      opacity: 0.7;
-     transition: opacity 0.3s ease-out;
+     transition: opacity 0.3s ease-out !important;
 }
 
 .btn-col-grey:active, .btn-col-grey:focus, .btn-col-grey:hover {
@@ -119,6 +137,8 @@
      user-select: none;
      touch-action: manipulation;
      border-radius: 2px;
+     outline: none;
+     outline-color: transparent !important;
 }
 
 .btn:focus,

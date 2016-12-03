@@ -12,6 +12,7 @@ import {
 	UPDATE_REGISTRANT_LIST,
 	LIST_RANDOM_REGISTRANTS_SUCCESS, LIST_RANDOM_REGISTRANTS_ERROR, 
 	CLEAR_CURRENT_REGISTRANT,
+	RETURN_TO_LIST,
 	SEND_NOTIFICATION
 } from '../actions/cc_registrant';
 
@@ -22,10 +23,10 @@ const INITIAL_STATE = {
 	searchError : false,
 	hasSearched : false,
 	searchLoading : false,
-	walkInMode : false,
-	returnToList : false,
+	returnToList : 0,
 	notificationCount : 0,
-	notificationText : ""
+	notificationText : "",
+	notificationSuccess : false
 };
 
 export const registrant = ( state = INITIAL_STATE, action ) => {
@@ -33,8 +34,9 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 
 		case SEND_NOTIFICATION:
 			return {...state, 
-				notificationCount : (state.notificationCount + 1),
-				notificationText : action.payload };
+				notificationText : action.msg,
+				notificationSuccess : action.isSuccess,
+				notificationCount : (state.notificationCount + 1) };
 
 		case CLEAR_CURRENT_REGISTRANT: 
 			return {...state, currentRegistrant : null};
@@ -42,26 +44,28 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 		case UPDATE_REGISTRANT_LIST:
 			return {
 				...state,
-				returnToList : true,
+				returnToList : (state.returnToList + 1),
 				registrantList : registrantListReducer(state.registrantList, action)
 			};
 
 		case CHECKIN_REGISTRANT_SUCCESS:			
 			return state;
 		case CHECKIN_REGISTRANT_ERROR:
-			return {...state, returnToList : false, 
+			return {...state, 
 				notificationCount : (state.notificationCount + 1), 
-				notificationText : "Sorry, we're having some issues checking this registrant in..."};
+				notificationText : "Sorry, we're having some issues checking this registrant in...",
+				notificationSuccess : false };
 
 		case CHECKOUT_REGISTRANT_SUCCESS:
 			return state;//{...state, returnToList : true};
 		case CHECKOUT_REGISTRANT_ERROR:
-			return {...state, returnToList : false, 
+			return {...state, 
 				notificationCount : (state.notificationCount + 1), 
-				notificationText : "Sorry, we're having some issues checking this registrant out..."};	
+				notificationText : "Sorry, we're having some issues checking this registrant out...",
+				notificationSuccess : false };	
 
 		case LOAD_REGISTRANT_ATTENDEEGUID_START: 
-			return {...state, currentRegistrant : null, currentError : false, returnToList : false};
+			return {...state, currentRegistrant : null, currentError : false};
 		case LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS:
 			return {...state, currentRegistrant : action.payload, currentError : false};
 		case LOAD_REGISTRANT_ATTENDEEGUID_ERROR:
@@ -73,6 +77,9 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 			return {...state, registrantList : action.payload, currentRegistrant : null, searchError : false, hasSearched : true, searchLoading : false};
 		case SEARCH_REGISTRANTS_ERROR:
 			return {...state, registrantList : [], currentRegistrant : null, searchError : true, hasSearched : true, searchLoading : false};
+
+		case RETURN_TO_LIST:
+			return {...state, returnToList : (state.returnToList + 1)};
 
 		case LOAD_REGISTRANT_BADGEID_SUCCESS:
 			return state;
