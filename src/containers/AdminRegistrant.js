@@ -51,6 +51,7 @@ class AdminRegistrant extends Component {
 				}
 			});
 		}
+		console.log("IS CANCELLED " , isCancelled);
 		return isCancelled;
 	}
 
@@ -102,7 +103,7 @@ class AdminRegistrant extends Component {
 					<div className="registrant-email f-s-24 other-info">{this.props.registrant.Email}</div>
 					<div className="registrant-atType f-s-24 other-info">{this.props.registrant.AttendeeType}</div>
 					{ isCancelled ? 
-						<p className="cancelled-text">This registration is marked as cancelled. Are you sure you want to continue checking in?</p>
+						<p className="cancelled-text">This registration is marked as cancelled.</p>
 						: 
 						""
 					}

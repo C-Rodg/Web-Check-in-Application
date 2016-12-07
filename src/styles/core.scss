@@ -10,12 +10,20 @@ html {
 }
 
 html, body {
-	margin: 0;
-	padding: 0;
-	height: 100%;
 	font-family: 'robotoregular', Helvetica, Arial, sans-serif;
 	font-size: 16px;
 	background-color: $grey-bg;
+}
+
+html,
+body,
+#app,
+.root-router,
+.root-attendee,
+.root-admin {
+	margin: 0;
+	padding: 0;
+	height: 100%;
 }
 
 *,
@@ -50,3 +58,4 @@ input:focus, input:hover, input:active {
 @import 'forms';
 @import 'donutChart';
 @import 'adminMode';
+@import 'attendeeMode';

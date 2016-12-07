@@ -33,3 +33,26 @@
 	content : " *";
 	color: #e74c3c;
 }
+
+.attendee-form {
+	background-color: rgba(255,255,255,0.2);
+	width: 270px;
+	transition: all 0.3s ease-in-out;
+	color: #333;
+	padding: 6px 10px;
+	line-height: 1.5;
+	background-image: none;
+	outline: 0;
+	border-radius: 3px;
+	appearance: none;
+	border: 1px solid rgba(255,255,255,0.4);		
+
+	&:hover {
+		background-color: rgba(255,255,255,0.4);
+	}
+
+	&:focus {
+		background-color: #fff;
+		width: 320px;
+	}
+}
