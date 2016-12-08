@@ -92,15 +92,20 @@ class AttendeeSearch extends Component {
 					}
 					{
 						(!this.props.searchLoading && this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) ?
-						<div className="msg-text m-t-10">
+						<div className="msg-text m-t-15">
 							Sorry! No registrations found...
+							{ this.props.allowWalkIns ? 
+								<div className="register-now-action m-t-15 method-walkin"><Link to="/attendee/walkin">Register Now</Link></div>
+								:
+								""
+							}
 						</div>
 						:
 						""
 					}
 					{
 						(this.props.searchError && this.props.hasSearched) ? 
-						<div className="msg-text m-t-10">
+						<div className="msg-text m-t-15">
 							Uh-Oh! We're having some issues searching...
 						</div>
 						: 
@@ -127,6 +132,7 @@ const mapStateToProps = (state) => {
 	return {
 		regList : state.registrant.registrantList,
 		searchBy : state.settings.configuration.AttendeeMode.Search,
+		allowWalkIns : state.settings.configuration.AttendeeMode.WalkIns,
 		hasSearched : state.registrant.hasSearched,
 		searchError : state.registrant.searchError,
 		searchLoading : state.registrant.searchLoading
