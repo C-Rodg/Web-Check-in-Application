@@ -18,8 +18,7 @@ export default class NotificationBar extends Component {
 		}, this.props.time);
 	}
 
-	componentWillUnmount(){
-		console.log('removing notification bar');
+	componentWillUnmount(){		
 		this._timeout = null;
 	}
 
@@ -35,7 +34,7 @@ export default class NotificationBar extends Component {
 
 NotificationBar.defaultProps = {
 	text : 'Something seems to be wrong...',
-	time : 5000,	
+	time : 3000,	
 	counter : 0,
 	typeSuccess : false
 };

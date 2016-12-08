@@ -12,6 +12,7 @@ import {
 	UPDATE_REGISTRANT_LIST,
 	LIST_RANDOM_REGISTRANTS_SUCCESS, LIST_RANDOM_REGISTRANTS_ERROR, 
 	CLEAR_CURRENT_REGISTRANT,
+	CLEAR_ALL_SEARCHING,
 	RETURN_TO_LIST,
 	SEND_NOTIFICATION
 } from '../actions/cc_registrant';
@@ -40,6 +41,9 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 
 		case CLEAR_CURRENT_REGISTRANT: 
 			return {...state, currentRegistrant : null};
+
+		case CLEAR_ALL_SEARCHING:
+			return {...state, currentRegistrant: null, currentError : false, registrantList : [], searchError : false, hasSearched : false, searchLoading : false };
 
 		case UPDATE_REGISTRANT_LIST:
 			return {

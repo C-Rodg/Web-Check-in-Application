@@ -34,6 +34,7 @@ export const CHECKOUT_REGISTRANT_ERROR = 'CHECKOUT_REGISTRANT_ERROR';
 export const UPDATE_REGISTRANT_LIST = 'UPDATE_REGISTRANT_LIST';
 
 export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
+export const CLEAR_ALL_SEARCHING = 'CLEAR_ALL_SEARCHING';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const RETURN_TO_LIST = 'RETURN_TO_LIST';
@@ -171,8 +172,38 @@ export function searchRegistrants(searchText, filter) {
 				Value : searchText
 			}]
 		};
+	} else if (filter === 'lastname') {
+		query = {
+			Operator : 'OR',
+			Expressions : [{
+				Column : "LastName",
+				Comparison : "Equals",
+				Value : searchText
+			}]
+		};
+	} else if (filter === 'email') {
+		query = {
+			Operator : 'OR',
+			Expressions : [{
+				Column : "Email",
+				Comparison : "Equals",
+				Value : searchText
+			}]
+		};
+	} else if (filter === 'both') {
+		query = {
+			Operator : 'OR',
+			Expressions : [{
+				Column : "LastName",
+				Comparison : "Equals",
+				Value : searchText
+			}, {
+				Column : "Email",
+				Comparison: "Equals",
+				Value : searchText
+			}]
+		};
 	}
-	// TODO: support for other filters
 
 	let inputArg = {
 		"top" : null,
@@ -257,7 +288,7 @@ export function createWalkIn(registrant) {
 	return function(dispatch) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
-				dispatch(sendNotification("Walk-in Created!", true));
+				dispatch(sendNotification("Thank you for joining us today!", true));
 				dispatch(createWalkInSuccess());							
 			})
 			.catch((err) => {
@@ -416,6 +447,13 @@ function listRandomRegistrantsError(err) {
 export function clearCurrentRegistrant() {
 	return {
 		type : CLEAR_CURRENT_REGISTRANT,
+		payload : null
+	};
+}
+
+export function clearAllSearching() {
+	return {
+		type: CLEAR_ALL_SEARCHING,
 		payload : null
 	};
 }

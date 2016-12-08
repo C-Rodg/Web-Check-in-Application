@@ -6,7 +6,7 @@ import AdminControls from './AdminControls';
 import AdminFooter from '../components/AdminFooter';
 
 import { getEventSettings, getEventInformation, getRegistrationStats } from '../actions/cc_settings';
-import { searchRegistrants } from '../actions/cc_registrant';
+import { searchRegistrants, clearAllSearching } from '../actions/cc_registrant';
 
 class RootAdmin extends Component {
 	constructor(props) {
@@ -16,10 +16,13 @@ class RootAdmin extends Component {
 	}
 
 	componentDidMount() {	
-		console.log("Mounting Root Admin");
 		this.props.getEventSettings();	
 		this.props.getEventInformation();
 		this.props.getRegistrationStats();
+	}
+
+	componentWillUnmount() {
+		this.props.clearAllSearching();
 	}
 
 	handleSearchRegistrants(val) {
@@ -60,14 +63,15 @@ const mapStateToProps = (state) => {
 		notifyCounter : state.registrant.notificationCount,
 		notifyType : state.registrant.notificationSuccess
 	};
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getEventSettings : () => dispatch(getEventSettings()),
 		getEventInformation : () => dispatch(getEventInformation()),
 		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f)),
-		getRegistrationStats : () => dispatch(getRegistrationStats())
+		getRegistrationStats : () => dispatch(getRegistrationStats()),
+		clearAllSearching : () => dispatch(clearAllSearching())
 	};
 };
 

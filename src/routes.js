@@ -5,7 +5,7 @@ import App from './components/App';
 import RootAdmin from './containers/RootAdmin';
 import AdminResults from './containers/AdminResults';
 import AdminStats from './containers/AdminStats';
-import AdminWalkIn from './containers/AdminWalkIn';
+import WalkInForm from './containers/WalkInForm';
 import AdminScan from './containers/AdminScan';
 import AdminRegistrant from './containers/AdminRegistrant';
 import RootAttendee from './containers/RootAttendee';
@@ -22,7 +22,7 @@ export default (
 			<IndexRedirect to="results" />
 			<Route path="results" component={AdminResults} />
 			<Route path="stats" component={AdminStats} />
-			<Route path="walkin" component={AdminWalkIn} />
+			<Route path="walkin" component={WalkInForm} />
 			<Route path="scan" component={AdminScan} />
 			<Route path="registrant/:atGuid" component={AdminRegistrant} />
 		</Route>

@@ -6,7 +6,7 @@ import InputText from '../components/InputText';
 import InputSelect from '../components/InputSelect';
 import { createWalkIn, sendNotification, generateSurveyDataXML } from '../actions/cc_registrant';
 
-class AdminWalkIn extends Component {
+class WalkInForm extends Component {
 	constructor(props, context) {
 		super(props);
 		this.state = {			
@@ -27,7 +27,11 @@ class AdminWalkIn extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.returnToList !== this.props.returnToList) {
-			this.context.router.push('/admin/results');
+			if(this.context.router.isActive('/attendee/walkin')){
+				this.context.router.push('/attendee/welcome');
+			} else {
+				this.context.router.push('/admin/results');
+			}			
 		}
 	}
 
@@ -38,7 +42,6 @@ class AdminWalkIn extends Component {
 			);
 		}
 
-		// CHANGE TO PROPS
 		let questions = [];
 		this._requiredFields = [];
 		this.props.formConfig.forEach((question) => {
@@ -65,7 +68,6 @@ class AdminWalkIn extends Component {
 	checkRequired() {
 		let invalidField = "";
 		if(this._requiredFields) {
-			debugger;
 			for(let i = 0, j = this._requiredFields.length ; i < j; i++){
 				if(!this.state.formData[this._requiredFields[i]] || 
 					(Array.isArray(this.state.formData[this._requiredFields[i]]) && 
@@ -155,7 +157,7 @@ class AdminWalkIn extends Component {
 
 	render(){		
 		return (
-			<div className="walk-in-form">
+			<div className="walk-in-form clearfix">
 				<div className="col-xs-12">
 					{ this.generateForm() }						
 				</div>
@@ -173,7 +175,7 @@ class AdminWalkIn extends Component {
 	}
 }
 
-AdminWalkIn.contextTypes = {
+WalkInForm.contextTypes = {
 	router : PropTypes.func.isRequired
 };
 
@@ -191,4 +193,4 @@ const mapDispatchToProps = (dispatch) => {
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(AdminWalkIn);
+export default connect(mapStateToProps, mapDispatchToProps)(WalkInForm);

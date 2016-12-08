@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-export default class RootAttendee extends Component {
+import { getEventSettings } from '../actions/cc_settings';
+import { clearAllSearching } from '../actions/cc_registrant';
+import NotificationBar from '../components/NotificationBar';
+
+class RootAttendee extends Component {
 	constructor(props) {
 		super(props);
+	}
+
+	componentDidMount() {
+		this.props.getEventSettings();
+	}
+
+	componentWillUnmount() {
+		this.props.clearAllSearching();
 	}
 
 	render(){
@@ -12,12 +24,30 @@ export default class RootAttendee extends Component {
 				<h1 className="welcome-text text-center">
 					Welcome.				
 				</h1>
-				{this.props.children}
-				
-				<Link to="/attendee/password" className="attendee-password-btn">
 
-				</Link>
+				{this.props.children}							
+
+				<div className="attendee-footer container-fluid clearfix">
+					<NotificationBar text={this.props.notifyText} counter={this.props.notifyCount} typeSuccess={this.props.notifyType}/>
+				</div>
 			</div>
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		notifyText : state.registrant.notificationText,
+		notifyCount : state.registrant.notificationCount,
+		notifyType : state.registrant.notificationSuccess
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		getEventSettings : () => dispatch(getEventSettings()),
+		clearAllSearching : () => dispatch(clearAllSearching())
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(RootAttendee);

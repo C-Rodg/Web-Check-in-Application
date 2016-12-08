@@ -1,13 +1,26 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import { connect } from 'react-redux';
 
-const camera = true;
-const walkIns = true;
+import { clearAllSearching } from '../actions/cc_registrant';
 
-export default class AttendeeWelcome extends Component {
+class AttendeeWelcome extends Component {
+	constructor(props) {
+		super(props);
+	}
+
+	componentWillMount(){		
+		this.props.clearAllSearching();
+	}
+
 	render() {
 		return (
 			<div className="attendee-welcome container-fluid">
+
+				<Link to="/attendee/password" className="attendee-password-btn">
+
+				</Link>
+				
 				<div className="row">
 					<div className="instruction-text col-xs-12">
 						Please select your method of checking in.
@@ -16,7 +29,7 @@ export default class AttendeeWelcome extends Component {
 				<div className="row">
 					<div className="col-xs-12 col-sm-6 offset-sm-3">
 						<div className="select-entry-method text-center">
-							<Link to="/attendee/search" className={"method-search " + (camera ? "" : "one-method")}>
+							<Link to="/attendee/search" className={"method-search " + ((this.props.attendeeConfig && this.props.attendeeConfig.Camera) ? "" : "one-method")}>
 								<div className="method-icon">
 									<i className="material-icons">search</i>
 								</div>
@@ -25,7 +38,7 @@ export default class AttendeeWelcome extends Component {
 								</div>
 							</Link>
 							{
-								camera ? 
+								(this.props.attendeeConfig && this.props.attendeeConfig.Camera) ? 
 								<Link to="/attendee/scan" className="method-scan">
 									<div className="method-icon">
 										<i className="material-icons">filter_center_focus</i>
@@ -40,7 +53,7 @@ export default class AttendeeWelcome extends Component {
 					</div>
 				</div>
 				{
-					walkIns ?
+					(this.props.attendeeConfig && this.props.attendeeConfig.WalkIns) ?
 					<div className="row">
 						<div className="col-xs-12 col-sm-6 offset-sm-3 method-walkin text-center">
 							<Link to="/attendee/walkin">
@@ -54,3 +67,17 @@ export default class AttendeeWelcome extends Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		attendeeConfig : state.settings.configuration.AttendeeMode
+	};
+};
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		clearAllSearching : () => dispatch(clearAllSearching())
+	};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AttendeeWelcome);

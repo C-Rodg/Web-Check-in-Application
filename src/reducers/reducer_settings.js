@@ -13,8 +13,8 @@ const INITIAL_CONFIG_STATE = {
 	CancelledStrings : [],
 	WalkInFields : [],
 	AttendeeMode : {
-		Search : "email",
-		Camera : false,
+		Search : "both",
+		Camera : true,
 		WalkIns : true
 	}
 };
