@@ -19,25 +19,25 @@ class AdminRegistrant extends Component {
 		this.checkCancelled = this.checkCancelled.bind(this);
 	}
 
-	componentDidMount(){		
+	componentDidMount() {		
 		this.props.loadRegistrantByGuid(this.props.params.atGuid);
 	}
 
-	componentWillUnmount(){
+	componentWillUnmount() {
 		this.props.clearCurrentRegistrant();
 	}
 
-	componentDidUpdate(prevProps, prevState){
+	componentDidUpdate(prevProps, prevState) {
 		if(this.props.returnToList !== prevProps.returnToList){
 			this.context.router.push('/admin/results');
 		}
 	}
 
-	checkInRegistrant(){
+	checkInRegistrant() {
 		this.props.checkInRegistrant(this.props.registrant);
 	}
 
-	checkOutRegistrant(){
+	checkOutRegistrant() {
 		this.props.checkOutRegistrant(this.props.registrant);
 	}
 
@@ -51,11 +51,10 @@ class AdminRegistrant extends Component {
 				}
 			});
 		}
-		console.log("IS CANCELLED " , isCancelled);
 		return isCancelled;
 	}
 
-	getButtonActions(cancelled){
+	getButtonActions(cancelled) {
 		if(this.props.registrant.Attended){
 			return (
 				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
@@ -87,7 +86,7 @@ class AdminRegistrant extends Component {
 		});
 	}
 
-	render(){
+	render() {
 		if(!this.props.registrantError && !this.props.registrant) {
 			return (<Loading height={112} width={112} />);
 		}

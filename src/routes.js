@@ -14,6 +14,7 @@ import AttendeeScan from './containers/AttendeeScan';
 import AttendeeWalkIn from './containers/AttendeeWalkIn';
 import AttendeeWelcome from './containers/AttendeeWelcome';
 import AttendeePassword from './containers/AttendeePassword';
+import AttendeeRegistrant from './containers/AttendeeRegistrant';
 
 export default (
 	<Route path="/" component={App}>
@@ -33,6 +34,7 @@ export default (
 			<Route path="scan" component={AttendeeScan} />
 			<Route path="walkin" component={AttendeeWalkIn} />
 			<Route path="password" component={AttendeePassword} />
+			<Route path="registrant/:atGuid" component={AttendeeRegistrant} />
 		</Route>
 	</Route>
 );

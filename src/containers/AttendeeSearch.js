@@ -96,7 +96,7 @@ class AttendeeSearch extends Component {
 
 	generateMessageText() {
 		if(this.props.searchLoading){
-			return (<Loading color="#f5f5f5" />);
+			return (<Loading height={112} width={112} color="#f5f5f5" />);
 		}
 		if(this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) {
 			return (
