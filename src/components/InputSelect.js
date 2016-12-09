@@ -11,10 +11,14 @@ export default class InputSelect extends Component {
 	}
 
 	handlePickOne(event) {
-		this.props.onUpdateFormData([event.target.value], this.props.tagName);
+		if(this.props.exportAsText){
+			this.props.onUpdateFormData(event.target.value, this.props.tagName);			
+		} else {
+			this.props.onUpdateFormData([event.target.value], this.props.tagName);			
+		}
 		this.setState({
 			selectVal : [event.target.value]
-		});		
+		});
 	}
 
 	handlePickMany(event) {		

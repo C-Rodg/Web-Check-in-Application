@@ -55,11 +55,15 @@ class WalkInForm extends Component {
 			} else if (question.type === "O") {
 				questions.push(<InputSelect questionPrompt={question.label} 
 					tagName={question.tag} isRequired={question.req} 
-					options={question.responses} isPickMany={false} onUpdateFormData={this.updateFormData} />);
+					options={question.responses} isPickMany={false} onUpdateFormData={this.updateFormData} exportAsText={false} />);
 			} else if (question.type === 'M') {
 				questions.push(<InputSelect questionPrompt={question.label} 
 					tagName={question.tag} isRequired={question.req} options={question.responses} 
-					isPickMany={true} onUpdateFormData={this.updateFormData}/>);
+					isPickMany={true} onUpdateFormData={this.updateFormData} exportAsText={false} />);
+			} else if (question.type === 'TO') {
+				questions.push(<InputSelect questionPrompt={question.label}
+					tagName={question.tag} isRequired={question.req} options={question.responses}
+					isPickMany={false} exportAsText={true} onUpdateFormData={this.updateFormData} />);
 			}
 		});		
 		return questions;
@@ -92,7 +96,7 @@ class WalkInForm extends Component {
 				let hint = fieldObj.hint.toUpperCase();
 				let type = fieldObj.type.toUpperCase();
 				let val = this.state.formData[fieldObj.tag];
-				if(type === 'T'){
+				if(type === 'T' || type === 'TO'){
 					if (hint === 'ATTENDEETYPE') {
 						this._registrant.AttendeeType = val || null;
 					} else if (hint === 'COMPANY') {

@@ -11,17 +11,20 @@ class AttendeeSearch extends Component {
 		super(props);
 
 		this.state = {
-			searchTerm : ""
+			searchTerm : "",
+			alreadyCheckedIn : false
 		};
 
 		this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
 		this.handleInputChange = this.handleInputChange.bind(this);
 		this.getSearchTerm = this.getSearchTerm.bind(this);
 		this.getRegistrantList = this.getRegistrantList.bind(this);
+		this.registrantAlreadyLoaded = this.registrantAlreadyLoaded.bind(this);
+		this.generateMessageText = this.generateMessageText.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.regList.length === 1) {
+		if(nextProps.regList.length === 1 && nextProps.regList[0].Attended !== true) {
 			this.context.router.push('/attendee/registrant/' + nextProps.regList[0].AttendeeGuid);
 		}
 	}
@@ -35,6 +38,9 @@ class AttendeeSearch extends Component {
 			filter = 'lastname';
 		}
 		this.props.searchRegistrants(this.state.searchTerm, filter);
+		this.setState({
+			alreadyCheckedIn : false
+		});
 	}
 
 	handleInputChange(event) {
@@ -55,16 +61,69 @@ class AttendeeSearch extends Component {
 		return searchTerm;
 	}
 
+	registrantAlreadyLoaded(event) {
+		event.preventDefault();
+		this.setState({
+			alreadyCheckedIn : true
+		});
+	}
+
 	getRegistrantList(){
 		return this.props.regList.map((registrant) => {
-			return (
-				<Link key={registrant.AttendeeGuid} className="attendee-search-tile" to={"/attendee/registrant/" + registrant.AttendeeGuid}>
-					<div className="primary-tile-text">{registrant.FirstName + " " + registrant.LastName}</div>
-					<div className="secondary-tile-text">{registrant.Company}</div>
-					{registrant.Attended ? <div className="checkin-icon"><i className="material-icons">check_circle</i></div> : "" }
-				</Link>
-			);
+			if(registrant.Attended){
+				return (
+					<Link key={registrant.AttendeeGuid} 
+						className="attendee-search-tile" 
+						to={"/attendee/registrant/" + registrant.AttendeeGuid}
+						onClick={this.registrantAlreadyLoaded}>
+						<div className="primary-tile-text">{registrant.FirstName + " " + registrant.LastName}</div>
+						<div className="secondary-tile-text">{registrant.Company}</div>
+						<div className="checkin-icon"><i className="material-icons">check_circle</i></div>
+					</Link>
+				);
+			} else {
+				return (
+					<Link key={registrant.AttendeeGuid} 
+						className="attendee-search-tile" 
+						to={"/attendee/registrant/" + registrant.AttendeeGuid}>
+						<div className="primary-tile-text">{registrant.FirstName + " " + registrant.LastName}</div>
+						<div className="secondary-tile-text">{registrant.Company}</div>						
+					</Link>
+				);
+			}
 		});
+	}
+
+	generateMessageText() {
+		if(this.props.searchLoading){
+			return (<Loading color="#f5f5f5" />);
+		}
+		if(this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) {
+			return (
+				<div className="msg-text m-t-15">
+					Sorry! No registrations found...
+					{ this.props.allowWalkIns ? 
+						<div className="register-now-action m-t-15 method-walkin"><Link to="/attendee/walkin">Register Now</Link></div>
+						:
+						""
+					}
+				</div>
+			);
+		}
+		if(this.props.hasSearched && this.props.searchError) {
+			return (
+				<div className="msg-text m-t-15">
+					Uh-Oh! We're having some issues searching...
+				</div>
+			);
+		}
+		if(this.state.alreadyCheckedIn) {
+			return (
+				<div className="msg-text m-t-15">
+					It appears you have already checked-in.  Please see the help desk for more information.
+				</div>
+			);
+		}
 	}
 
 	render() {		
@@ -85,36 +144,11 @@ class AttendeeSearch extends Component {
 							</button>
 						</div>
 					</form>
-					{
-						this.props.searchLoading ? 
-						<Loading color="#f5f5f5" /> :
-						""
-					}
-					{
-						(!this.props.searchLoading && this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) ?
-						<div className="msg-text m-t-15">
-							Sorry! No registrations found...
-							{ this.props.allowWalkIns ? 
-								<div className="register-now-action m-t-15 method-walkin"><Link to="/attendee/walkin">Register Now</Link></div>
-								:
-								""
-							}
-						</div>
-						:
-						""
-					}
-					{
-						(this.props.searchError && this.props.hasSearched) ? 
-						<div className="msg-text m-t-15">
-							Uh-Oh! We're having some issues searching...
-						</div>
-						: 
-						""
-					}
+					{ this.generateMessageText() }					
 				</div>
 				{
 					(this.props.regList && this.props.regList.length > 0) ?
-					<div className="row attendee-search-list card-container m-t-10">
+					<div className="row attendee-search-list card-container m-t-15">
 						{this.getRegistrantList()}
 					</div> :
 					""
