@@ -318,7 +318,7 @@ export function checkInRegistrant(registrant) {
 	return function(dispatch) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
-				dispatch(sendNotification("Registrant checked-in!", true));
+				dispatch(sendNotification("Thank you for joining us!", true));
 				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));											
 			})
 			.catch((err) => {

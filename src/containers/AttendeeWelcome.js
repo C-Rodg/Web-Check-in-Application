@@ -26,20 +26,24 @@ class AttendeeWelcome extends Component {
 						Please select your method of checking in.
 					</div>
 				</div>
-				<div className="row">
+				<div className={"row " + ((this.props.attendeeConfig && !this.props.attendeeConfig.Search && !this.props.attendeeConfig.Scan) ? "invisible" : "")}>
 					<div className="col-xs-12 col-sm-6 offset-sm-3">
 						<div className="select-entry-method text-center">
-							<Link to="/attendee/search" className={"method-search " + ((this.props.attendeeConfig && this.props.attendeeConfig.Camera) ? "" : "one-method")}>
-								<div className="method-icon">
-									<i className="material-icons">search</i>
-								</div>
-								<div className="method-text">
-									Search
-								</div>
-							</Link>
 							{
-								(this.props.attendeeConfig && this.props.attendeeConfig.Camera) ? 
-								<Link to="/attendee/scan" className="method-scan">
+								(this.props.attendeeConfig && this.props.attendeeConfig.Search) ?
+								<Link to="/attendee/search" className={"method-search " + ((this.props.attendeeConfig && this.props.attendeeConfig.Scan) ? "" : "one-method")}>
+									<div className="method-icon">
+										<i className="material-icons">search</i>
+									</div>
+									<div className="method-text">
+										Search
+									</div>
+								</Link> :
+								""
+							}							
+							{
+								(this.props.attendeeConfig && this.props.attendeeConfig.Scan) ? 
+								<Link to="/attendee/scan" className={"method-scan " + ((this.props.attendeeConfig && this.props.attendeeConfig.Search) ? "" : "one-method")}>
 									<div className="method-icon">
 										<i className="material-icons">filter_center_focus</i>
 									</div>

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { loadRegistrantByAttendeeGuid } from '../actions/cc_registrant';
+import { loadRegistrantByAttendeeGuid, checkInRegistrant, checkOutRegistrant } from '../actions/cc_registrant';
 import Loading from '../components/Loading';
 import BackButton from '../components/BackButton';
 
@@ -12,6 +12,8 @@ class AttendeeRegistrant extends Component {
 		this.getTitleText = this.getTitleText.bind(this);
 		this.checkCancelled = this.checkCancelled.bind(this);
 		this.getActionButtons = this.getActionButtons.bind(this);
+		this.checkInRegistrant = this.checkInRegistrant.bind(this);
+		this.checkOutRegistrant = this.checkOutRegistrant.bind(this);
 	}
 
 	componentDidMount() {
@@ -23,6 +25,14 @@ class AttendeeRegistrant extends Component {
 			this.context.router.push('/attendee/welcome');
 		}
 	}	
+
+	checkInRegistrant() {
+		this.props.checkInRegistrant(this.props.registrant);
+	}
+
+	checkOutRegistrant() {
+		this.props.checkOutRegistrant(this.props.registrant);
+	}
 
 	checkCancelled() {
 		let isCancelled = false;
@@ -57,7 +67,8 @@ class AttendeeRegistrant extends Component {
 		if(this.props.registrant.Attended) {
 			return (
 				<div className="registrant-checkin">
-					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub">
+					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
+						onClick={this.checkOutRegistrant}>
 						Check-out
 					</button>
 				</div>
@@ -65,7 +76,8 @@ class AttendeeRegistrant extends Component {
 		}
 		return (
 			<div className="registrant-checkin">
-				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15">
+				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
+					onClick={this.checkInRegistrant}>
 					Check-in
 				</button>
 			</div>
@@ -84,7 +96,7 @@ class AttendeeRegistrant extends Component {
 				</div>
 				{ (!this.props.registrantError && this.props.registrant) ?
 					<div className="row">
-						<div className="attendee-info card-container m-t-15">
+						<div className="attendee-info card-container m-t-15 clearfix text-center">
 							<div className="attendee-fields col-xs-12">
 								<div className="registrant-name f-s-44">{this.props.registrant.FirstName + " " + this.props.registrant.LastName}</div>
 								<div className="registrant-company f-s-24 other-info">{this.props.registrant.Company}</div>
@@ -94,6 +106,8 @@ class AttendeeRegistrant extends Component {
 							{ this.getActionButtons(isCancelled) }
 						</div>
 					</div>
+					:
+					""
 				}				
 			</div>
 		);
@@ -115,7 +129,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid))
+		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid)),
+		checkInRegistrant : (registrant) => dispatch(checkInRegistrant(registrant)),
+		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant))
 	};
 }
 

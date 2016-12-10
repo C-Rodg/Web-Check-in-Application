@@ -13,8 +13,9 @@ const INITIAL_CONFIG_STATE = {
 	CancelledStrings : [],
 	WalkInFields : [],
 	AttendeeMode : {
-		Search : "both",
-		Camera : true,
+		SearchBy : "both",
+		Search : true,
+		Scan : true,
 		WalkIns : true
 	}
 };

@@ -52,7 +52,8 @@
 		width: 50%;
 		display: inline-block;
     }
-
+    
+    .method-scan.one-method,
     .method-search.one-method {
     	width: 100%;
     }
@@ -246,6 +247,12 @@
         color: #f5f5f5;
         font-size:1.6rem;
         font-family: 'robotothin', 'roboto', Helvetica, Arial, sans-serif;
+    }
+
+    .other-info {
+        color: #313534;
+        opacity: 0.8;
+        font-family: 'robotolight', 'robotoregular', 'roboto', Helvetica, Arial, sans-serif;
     }
 
 }

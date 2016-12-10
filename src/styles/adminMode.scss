@@ -68,6 +68,7 @@
 		.card-body {
 			padding-top: 10px;
 			padding-bottom: 10px;
+			overflow: auto;
 		}
 
 		.admin-controls {
@@ -319,8 +320,27 @@
 	}
 }
 
+@media (max-height: 1024px) {
+	.admin-body .card-body {
+		max-height: 785px;
+	}
+}
+
 @media (max-width: 991px) {
 	.root-admin .admin-body .controls-btn {
 		max-width: 65px !important;
 	}
 }
+
+@media (max-height: 768px){
+	.admin-body .card-body {
+		max-height: 560px;
+	}
+}
+
+@media (max-height: 737px) {
+	.admin-body .card-body {
+		max-height: 400px;
+	}
+}
+

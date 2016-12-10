@@ -165,7 +165,7 @@ AttendeeSearch.contextTypes = {
 const mapStateToProps = (state) => {
 	return {
 		regList : state.registrant.registrantList,
-		searchBy : state.settings.configuration.AttendeeMode.Search,
+		searchBy : state.settings.configuration.AttendeeMode.SearchBy,
 		allowWalkIns : state.settings.configuration.AttendeeMode.WalkIns,
 		hasSearched : state.registrant.hasSearched,
 		searchError : state.registrant.searchError,
