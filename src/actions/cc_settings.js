@@ -16,6 +16,7 @@ export const GET_EVENT_SETTINGS_ERROR = 'GET_EVENT_SETTINGS_ERROR';
 
 //-------------------- ACTION CREATORS --------------------//
 
+// Get Registration statistics
 export function getRegistrationStats() {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetRegistrationStats`, {})
@@ -37,7 +38,6 @@ function getRegistrationStatsSuccess(response) {
 	});
 
 	// Include calculated statistics
-	//stats.totalMissing = (stats.totalRegistered - stats.totalAttended) || 0;
 	stats.preRegisteredAttended  = (stats.totalAttended - stats.walkInsAttended) || 0;
 	stats.preRegisteredTotal = (stats.totalRegistered - stats.walkInsRegistered) || 0;
 
@@ -54,6 +54,7 @@ function getRegistrationStatsError(err) {
 	};
 }
 
+// Get demographic information about the event
 export function getEventInformation() {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetEventInformation`, {})
@@ -94,6 +95,7 @@ function getEventInformationError(err) {
 	};
 }
 
+// Get Event Settings - return configuration object
 export function getEventSettings(data) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/GetEventSettings`, {})
@@ -134,6 +136,7 @@ function getEventSettingsError(err) {
 	};
 }
 
+// Helper function that returns Event GUID
 function getGuidFromURL(){
 	let guid;
 	let path = window.location.pathname;

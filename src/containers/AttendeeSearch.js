@@ -23,6 +23,14 @@ class AttendeeSearch extends Component {
 		this.generateMessageText = this.generateMessageText.bind(this);
 	}
 
+	componentDidMount() {
+		console.log("COMPONENT MOUNTED");		
+	}
+
+	componentWillUpdate(){
+		console.log("COMPONENT UPDATING!");
+	}
+
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.regList.length === 1 && nextProps.regList[0].Attended !== true) {
 			this.context.router.push('/attendee/registrant/' + nextProps.regList[0].AttendeeGuid);
@@ -138,7 +146,7 @@ class AttendeeSearch extends Component {
 				<div className="row attendee-search-box text-center m-t-10">
 					<form className="attendee-search-form" onSubmit={this.handleSearchSubmit} >
 						<div className="inline-search">
-							<input type="text" className="attendee-form attendee-search-input" onChange={this.handleInputChange} value={this.state.searchTerm} />
+							<input type="text" autoFocus className="attendee-form attendee-search-input" onChange={this.handleInputChange} value={this.state.searchTerm} />
 							<button type="submit">
 								<i className="material-icons search-icon">search</i>
 							</button>

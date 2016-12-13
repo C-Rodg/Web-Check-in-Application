@@ -16,9 +16,11 @@ class AdminScan extends Component {
 
 	render(){
 		return (
-			<div>
-				<p>Admin Scan Page</p>
-				<button onClick={this.cameraOn}>Toggle Camera</button>
+			<div className="admin-scan text-center">
+				<div className="scan-camera-box">
+					<i className="material-icons scan-icon">filter_center_focus</i>
+					<div className="scan-text">Scan</div>
+				</div>			
 			</div>
 		);
 	}

@@ -2,12 +2,6 @@ import { axios } from './utilities_httpRequest';
 
 //------------------------- TYPES -------------------------//
 
-export const LOAD_REGISTRANT_BADGEID_SUCCESS = 'LOAD_REGISTRANT_BADGEID_SUCCESS';
-export const LOAD_REGISTRANT_BADGEID_ERROR   = 'LOAD_REGISTRANT_BADGEID_ERROR';
-
-export const LOAD_REGISTRANT_REGID_SUCCESS = 'LOAD_REGISTRANT_REGID_SUCCESS';
-export const LOAD_REGISTRANT_REGID_ERROR   = 'LOAD_REGISTRANT_REGID_ERROR';
-
 export const LOAD_REGISTRANT_ATTENDEEGUID_START = 'LOAD_REGISTRANT_ATTENDEEGUID_START';
 export const LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS = 'LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS';
 export const LOAD_REGISTRANT_ATTENDEEGUID_ERROR   = 'LOAD_REGISTRANT_ATTENDEEGUID_ERROR';
@@ -15,15 +9,6 @@ export const LOAD_REGISTRANT_ATTENDEEGUID_ERROR   = 'LOAD_REGISTRANT_ATTENDEEGUI
 export const SEARCH_REGISTRANTS_START = 'SEARCH_REGISTRANTS_START';
 export const SEARCH_REGISTRANTS_SUCCESS = 'SEARCH_REGISTRANTS_SUCCESS';
 export const SEARCH_REGISTRANTS_ERROR = 'SEARCH_REGISTRANTS_ERROR';
-
-export const SEARCH_REGISTRANTS_XML_SUCCESS = 'SEARCH_REGISTRANTS_XML_SUCCESS';
-export const SEARCH_REGISTRANTS_XML_ERROR = 'SEARCH_REGISTRANTS_XML_ERROR';
-
-export const UPSERT_REGISTRANT_SUCCESS = 'UPSERT_REGISTRANT_SUCCESS';
-export const UPSERT_REGISTRANT_ERROR = 'UPSERT_REGISTRANT_ERROR';
-
-export const LIST_RANDOM_REGISTRANTS_SUCCESS = 'LIST_RANDOM_REGISTRANT_SUCCESS';
-export const LIST_RANDOM_REGISTRANTS_ERROR = 'LIST_RANDOM_REGISTRANT_ERROR';
 
 export const CHECKIN_REGISTRANT_SUCCESS = 'CHECKIN_REGISTRANT_SUCCESS';
 export const CHECKIN_REGISTRANT_ERROR = 'CHECKIN_REGISTRANT_ERROR';
@@ -42,6 +27,7 @@ export const RETURN_TO_LIST = 'RETURN_TO_LIST';
 
 //-------------------- ACTION CREATORS --------------------//
 
+// Send Notification - message, error/success
 export function sendNotification(msg, isSuccess) {
 	return {
 		type : SEND_NOTIFICATION,
@@ -50,64 +36,9 @@ export function sendNotification(msg, isSuccess) {
 	};
 }
 
-// Not Implemented
-export function loadRegistrantByBadgeId(badgeId) {
-	return function(dispatch) {
-		axios.post(`methods.asmx/LoadRegistrantWithBadgeId`, {})
-			.then((response) => {
-				dispatch(loadRegistrantByBadgeIdSuccess(response));
-			})
-			.catch((err) => {
-				dispatch(loadRegistrantByBadgeIdError(err));
-			});
-	};
-}
-
-function loadRegistrantByBadgeIdSuccess(response) {
-	return {
-		type : LOAD_REGISTRANT_BADGEID_SUCCESS,
-		payload : response.data.d
-	};
-}
-
-function loadRegistrantByBadgeIdError(err) {
-	return {
-		type : LOAD_REGISTRANT_BADGEID_ERROR,
-		payload : err
-	};
-}
-
-// Not Implemented
-export function loadRegistrantByRegId(regId) {
-	return function(dispatch) {
-		axios.post(`methods.asmx/LoadRegistrantWithRegistrantId`, {})
-			.then((response) => {
-				dispatch(loadRegistrantByRegIdSuccess(response));
-			})
-			.catch((err) => {
-				dispatch(loadRegistrantByRegIdError(err));
-			});
-	};
-}
-
-function loadRegistrantByRegIdSuccess(response) {
-	return {
-		type : LOAD_REGISTRANT_REGID_SUCCESS,
-		payload : response.data.d
-	};
-}
-
-function loadRegistrantByRegIdError(err) {
-	return {
-		type : LOAD_REGISTRANT_REGID_ERROR,
-		payload : err
-	};
-}
-
-
+// Load Registrant (atGuid) - return registrant object
 export function loadRegistrantByAttendeeGuid(attendeeGuid) {
 	return function(dispatch) {
-
 		dispatch(loadRegistrantByAttendeeGuidStart());
 
 		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {attendeeGuid})
@@ -130,7 +61,6 @@ function loadRegistrantByAttendeeGuidStart() {
 function loadRegistrantByAttendeeGuidSuccess(response) {
 	
 	delete response.__type;
-
 	return {
 		type : LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS,
 		payload : response
@@ -144,7 +74,7 @@ function loadRegistrantByAttendeeGuidError(err) {
 	};
 }
 
-
+// Searching Registrants - start searchLoading, return list of registrants
 export function searchRegistrants(searchText, filter) {
 	let query;
 	if (filter === 'all') {
@@ -246,39 +176,14 @@ function searchRegistrantsError(err) {
 	};
 }
 
-// Not Implemented
-export function searchRegistrantsXml(data) {
-	return function(dispatch) {
-		axios.post(`methods.asmx/SearchRegistrantsXml`, {})
-			.then((response) => {
-				dispatch(searchRegistrantsXmlSuccess(response));
-			})
-			.catch((err) => {
-				dispatch(searchRegistrantsXmlError(err));
-			});
-	};
-}
-
-function searchRegistrantsXmlSuccess(response) {
-	return {
-		type : SEARCH_REGISTRANTS_XML_SUCCESS,
-		payload : response.data.d
-	};
-}
-
-function searchRegistrantsXmlError(err) {
-	return {
-		type : SEARCH_REGISTRANTS_XML_ERROR,
-		payload : err
-	};
-}
-
+// Create walk-in registrant - send notification, return to list
 export function createWalkIn(registrant) {
 
 	const checkedInRegistrant = Object.assign({}, registrant, {
 		Attended : true,
 		FirstCheckInDateTime : (new Date()),
-		OnSiteModifiedDateTime : (new Date())
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
 	});
 
 	const inputArg = {
@@ -304,11 +209,13 @@ function createWalkInSuccess(guid) {
 	};
 }
 
+// Checking IN - send success notification, update registrant list
 export function checkInRegistrant(registrant) {
 	const checkedInRegistrant = Object.assign({}, registrant, {
 		Attended : true,
 		FirstCheckInDateTime : (new Date()),
-		OnSiteModifiedDateTime : (new Date())
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
 	});
 
 	const inputArg = {
@@ -341,11 +248,13 @@ function checkInRegistrantError(err) {
 	};
 }
 
+// Checking OUT - Send success notification and update registrant list
 export function checkOutRegistrant(registrant) {
 	const checkedOutRegistrant = Object.assign({}, registrant, {
 		Attended : false,
 		FirstCheckInDateTime : null,
-		OnSiteModifiedDateTime : (new Date())
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
 	});
 
 	const inputArg = {
@@ -378,6 +287,7 @@ function checkOutRegistrantError(err) {
 	};
 }
 
+// returnToList update, mark registrantList as attended/not attended for UI
 function updateRegistrantList(guid, attended) {
 	return {
 		type : UPDATE_REGISTRANT_LIST,
@@ -386,64 +296,7 @@ function updateRegistrantList(guid, attended) {
 	};
 }
 
-export function upsertRegistrant(registrant) {
-
-	let inputArg = {
-		registrant
-	};
-
-	return function(dispatch) {
-		axios.post(`methods.asmx/UpsertRegistrant`, inputArg)
-			.then((response) => {
-				dispatch(upsertRegistrantSuccess(response.data.d.AttendeeGuid));
-			})
-			.catch((err) => {
-				dispatch(upsertRegistrantError(err));
-			});
-	};
-}
-
-function upsertRegistrantSuccess(guid) {
-	return {
-		type : UPSERT_REGISTRANT_SUCCESS,
-		payload : guid
-	};
-}
-
-function upsertRegistrantError(err) {
-	return {
-		type : UPSERT_REGISTRANT_ERROR,
-		payload : err
-	};
-}
-
-// Not Implemented
-export function listRandomRegistrants(data) {
-	return function(dispatch) {
-		axios.post(`methods.asmx/ListRandomRegistrants`, {})
-			.then((response) => {
-				dispatch(listRandomRegistrantsSuccess(response));
-			})
-			.catch((err) => {
-				dispatch(listRandomRegistrantsError(err));
-			});
-	};
-}
-
-function listRandomRegistrantsSuccess(response) {
-	return {
-		type : LIST_RANDOM_REGISTRANTS_SUCCESS,
-		payload : response.data.d
-	};
-}
-
-function listRandomRegistrantsError(err) {
-	return {
-		type : LIST_RANDOM_REGISTRANTS_ERROR,
-		payload : err
-	};
-}
-
+// Clear currentRegistrant
 export function clearCurrentRegistrant() {
 	return {
 		type : CLEAR_CURRENT_REGISTRANT,
@@ -451,6 +304,7 @@ export function clearCurrentRegistrant() {
 	};
 }
 
+// Clear currentRegistrant, currentError, registantList, searchError, hasSearched, searchLoading
 export function clearAllSearching() {
 	return {
 		type: CLEAR_ALL_SEARCHING,
@@ -458,6 +312,7 @@ export function clearAllSearching() {
 	};
 }
 
+// Convert form object into survey data xml string
 export function generateSurveyDataXML(form) {
 	let xmlDoc = document.implementation.createDocument(null, "result");
 	let docEl = xmlDoc.getElementsByTagName('result');
@@ -489,6 +344,47 @@ export function generateSurveyDataXML(form) {
 	return xmlString;
 }
 
+// Create an xmlDoc from an xml string
+export function parseXml(xmlStr) {
+	let xmlDoc;
+	if(window.DOMParser) {
+		let parser = new DOMParser();
+		xmlDoc = parser.parseFromString(xmlStr, 'text/xml');
+	} else {
+		xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+		xmlDoc.async = false;
+		xmlDoc.loadXML(xmlStr);
+	}
+	return xmlDoc;
+}
+
+// Get text value of specific survey data element
+export function getTextFromXml(responsesElement, elementId) {
+	if (elementId && elementId != "") {
+		let existingEl = responsesElement.getElementsByTagName(elementId);
+		if((existingEl != null) && (existingEl.length > 0)) {
+			let node = existingEl[0];
+			let textNode = node.firstChild;
+			if(textNode != null) {
+				return textNode.textContent;
+			}
+		}
+	}
+	return "";
+}
+
+// Get T/F if pick value is in survey data
+export function getPickFromXml(responsesElement, elementId) {
+	if (elementId && elementId != "") {
+		let existingEl = responsesElement.getElementsByTagName(elementId);
+		if((existingEl != null) && (existingEl.length > 0)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+// Walk-in Registrant Factory
 export function Registrant() {
 	this.Attended = false;
 	this.AttendeeGuid = null;

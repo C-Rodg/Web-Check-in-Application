@@ -49,7 +49,7 @@ export default class AttendeePassword extends Component {
 							""
 						}
 						<form className="attendee-password-form" onSubmit={this.handleSubmit} >
-							<input type="password" className="attendee-form password-input" onChange={this.handleChange} value={this.state.pass} />							
+							<input type="password" autoFocus className="attendee-form password-input" onChange={this.handleChange} value={this.state.pass} />							
 							<div className="password-btns">
 								<Link to="/attendee/welcome" className="password-btn-cancel">
 									Cancel

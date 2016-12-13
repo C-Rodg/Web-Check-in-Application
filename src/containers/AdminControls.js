@@ -33,6 +33,7 @@ export default class AdminControls extends Component {
 					<form className="controls-search-form" onSubmit={this.onSearchRegistrant}>
 						<div className="form-group">
 							<input type="text" className="controls-search-box" 
+								autoFocus
 								placeholder="Find a registrant..." 
 								value={this.state.searchQuery}
 								onChange={this.handleInputChange}
