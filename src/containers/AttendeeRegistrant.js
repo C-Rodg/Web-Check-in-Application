@@ -67,7 +67,7 @@ class AttendeeRegistrant extends Component {
 		if(this.props.registrant.Attended) {
 			return (
 				<div className="registrant-checkin">
-					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey m-t-15 v-a-sub"
+					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-grey v-a-sub"
 						onClick={this.checkOutRegistrant}>
 						Check-out
 					</button>
@@ -76,7 +76,7 @@ class AttendeeRegistrant extends Component {
 		}
 		return (
 			<div className="registrant-checkin">
-				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
+				<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green"
 					onClick={this.checkInRegistrant}>
 					Check-in
 				</button>
@@ -97,7 +97,7 @@ class AttendeeRegistrant extends Component {
 				{ (!this.props.registrantError && this.props.registrant) ?
 					<div className="row">
 						<div className="attendee-info card-container m-t-15 clearfix text-center">
-							<div className="attendee-fields col-xs-12">
+							<div className="attendee-fields col-xs-12 m-b-15">
 								<div className="registrant-name f-s-44">{this.props.registrant.FirstName + " " + this.props.registrant.LastName}</div>
 								<div className="registrant-company f-s-24 other-info">{this.props.registrant.Company}</div>
 								<div className="registrant-email f-s-24 other-info">{this.props.registrant.Email}</div>

@@ -146,7 +146,9 @@ class AttendeeSearch extends Component {
 				<div className="row attendee-search-box text-center m-t-10">
 					<form className="attendee-search-form" onSubmit={this.handleSearchSubmit} >
 						<div className="inline-search">
-							<input type="text" autoFocus className="attendee-form attendee-search-input" onChange={this.handleInputChange} value={this.state.searchTerm} />
+							<input type="text" autoFocus 
+								autoComplete="off" spellCheck="off"
+								className="attendee-form attendee-search-input" onChange={this.handleInputChange} value={this.state.searchTerm} />
 							<button type="submit">
 								<i className="material-icons search-icon">search</i>
 							</button>

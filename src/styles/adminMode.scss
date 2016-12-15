@@ -372,25 +372,15 @@
 
 	.admin-settings {
 
-		.station-name-group label {
+		.form-group label {
+			display: block;
 			margin-bottom: 5px;
 		}
 
-		.station-name-group input {
-			text-align: center;
-		}
-		:-moz-placeholder {
-			text-align: center;
-		}
-		::-moz-placeholder {
-			text-align: center;
-		}
-		:-ms-input-placeholder {
-			text-align: center;
-		}
-		::-webkit-input-placeholder {
-			text-align: center;
-		}
+		.settings-btn {
+			min-height: 38px;
+			padding: 6px 10px;
+		}		
 	}
 }
 
