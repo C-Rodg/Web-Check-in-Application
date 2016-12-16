@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 
-import { searchRegistrants } from '../actions/cc_registrant';
+import { searchRegistrants, sendNotification } from '../actions/cc_registrant';
 import BackButton from '../components/BackButton';
 import Loading from '../components/Loading';
 
@@ -11,8 +11,7 @@ class AttendeeSearch extends Component {
 		super(props);
 
 		this.state = {
-			searchTerm : "",
-			alreadyCheckedIn : false
+			searchTerm : ""
 		};
 
 		this.handleSearchSubmit = this.handleSearchSubmit.bind(this);
@@ -23,18 +22,10 @@ class AttendeeSearch extends Component {
 		this.generateMessageText = this.generateMessageText.bind(this);
 	}
 
-	componentDidMount() {
-		console.log("COMPONENT MOUNTED");		
-	}
-
-	componentWillUpdate(){
-		console.log("COMPONENT UPDATING!");
-	}
-
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.regList.length === 1 && nextProps.regList[0].Attended !== true) {
 			this.context.router.push('/attendee/registrant/' + nextProps.regList[0].AttendeeGuid);
-		}
+		}		
 	}
 
 	handleSearchSubmit(event) {
@@ -46,9 +37,6 @@ class AttendeeSearch extends Component {
 			filter = 'lastname';
 		}
 		this.props.searchRegistrants(this.state.searchTerm, filter);
-		this.setState({
-			alreadyCheckedIn : false
-		});
 	}
 
 	handleInputChange(event) {
@@ -71,9 +59,7 @@ class AttendeeSearch extends Component {
 
 	registrantAlreadyLoaded(event) {
 		event.preventDefault();
-		this.setState({
-			alreadyCheckedIn : true
-		});
+		this.props.sendNotification("It appears you have already checked-in. Please see the help desk for assistance.", false);
 	}
 
 	getRegistrantList(){
@@ -106,7 +92,7 @@ class AttendeeSearch extends Component {
 		if(this.props.searchLoading){
 			return (<Loading height={112} width={112} color="#f5f5f5" />);
 		}
-		if(this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) {
+		if(this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) {	
 			return (
 				<div className="msg-text m-t-15">
 					Sorry! No registrations found...
@@ -116,21 +102,14 @@ class AttendeeSearch extends Component {
 						""
 					}
 				</div>
-			);
+			);			
 		}
-		if(this.props.hasSearched && this.props.searchError) {
+		if(this.props.hasSearched && this.props.searchError) {			
 			return (
 				<div className="msg-text m-t-15">
 					Uh-Oh! We're having some issues searching...
 				</div>
-			);
-		}
-		if(this.state.alreadyCheckedIn) {
-			return (
-				<div className="msg-text m-t-15">
-					It appears you have already checked-in.  Please see the help desk for more information.
-				</div>
-			);
+			);			
 		}
 	}
 
@@ -185,7 +164,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f))
+		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f)),
+		sendNotification : (msg, isSuccess) => dispatch(sendNotification(msg, isSuccess))
 	};
 };
 

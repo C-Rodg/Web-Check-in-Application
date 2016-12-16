@@ -18,11 +18,11 @@
 			position: absolute;
 		}
 
-		.branding-settings {
+		.branding-switch {
 			right: 8px;
 		}
 
-		.branding-switch {
+		.branding-settings {
 			left: 8px;
 		}
 
@@ -408,6 +408,14 @@
 		.inline-btn {
 			margin-right: 8px;
 		}	
+
+		.settings-lastname .lastname-btn,
+		.settings-email .email-btn,
+		.settings-both .both-btn,
+		.settings-on .btn-on,
+		.settings-off .btn-off {
+			background-color: rgba(0,0,0,.1);
+		}
 	}
 }
 

@@ -16,6 +16,8 @@ export const CHECKIN_REGISTRANT_ERROR = 'CHECKIN_REGISTRANT_ERROR';
 export const CHECKOUT_REGISTRANT_SUCCESS = 'CHECKOUT_REGISTRANT_SUCCESS';
 export const CHECKOUT_REGISTRANT_ERROR = 'CHECKOUT_REGISTRANT_ERROR';
 
+//export const GET_RANDOM_REGISTRANT_SUCCESS = 
+
 export const UPDATE_REGISTRANT_LIST = 'UPDATE_REGISTRANT_LIST';
 
 export const CLEAR_CURRENT_REGISTRANT = 'CLEAR_CURRENT_REGISTRANT';
@@ -34,6 +36,17 @@ export function sendNotification(msg, isSuccess) {
 		msg,
 		isSuccess
 	};
+}
+
+// Load Random Registrant
+export function getRandomRegistrant(limitToAttended){
+	let inputArg = {
+		top : 1,
+		limitToAttended
+	};
+	return function(dispatch) {
+		return axios.post('methods.asmx/ListRandomRegistrants', inputArg);
+	}
 }
 
 // Load Registrant (atGuid) - return registrant object

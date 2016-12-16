@@ -1,19 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { sendNotification } from '../actions/cc_registrant';
+import { getEventSettings } from '../actions/cc_settings';
+import { getRandomRegistrant, sendNotification } from '../actions/cc_registrant';
 
 class AdminSettings extends Component {
-	constructor(props) {
+	constructor(props, context) {
 		super(props);
+
 		let stationName = window.localStorage.getItem('stationName') || "";
+		let searchBy = props.attendeeConfig.SearchBy;
+		let search = props.attendeeConfig.Search;
+		let scan = props.attendeeConfig.Scan;
+		let walkIns = props.attendeeConfig.WalkIns;
 		this.state = {
-			stationName
+			stationName,
+			searchBy,
+			search,
+			scan, 
+			walkIns
 		};
+
 		this.onStationChange = this.onStationChange.bind(this);
 		this.toggleFullscreenMode = this.toggleFullscreenMode.bind(this);
 		this.setCustomSettings = this.setCustomSettings.bind(this);
 		this.goToRandom = this.goToRandom.bind(this);	
+	}
+
+	componentWillUnmount() {
+		this.props.getEventSettings();
 	}
 
 	onStationChange(event) {
@@ -39,10 +54,25 @@ class AdminSettings extends Component {
 	setCustomSettings(item, val) {
 		window.localStorage.setItem('customSettings', 'TRUE');
 		window.localStorage.setItem(item, val);
+		let stateVal;
+		if(val === "TRUE"){
+			stateVal = true;
+		} else if (val === 'FALSE') {
+			stateVal = false;
+		} else {
+			stateVal = val;
+		}
+		let obj = {};
+		obj[item] = stateVal;
+		this.setState(obj);
 	}
 
 	goToRandom() {
-
+		this.props.getRandomRegistrant(true).then((resp) => {
+			this.context.router.push('/admin/registrant/' + resp.data.d.Registrants[0].AttendeeGuid );
+		}).catch((err) => {
+			this.props.sendNotification("There was an issue finding a random registrant.", false);
+		});
 	}
 
 	render() {
@@ -65,32 +95,38 @@ class AdminSettings extends Component {
 					</div>
 				</div>								
 				<div className="col-xs-12 col-sm-6">
-					<div className={"form-group search-" + this.props.attendeeConfig.Search}>
+					<div className={"form-group settings-" + (this.state.search ? "on" : "off")}>
 						<label>Searching - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('search', 'TRUE')}}><span>Search On</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('search', 'FALSE')}}><span>Search Off</span></button>
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">
-					<div className={"form-group scan-" + this.props.attendeeConfig.Scan}>
+					<div className={"form-group settings-" + (this.state.scan ? "on" : "off")}>
 						<label>Scanning - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('scan', 'TRUE')}}><span>Scanning On</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('scan', 'FALSE')}}><span>Scanning Off</span></button>
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">
-					<div className={"form-group walkins-" + this.props.attendeeConfig.WalkIns}>
+					<div className={"form-group settings-" + (this.state.walkIns ? "on" : "off")}>
 						<label>Walk-ins - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('walkIns', 'TRUE')}}><span>Allow Walk-ins</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('walkIns', 'FALSE')}}><span>No Walk-ins</span></button>
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">
-					<div className={"form-group " + this.props.attendeeConfig.SearchBy}>
+					<div className={"form-group settings-" + this.state.searchBy}>
 						<label>Search By - Attendee Mode</label>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-last" onClick={() => {this.setCustomSettings('searchBy', 'lastname')}}><span>Last Name</span></button>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-email" onClick={() => {this.setCustomSettings('searchBy', 'email')}}><span>Email</span></button>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-both" onClick={() => {this.setCustomSettings('searchBy', 'both')}}><span>Both</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn lastname-btn" onClick={() => {this.setCustomSettings('searchBy', 'lastname')}}><span>Last Name</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn email-btn" onClick={() => {this.setCustomSettings('searchBy', 'email')}}><span>Email</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn both-btn" onClick={() => {this.setCustomSettings('searchBy', 'both')}}><span>Both</span></button>
+					</div>
+				</div>
+				<div className="col-xs-12 col-sm-6">
+					<div className="form-group force-fullscreen-group">
+						<label>Refresh Event Settings</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Refresh</span></button>
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">
@@ -104,6 +140,10 @@ class AdminSettings extends Component {
 	}
 }
 
+AdminSettings.contextTypes = {
+	router : PropTypes.func.isRequired
+};
+
 const mapStateToProps = (state) => {
 	return {
 		attendeeConfig : state.settings.configuration.AttendeeMode
@@ -112,6 +152,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		getEventSettings : () => dispatch(getEventSettings()),
+		getRandomRegistrant : (isAttended) => dispatch(getRandomRegistrant(isAttended)),
 		sendNotification : (msg, isSuccess) => dispatch(sendNotification(msg, isSuccess))
 	};
 }

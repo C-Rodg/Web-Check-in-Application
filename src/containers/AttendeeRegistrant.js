@@ -55,7 +55,7 @@ class AttendeeRegistrant extends Component {
 			return("Uh-oh! There was an issue loading that record...");
 		}
 		if(cancelled) {
-			return ("There is an issue with this registration.  Please see the help desk to continue checking in.");
+			return ("There is an issue with this registration. Please see the help desk for assistance.");
 		}
 		return ("Please confirm your information to continue checking in.");
 	}
