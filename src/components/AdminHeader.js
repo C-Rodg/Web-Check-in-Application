@@ -6,12 +6,7 @@ const AdminHeader = (props) => {
 		<div className="admin-header container-fluid clearfix">
 			<div className="row">
 				<div className="col-xs-12 text-center title-row">
-					<p className="event-name mi-38">{props.eventName}</p>
-					<Link to="/attendee">
-						<span className="change-mode-btn">
-							<i className="material-icons mi-26">transfer_within_a_station</i>
-						</span>
-					</Link>
+					<p className="event-name">{props.eventName}</p>					
 				</div>
 			</div>
 			<div className="row">

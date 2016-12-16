@@ -5,6 +5,13 @@ import routes from '../routes';
 
 export default class Root extends Component {
 	render() {
+		// Remove custom settings at boot
+		window.localStorage.setItem('customSettings', 'FALSE');
+		window.localStorage.removeItem('searchBy');
+		window.localStorage.removeItem('walkIns');
+		window.localStorage.removeItem('scan');
+		window.localStorage.removeItem('search');
+
 		const { store, history } = this.props;
 		return (
 			<Provider store={store}>

@@ -153,15 +153,15 @@ class AdminRegistrant extends Component {
 						}						
 						
 					</div>
+					<div className={"col-xs-12 confirm-checkin " + (!this.state.showConfirm ? '' : 'confirm-checkin-yes')}>
+						<p>Continue checking in?</p>
+						<button className="btn btn-flat uppercase btn-col-green" onClick={this.checkInRegistrant}>Yes</button>
+						<button className="btn btn-flat uppercase btn-col-black" onClick={this.toggleConfirmMenu}>No</button>
+					</div>
 				</div>
 				<div className="registrant-checkin">
 					{ this.getButtonActions(isCancelled) }					
-				</div>
-				<div className={"confirm-checkin " + (!this.state.showConfirm ? '' : 'confirm-checkin-yes')}>
-					<p>Continue checking in?</p>
-					<button className="btn btn-flat uppercase btn-col-green" onClick={this.checkInRegistrant}>Yes</button>
-					<button className="btn btn-flat uppercase btn-col-black" onClick={this.toggleConfirmMenu}>No</button>
-				</div>
+				</div>				
 			</div>
 		);
 	}

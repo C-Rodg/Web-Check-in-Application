@@ -122,7 +122,7 @@ function getEventSettingsSuccess(response) {
 		config = JSON.parse(response);
 	} catch(e) {
 		return getEventSettingsError(e);
-	}
+	}	
 	return {
 		type : GET_EVENT_SETTINGS_SUCCESS,
 		payload : config

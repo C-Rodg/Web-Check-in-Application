@@ -10,7 +10,25 @@
 			background-color: $primary-bg;
 			color: $primary-bg-text-subtle;
 			padding-top: 5px;
-			padding-bottom:5px;
+			padding-bottom:5px;			
+		}
+
+		.branding-settings,
+		.branding-switch {
+			position: absolute;
+		}
+
+		.branding-settings {
+			right: 8px;
+		}
+
+		.branding-switch {
+			left: 8px;
+		}
+
+		.branding-text {
+			font-family: 'robotomedium', 'robotoregular', roboto, Helvetica, Arial, sans-serif;
+			font-size: 18px;
 		}
 	}
 
@@ -52,7 +70,9 @@
 		.event-name {
 			color: #fff;
 			display:inline-block;
-			line-height: 44px;
+			line-height: 1;
+			font-size: 38px;
+			font-size: 4v;
 			font-family: 'roboto_condensedlight', 'robotoregular', Helvetica, Arial, sans-serif;
 		}
 	}
@@ -69,6 +89,7 @@
 			padding-top: 10px;
 			padding-bottom: 10px;
 			overflow: auto;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		.admin-controls {
@@ -267,9 +288,10 @@
 		
 
 		.confirm-checkin {
-			max-height: 0;
+			opacity: 0;		
+			transition: opacity 0.3s ease-in-out;
+			height: 0;
 			overflow : hidden;
-			transition: max-height 0.3s ease-in-out;
 
 			p {
 				padding: 5px 0 2px 0;
@@ -282,7 +304,8 @@
 		}
 
 		.confirm-checkin.confirm-checkin-yes {
-			max-height: 200px;
+			opacity: 1;
+			height: auto;
 		}
 
 		.registrant-more-box {
@@ -380,7 +403,11 @@
 		.settings-btn {
 			min-height: 38px;
 			padding: 6px 10px;
-		}		
+		}	
+
+		.inline-btn {
+			margin-right: 8px;
+		}	
 	}
 }
 

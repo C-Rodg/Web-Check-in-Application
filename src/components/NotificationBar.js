@@ -14,7 +14,9 @@ export default class NotificationBar extends Component {
 	componentDidUpdate(){
 		this.refs.errorBox.classList.add('in');
 		this._timeout = setTimeout(() => {
-			this.refs.errorBox.classList.remove('in');
+			if(this.refs.errorBox){
+				this.refs.errorBox.classList.remove('in');
+			}			
 		}, this.props.time);
 	}
 

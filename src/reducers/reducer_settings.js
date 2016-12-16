@@ -12,15 +12,17 @@ const INITIAL_STATS_STATE = {
 	walkInsAttended : 0
 };
 
+const INITIAL_CONFIG_ATTENDEE_STATE = {
+	SearchBy : "both",
+	Search : true,
+	Scan : true,
+	WalkIns : true
+};
+
 const INITIAL_CONFIG_STATE = {
 	CancelledStrings : [],
 	WalkInFields : [],
-	AttendeeMode : {
-		SearchBy : "both",
-		Search : true,
-		Scan : true,
-		WalkIns : true
-	}
+	AttendeeMode : INITIAL_CONFIG_ATTENDEE_STATE
 };
 
 const INITIAL_STATE = {
@@ -33,6 +35,7 @@ const INITIAL_STATE = {
 	stats : INITIAL_STATS_STATE
 };
 
+// Settings Reducer
 export const settings = ( state = INITIAL_STATE, action ) => {
 	switch(action.type) {
 		case GET_REGISTRATION_STATS_SUCCESS:
@@ -43,9 +46,17 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			return state;
 
 		case GET_EVENT_SETTINGS_SUCCESS: 
-			return {...state, configurationError : false, configuration : action.payload};
+			return {...state, 
+				configurationError : false, 
+				configuration : configReducer(state.configuration, action)
+			};
+			//return {...state, configurationError : false, configuration : action.payload};
 		case GET_EVENT_SETTINGS_ERROR:
-			return {...state, configurationError : true};
+			return {...state, 
+				configurationError : true, 
+				configuration : configReducer(state.configuration, action)
+			};
+			//return {...state, configurationError : true};
 
 		case GET_EVENT_INFORMATION_SUCCESS:
 			return {...state, 
@@ -62,14 +73,86 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 	}
 }
 
+// Configuration Reducer (nested)
+function configReducer(state = INITIAL_CONFIG_STATE, action) {
+	switch(action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:
+			return {...state, 
+				CancelledStrings : action.payload.CancelledStrings, 
+				WalkInFields : action.payload.WalkInFields,
+				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action)
+			};
+		case GET_EVENT_SETTINGS_ERROR:
+			return {...state,
+				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action)
+			};
+		default:
+			return state;
+	}
+}
+
+// Attendee Mode Configuration Reducer (nested)
+function configAttendeeReducer(state = INITIAL_CONFIG_ATTENDEE_STATE, action) {
+	switch(action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:
+			return checkForOverwriteAttendeeSettings(state);
+		case GET_EVENT_SETTINGS_ERROR:
+			return checkForOverwriteAttendeeSettings(state);
+		default:
+			return state;
+	}
+}
+
+// Stats Reducer (nested)
 function statsReducer(state = {}, action){
-	const { totalAttended, totalRegistered, walkInsRegistered, walkInsAttended, preRegisteredAttended, preRegisteredTotal } = action.payload;
-	return {...state,
-		totalAttended,
-		totalRegistered,
-		preRegisteredAttended,
-		preRegisteredTotal,
-		walkInsRegistered,
-		walkInsAttended
-	};
+	switch(action.type) {
+		case GET_REGISTRATION_STATS_SUCCESS:
+			const { totalAttended, totalRegistered, walkInsRegistered, walkInsAttended, preRegisteredAttended, preRegisteredTotal } = action.payload;
+			return {...state,
+				totalAttended,
+				totalRegistered,
+				preRegisteredAttended,
+				preRegisteredTotal,
+				walkInsRegistered,
+				walkInsAttended
+			};
+		default:
+			return state;
+	}
+}
+
+// Return object with overwritten settings if needed
+function checkForOverwriteAttendeeSettings(config){
+	let newConfig = Object.assign({}, config);
+
+	if(window.localStorage.getItem('customSettings') === 'TRUE'){
+		let scan = window.localStorage.getItem('scan');
+		let search = window.localStorage.getItem('search');	
+		let walkIns = window.localStorage.getItem('walkIns');
+		let searchBy = window.localStorage.getItem('searchBy');
+
+		if(scan === 'TRUE') {
+			newConfig.Scan = true;
+		} else if (scan === 'FALSE') {
+			newConfig.Scan = false;
+		}
+
+		if(search === 'TRUE') {
+			newConfig.Search = true;
+		} else if (search === 'FALSE') {
+			newConfig.Search = false;
+		}
+
+		if(walkIns === 'TRUE') {
+			newConfig.WalkIns = true;
+		} else if (walkIns === 'FALSE') {
+			newConfig.WalkIns = false;
+		}
+
+		if(searchBy) {
+			newConfig.SearchBy = searchBy;
+		}
+	}	
+	console.log(newConfig);
+	return newConfig;
 }
