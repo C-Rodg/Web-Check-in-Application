@@ -50,13 +50,11 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 				configurationError : false, 
 				configuration : configReducer(state.configuration, action)
 			};
-			//return {...state, configurationError : false, configuration : action.payload};
 		case GET_EVENT_SETTINGS_ERROR:
 			return {...state, 
 				configurationError : true, 
 				configuration : configReducer(state.configuration, action)
 			};
-			//return {...state, configurationError : true};
 
 		case GET_EVENT_INFORMATION_SUCCESS:
 			return {...state, 
@@ -95,9 +93,9 @@ function configReducer(state = INITIAL_CONFIG_STATE, action) {
 function configAttendeeReducer(state = INITIAL_CONFIG_ATTENDEE_STATE, action) {
 	switch(action.type) {
 		case GET_EVENT_SETTINGS_SUCCESS:
-			return checkForOverwriteAttendeeSettings(state);
+			return checkForOverwriteAttendeeSettings(state, action);
 		case GET_EVENT_SETTINGS_ERROR:
-			return checkForOverwriteAttendeeSettings(state);
+			return checkForOverwriteAttendeeSettings(state, action);
 		default:
 			return state;
 	}
@@ -122,8 +120,18 @@ function statsReducer(state = {}, action){
 }
 
 // Return object with overwritten settings if needed
-function checkForOverwriteAttendeeSettings(config){
-	let newConfig = Object.assign({}, config);
+function checkForOverwriteAttendeeSettings(state, action){
+	let newConfig;
+	switch(action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:						
+			newConfig = Object.assign({}, state, action.payload.AttendeeMode);
+			break;
+		case GET_EVENT_SETTINGS_ERROR:
+			newConfig = Object.assign({}, state);
+			break;
+		default:
+			newConfig = Object.assign({}, state);
+	}	
 
 	if(window.localStorage.getItem('customSettings') === 'TRUE'){
 		let scan = window.localStorage.getItem('scan');
@@ -153,6 +161,5 @@ function checkForOverwriteAttendeeSettings(config){
 			newConfig.SearchBy = searchBy;
 		}
 	}	
-	console.log(newConfig);
 	return newConfig;
 }
