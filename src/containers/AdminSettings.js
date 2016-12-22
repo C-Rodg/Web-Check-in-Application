@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { getEventSettings } from '../actions/cc_settings';
-import { getRandomRegistrant, sendNotification } from '../actions/cc_registrant';
+import { getRandomRegistrant, sendNotification, navigateToListView } from '../actions/cc_registrant';
 
 class AdminSettings extends Component {
 	constructor(props, context) {
@@ -24,7 +24,8 @@ class AdminSettings extends Component {
 		this.onStationChange = this.onStationChange.bind(this);
 		this.toggleFullscreenMode = this.toggleFullscreenMode.bind(this);
 		this.setCustomSettings = this.setCustomSettings.bind(this);
-		this.goToRandom = this.goToRandom.bind(this);	
+		this.goToRandom = this.goToRandom.bind(this);
+		this.returnToListView = this.returnToListView.bind(this);	
 	}
 
 	componentWillUnmount() {
@@ -75,6 +76,10 @@ class AdminSettings extends Component {
 		});
 	}
 
+	returnToListView() {
+		this.props.navigateToListView();
+	}
+
 	render() {
 		return (
 			<div className="admin-settings">
@@ -89,11 +94,12 @@ class AdminSettings extends Component {
 					</div>				
 				</div>
 				<div className="col-xs-12 col-sm-6">
-					<div className="form-group">
-						<label>Find a Random Registrant</label>
-						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.goToRandom}><i className="material-icons">shuffle</i> <span>Random Registrant</span></button>
+					<div className="form-group force-fullscreen-group">
+						<label>Return to Event List</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.returnToListView}><i className="material-icons">list</i> <span>List Events</span></button>
 					</div>
-				</div>								
+				</div>
+											
 				<div className="col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.search ? "on" : "off")}>
 						<label>Searching - Attendee Mode</label>
@@ -124,6 +130,12 @@ class AdminSettings extends Component {
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">
+					<div className="form-group">
+						<label>Find a Random Registrant</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.goToRandom}><i className="material-icons">shuffle</i> <span>Random Registrant</span></button>
+					</div>
+				</div>	
+				<div className="col-xs-12 col-sm-6">
 					<div className="form-group force-fullscreen-group">
 						<label>Refresh Event Settings</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Refresh</span></button>
@@ -148,14 +160,15 @@ const mapStateToProps = (state) => {
 	return {
 		attendeeConfig : state.settings.configuration.AttendeeMode
 	};
-}
+};
 
 const mapDispatchToProps = (dispatch) => {
 	return {
 		getEventSettings : () => dispatch(getEventSettings()),
 		getRandomRegistrant : (isAttended) => dispatch(getRandomRegistrant(isAttended)),
-		sendNotification : (msg, isSuccess) => dispatch(sendNotification(msg, isSuccess))
+		sendNotification : (msg, isSuccess) => dispatch(sendNotification(msg, isSuccess)),
+		navigateToListView : () => dispatch(navigateToListView())
 	};
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminSettings);

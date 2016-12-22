@@ -38,6 +38,18 @@ export function sendNotification(msg, isSuccess) {
 	};
 }
 
+// Navigate back to List View
+export function navigateToListView() {
+	return function(dispatch) {
+		axios.post(`methods.asmx/ListRootPath`, {})
+			.then((response) => {
+				window.location = response.data.d;
+			}).catch((err) => {
+				dispatch(sendNotification("We're having problems navigating to the list view..", false));
+			});
+	}
+}
+
 // Load Random Registrant
 export function getRandomRegistrant(limitToAttended){
 	let inputArg = {

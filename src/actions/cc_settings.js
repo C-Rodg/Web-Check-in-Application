@@ -76,12 +76,7 @@ function getEventInformationSuccess(response) {
 	// Convert location to full string
 	let locArr = [response.City, response.StateProvince || response.Country];
 	eventInfo.eventLocation = locArr.filter((str) => { return str; }).join(', ');
-
-	eventInfo.eventStartDate = "";
-	if(response.hasOwnProperty('StartDate') && response.StartDate !== null && response.StartDate.indexOf("/Date") === 0 ){
-		let sDate = response.StartDate.slice(6, -2);
-		eventInfo.eventStartDate = moment(sDate, 'x').format("MM/DD/YY");
-	}
+	eventInfo.eventStartDate = moment(response.StartDate, 'YYYY-MM-DDTHH:mm:ss.SSSSSS').format('MM/DD/YY');
 	return {
 		type : GET_EVENT_INFORMATION_SUCCESS,
 		payload : eventInfo
