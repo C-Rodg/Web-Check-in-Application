@@ -10,6 +10,7 @@ export const TURN_CAMERA_OFF_ERROR = 'TURN_CAMERA_OFF_ERROR';
 
 //-------------------- ACTION CREATORS --------------------//
 
+// Turn Camera On
 export function turnCameraOn(data) {
 	return function(dispatch) {
 		axios.post(`https://localhost/ShowBarCodeReader`, "ON;X:80;Y:175;W:180;H:180")

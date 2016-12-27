@@ -21,7 +21,7 @@ export default (
 	<Route path="/" component={App}>
 		<IndexRedirect to="/admin" />
 		<Route path="admin" component={RootAdmin}>
-			<IndexRedirect to="results" />
+			<IndexRedirect to="config" />
 			<Route path="results" component={AdminResults} />
 			<Route path="stats" component={AdminStats} />
 			<Route path="walkin" component={WalkInForm} />

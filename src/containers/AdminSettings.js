@@ -26,6 +26,7 @@ class AdminSettings extends Component {
 		this.setCustomSettings = this.setCustomSettings.bind(this);
 		this.goToRandom = this.goToRandom.bind(this);
 		this.returnToListView = this.returnToListView.bind(this);	
+		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
 	}
 
 	componentWillUnmount() {
@@ -78,6 +79,10 @@ class AdminSettings extends Component {
 
 	returnToListView() {
 		this.props.navigateToListView();
+	}
+
+	navigateToSeatManager() {
+		this.context.router.push('/admin/seats');
 	}
 
 	render() {
@@ -136,9 +141,15 @@ class AdminSettings extends Component {
 					</div>
 				</div>	
 				<div className="col-xs-12 col-sm-6">
-					<div className="form-group force-fullscreen-group">
+					<div className="form-group">
 						<label>Refresh Event Settings</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Refresh</span></button>
+					</div>
+				</div>
+				<div className="col-xs-12 col-sm-6">
+					<div className="form-group">
+						<label>Device Control</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.navigateToSeatManager} ><i className="material-icons">event_seat</i> <span>Seat Manager</span></button>
 					</div>
 				</div>
 				<div className="col-xs-12 col-sm-6">

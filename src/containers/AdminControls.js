@@ -56,7 +56,7 @@ export default class AdminControls extends Component {
 							<i className="material-icons">filter_center_focus</i><span className="hidden-md-down controls-btn-label">Scan</span>
 						</Link>
 						<Link to="/admin/stats" activeClassName="controls-btn-active" className="controls-btn btn ">
-							<i className="material-icons">equalizer</i><span className="hidden-md-down controls-btn-label">Dashboard</span>
+							<i className="material-icons">equalizer</i><span className="hidden-md-down controls-btn-label">Stats</span>
 						</Link>
 					</ul>
 				</div>
