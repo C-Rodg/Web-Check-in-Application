@@ -1,0 +1,52 @@
+.login {
+    max-width: 380px;
+    padding: 10px;
+    margin: 0 auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    .title {
+        margin-top: 2rem;
+        text-align: center;
+
+        h1 {
+            padding-bottom: 5px;
+        }
+        h5 {
+            padding-bottom: 15px;
+        }
+    }
+
+    .card {
+        button {
+            text-transform: uppercase;
+            background-color: transparent;
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+
+        .card-content {
+            padding: 15px 10px 5px 10px;
+        }
+
+        .station-required {
+            color: rgb(220, 80, 76);
+            display: block;
+            padding-top: 5px;
+        }
+    }
+
+    .validar-logo {
+        flex-grow: 1;
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 10px;
+        opacity: 0.45;
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    }
+}

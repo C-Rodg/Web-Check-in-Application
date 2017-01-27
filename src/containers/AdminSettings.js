@@ -27,9 +27,9 @@ class AdminSettings extends Component {
 		this.toggleFullscreenMode = this.toggleFullscreenMode.bind(this);
 		this.setCustomSettings = this.setCustomSettings.bind(this);
 		this.goToRandom = this.goToRandom.bind(this);
-		this.returnToListView = this.returnToListView.bind(this);	
-		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
+		this.returnToListView = this.returnToListView.bind(this);			
 		this.setCameraMode = this.setCameraMode.bind(this);
+		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
 	}
 
 	componentWillReceiveProps(nextProps) {
@@ -167,6 +167,13 @@ class AdminSettings extends Component {
 					</div>
 				</div>	
 				<div className="settings-box col-xs-12 col-sm-6">
+					<div className={"form-group settings-" + (this.state.cameraFront === "TRUE" ? "on" : "off")}>
+						<label>Camera Facing</label>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCameraMode("TRUE")}}><span>Front</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCameraMode("FALSE")}}><span>Back</span></button>
+					</div>
+				</div>
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group">
 						<label>Reset Event Settings</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Restore to Default</span></button>
@@ -177,14 +184,7 @@ class AdminSettings extends Component {
 						<label>Device Control</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.navigateToSeatManager} ><i className="material-icons">event_seat</i> <span>Seat Manager</span></button>
 					</div>
-				</div>
-				<div className="settings-box col-xs-12 col-sm-6">
-					<div className={"form-group settings-" + (this.state.cameraFront === "TRUE" ? "on" : "off")}>
-						<label>Camera Facing</label>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCameraMode("TRUE")}}><span>Front</span></button>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCameraMode("FALSE")}}><span>Back</span></button>
-					</div>
-				</div>
+				</div>				
 				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group force-fullscreen-group">
 						<label>Toggle Fullscreen (non-iOS)</label>

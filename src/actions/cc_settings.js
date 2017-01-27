@@ -131,6 +131,34 @@ function getEventSettingsError(err) {
 	};
 }
 
+// Acquire Seat
+export function acquireSeat(stationInformation) {
+	return function(dispatch) {
+		axios.post(`methods.asmx/AcquireSeat`, {stationInformation})
+			.then((response) => {
+				// Successfully logged in.. navigate to app
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+}
+
+// Release Current Seat
+export function releaseThisSeat() {
+	return function(dispatch) {
+		axios.post(`methods.asmx/ReleaseSeat`, {})
+			.then((response) => {
+				if(response.data.d.Fault == null){
+					// CLEAR STATION INFO...
+				}
+			})
+			.catch((err) => {
+				
+			});
+	};
+}
+
 // Helper function that returns Event GUID
 function getGuidFromURL(){
 	let guid;

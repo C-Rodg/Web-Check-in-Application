@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, IndexRedirect } from 'react-router';
 
 import App from './components/App';
+import Login from './containers/Login';
 import RootAdmin from './containers/RootAdmin';
 import AdminResults from './containers/AdminResults';
 import AdminStats from './containers/AdminStats';
@@ -17,9 +18,10 @@ import AttendeePassword from './containers/AttendeePassword';
 import AttendeeRegistrant from './containers/AttendeeRegistrant';
 import AdminSettings from './containers/AdminSettings';
 
+
 export default (
 	<Route path="/" component={App}>
-		<IndexRedirect to="/admin" />
+		<IndexRedirect to="/login" />
 		<Route path="admin" component={RootAdmin}>
 			<IndexRedirect to="config" />
 			<Route path="results" component={AdminResults} />
@@ -38,5 +40,6 @@ export default (
 			<Route path="password" component={AttendeePassword} />
 			<Route path="registrant/:atGuid" component={AttendeeRegistrant} />
 		</Route>
+		<Route path="login" component={Login} />
 	</Route>
 );
