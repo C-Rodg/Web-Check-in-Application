@@ -13,12 +13,14 @@ class AdminSettings extends Component {
 		let search = props.attendeeConfig.Search;
 		let scan = props.attendeeConfig.Scan;
 		let walkIns = props.attendeeConfig.WalkIns;
+		let cameraFront = window.localStorage.getItem('cameraFront');
 		this.state = {
 			stationName,
 			searchBy,
 			search,
 			scan, 
-			walkIns
+			walkIns,
+			cameraFront
 		};
 
 		this.onStationChange = this.onStationChange.bind(this);
@@ -27,6 +29,23 @@ class AdminSettings extends Component {
 		this.goToRandom = this.goToRandom.bind(this);
 		this.returnToListView = this.returnToListView.bind(this);	
 		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
+		this.setCameraMode = this.setCameraMode.bind(this);
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.attendeeConfig) {
+			let searchBy = nextProps.attendeeConfig.SearchBy,
+				scan = nextProps.attendeeConfig.Scan,
+				search = nextProps.attendeeConfig.Search,
+				walkIns = nextProps.attendeeConfig.WalkIns;
+
+				this.setState({
+					searchBy,
+					scan,
+					search,
+					walkIns
+				});
+		}
 	}
 
 	componentWillUnmount() {
@@ -51,6 +70,13 @@ class AdminSettings extends Component {
 		} else {
 			cancelFullScreen.call(doc);
 		}
+	}
+
+	setCameraMode(val) {
+		window.localStorage.setItem('cameraFront', val);
+		this.setState({
+			cameraFront : val
+		});
 	}
 
 	setCustomSettings(item, val) {
@@ -88,7 +114,7 @@ class AdminSettings extends Component {
 	render() {
 		return (
 			<div className="admin-settings">
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group station-name-group">
 						<label for="stationName">Station Name</label>
 						<input className="form-control" type="text"
@@ -98,35 +124,35 @@ class AdminSettings extends Component {
 						/>
 					</div>				
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group force-fullscreen-group">
 						<label>Return to Event List</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.returnToListView}><i className="material-icons">list</i> <span>List Events</span></button>
 					</div>
 				</div>
 											
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.search ? "on" : "off")}>
 						<label>Searching - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('search', 'TRUE')}}><span>Search On</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('search', 'FALSE')}}><span>Search Off</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.scan ? "on" : "off")}>
 						<label>Scanning - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('scan', 'TRUE')}}><span>Scanning On</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('scan', 'FALSE')}}><span>Scanning Off</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.walkIns ? "on" : "off")}>
 						<label>Walk-ins - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('walkIns', 'TRUE')}}><span>Allow Walk-ins</span></button>
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('walkIns', 'FALSE')}}><span>No Walk-ins</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + this.state.searchBy}>
 						<label>Search By - Attendee Mode</label>
 						<button className="btn-flat border-0 settings-btn inline-btn lastname-btn" onClick={() => {this.setCustomSettings('searchBy', 'lastname')}}><span>Last Name</span></button>
@@ -134,25 +160,32 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn both-btn" onClick={() => {this.setCustomSettings('searchBy', 'both')}}><span>Both</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group">
 						<label>Find a Random Registrant</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.goToRandom}><i className="material-icons">shuffle</i> <span>Random Registrant</span></button>
 					</div>
 				</div>	
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group">
-						<label>Refresh Event Settings</label>
-						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Refresh</span></button>
+						<label>Reset Event Settings</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Restore to Default</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group">
 						<label>Device Control</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.navigateToSeatManager} ><i className="material-icons">event_seat</i> <span>Seat Manager</span></button>
 					</div>
 				</div>
-				<div className="col-xs-12 col-sm-6">
+				<div className="settings-box col-xs-12 col-sm-6">
+					<div className={"form-group settings-" + (this.state.cameraFront === "TRUE" ? "on" : "off")}>
+						<label>Camera Facing</label>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCameraMode("TRUE")}}><span>Front</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCameraMode("FALSE")}}><span>Back</span></button>
+					</div>
+				</div>
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group force-fullscreen-group">
 						<label>Toggle Fullscreen (non-iOS)</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.toggleFullscreenMode} ><i className="material-icons">zoom_out_map</i> <span>Fullscreen Mode</span></button>

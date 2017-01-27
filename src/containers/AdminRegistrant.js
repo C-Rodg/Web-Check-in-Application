@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { loadRegistrantByAttendeeGuid, clearCurrentRegistrant, checkInRegistrant, checkOutRegistrant, parseXml, getTextFromXml, getPickFromXml } from '../actions/cc_registrant';
+import { loadRegistrantByAttendeeGuid, loadRegistrantByBadgeId, clearCurrentRegistrant, checkInRegistrant, checkOutRegistrant, parseXml, getTextFromXml, getPickFromXml } from '../actions/cc_registrant';
 import Loading from '../components/Loading';
 
 class AdminRegistrant extends Component {
@@ -13,6 +13,8 @@ class AdminRegistrant extends Component {
 			showMoreFields : false
 		};
 
+		this._returnToScan = false;
+
 		this.checkOutRegistrant = this.checkOutRegistrant.bind(this);
 		this.checkInRegistrant = this.checkInRegistrant.bind(this);
 		this.getButtonActions = this.getButtonActions.bind(this);
@@ -22,8 +24,13 @@ class AdminRegistrant extends Component {
 		this.viewSurveyFields = this.viewSurveyFields.bind(this);
 	}
 
-	componentDidMount() {		
-		this.props.loadRegistrantByGuid(this.props.params.atGuid);
+	componentDidMount() {	
+		if (this.props.location && this.props.location.hasOwnProperty('query') && this.props.location.query.badge) {
+			this.props.loadRegistrantByBadgeId(this.props.location.query.badge);
+			this._returnToScan = true;
+		} else if (this.props.params.atGuid) {
+			this.props.loadRegistrantByGuid(this.props.params.atGuid);
+		}	
 	}
 
 	componentWillUnmount() {
@@ -32,7 +39,11 @@ class AdminRegistrant extends Component {
 
 	componentDidUpdate(prevProps, prevState) {
 		if(this.props.returnToList !== prevProps.returnToList){
-			this.context.router.push('/admin/results');
+			if (!this._returnToScan) {
+				this.context.router.push('/admin/results');
+			} else {
+				this.context.router.push('/admin/scan');
+			}			
 		}
 	}
 
@@ -183,6 +194,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		loadRegistrantByBadgeId : (badge) => dispatch(loadRegistrantByBadgeId(badge)),
 		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid)),
 		clearCurrentRegistrant : () => dispatch(clearCurrentRegistrant()),
 		checkInRegistrant : (registrant) => dispatch(checkInRegistrant(registrant)),

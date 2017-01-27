@@ -1,13 +1,13 @@
 import React from 'react';
 
-const TableHeaders = ["Checked In", "First Name", "Last Name", "Company", "Email", "Type"];
+import TableFields from './TableFields';
 
 const TableSort = (props) => {
 	const arrowDirection = `keyboard_arrow_${props.sortDirection}`;
 	return (
 		<tr>
 		{
-			TableHeaders.map((header) => {
+			TableFields.map((header) => {
 				return ( props.sort === header ?
 							<th id={header} onClick={(event) => {props.changeSortDirection(props.sortDirection)}}>{header} <i className="material-icons v-middle">{arrowDirection}</i></th>
 						:

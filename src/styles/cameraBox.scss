@@ -1,0 +1,28 @@
+.camera-box {
+	.scan-camera-box {
+		display: inline-block;
+		padding: 10px;
+		cursor: pointer;
+		border-radius: 8px;
+		border: 1px solid #555;
+		margin-bottom: 5px;
+		margin-top: 10px;
+		background-color: #dfe1e1;
+		border-color: #dfe1e1;
+		width: 210px;
+		height: 210px;
+	}
+
+	.scan-icon {
+		vertical-align: middle;
+		font-size: 188px;
+	}
+
+	.scan-switch {
+		margin-top: 10px;
+	}
+
+	.switch-camera-btn:hover, .switch-camera-btn:focus, .switch-camera-btn:active {
+		background-color: #fff;
+	}
+}

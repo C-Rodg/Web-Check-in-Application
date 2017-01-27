@@ -166,7 +166,7 @@ class WalkInForm extends Component {
 					{ this.generateForm() }						
 				</div>
 			
-			{ this.props.formConfig.length > 0 ? 
+			{ (this.props.formConfig && this.props.formConfig.length > 0) ? 
 				<div className="registrant-checkin">
 					<button className="registrant-checkin-btn btn-full btn-large btn-none b-t-light btn-col-green m-t-15"
 						onClick={this.checkInRegistrant}

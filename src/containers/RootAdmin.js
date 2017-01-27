@@ -13,16 +13,22 @@ class RootAdmin extends Component {
 		super(props);
 
 		this.handleSearchRegistrants = this.handleSearchRegistrants.bind(this);
+		this._getStatsTimer = null;
 	}
 
 	componentDidMount() {	
 		this.props.getEventSettings();	
 		this.props.getEventInformation();
 		this.props.getRegistrationStats();
+
+		this._getStatsTimer = setInterval(() => {
+			this.props.getRegistrationStats();
+		}, 90000);
 	}
 
 	componentWillUnmount() {
 		this.props.clearAllSearching();
+		clearInterval(this._getStatsTimer);
 	}
 
 	handleSearchRegistrants(val) {

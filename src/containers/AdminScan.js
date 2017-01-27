@@ -1,35 +1,27 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-
-import { turnCameraOn } from '../actions/camera';
+import React, { Component, PropTypes } from 'react';
+import CameraBox from '../components/CameraBox';
 
 class AdminScan extends Component {
-	constructor(props){
-		super(props);
-
-		this.cameraOn = this.cameraOn.bind(this);
+	constructor(props, context){
+		super(props);						
+		this.handleScanData = this.handleScanData.bind(this);
 	}
 
-	cameraOn(){
-		this.props.turnCameraOn('test');
+	handleScanData(data) {
+		this.context.router.push('/admin/registrant/loading?badge=' + data);
 	}
 
 	render(){
 		return (
-			<div className="admin-scan text-center">
-				<div className="scan-camera-box">
-					<i className="material-icons scan-icon">filter_center_focus</i>
-					<div className="scan-text">Scan</div>
-				</div>			
+			<div className="admin-scan text-center">				
+				<CameraBox onScanData={this.handleScanData} />
 			</div>
 		);
 	}
 }
 
-const mapDispatchToProps = (dispatch) => {
-	return {
-		turnCameraOn : data => dispatch(turnCameraOn(data))
-	};
+AdminScan.contextTypes = {
+	router : PropTypes.func.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(AdminScan);
+export default AdminScan;

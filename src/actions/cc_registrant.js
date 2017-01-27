@@ -1,4 +1,5 @@
 import { axios } from './utilities_httpRequest';
+import { getRegistrationStats } from './cc_settings';
 
 //------------------------- TYPES -------------------------//
 
@@ -56,6 +57,21 @@ export function getRandomRegistrant(limitToAttended){
 	};
 	return function(dispatch) {
 		return axios.post('methods.asmx/ListRandomRegistrants', inputArg);
+	}
+}
+
+// Load Registrant (badgeId) - return registrant object
+export function loadRegistrantByBadgeId(badgeId) {
+	return function(dispatch) {
+		dispatch(loadRegistrantByAttendeeGuidStart());
+
+		axios.post('methods.asmx/LoadRegistrantWithBadgeId', {badgeId})
+			.then((response) => {
+				dispatch(loadRegistrantByAttendeeGuidSuccess(response.data.d.Registrant));
+			})
+			.catch((err) => {
+				dispatch(loadRegistrantByAttendeeGuidError(err));
+			});
 	}
 }
 
@@ -199,7 +215,7 @@ function searchRegistrantsError(err) {
 	};
 }
 
-// Create walk-in registrant - send notification, return to list
+// Create walk-in registrant - send notification, return to list, update stats
 export function createWalkIn(registrant) {
 
 	const checkedInRegistrant = Object.assign({}, registrant, {
@@ -217,7 +233,8 @@ export function createWalkIn(registrant) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
 				dispatch(sendNotification("Thank you for joining us today!", true));
-				dispatch(createWalkInSuccess());							
+				dispatch(createWalkInSuccess());	
+				dispatch(getRegistrationStats());							
 			})
 			.catch((err) => {
 				dispatch(checkInRegistrantError(err));
@@ -232,7 +249,7 @@ function createWalkInSuccess(guid) {
 	};
 }
 
-// Checking IN - send success notification, update registrant list
+// Checking IN - send success notification, update registrant list, update stats
 export function checkInRegistrant(registrant) {
 	const checkedInRegistrant = Object.assign({}, registrant, {
 		Attended : true,
@@ -249,7 +266,8 @@ export function checkInRegistrant(registrant) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
 				dispatch(sendNotification("Thank you for joining us!", true));
-				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));											
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+				dispatch(getRegistrationStats());										
 			})
 			.catch((err) => {
 				dispatch(checkInRegistrantError(err));
@@ -271,7 +289,7 @@ function checkInRegistrantError(err) {
 	};
 }
 
-// Checking OUT - Send success notification and update registrant list
+// Checking OUT - Send success notification, update registrant list, update stats
 export function checkOutRegistrant(registrant) {
 	const checkedOutRegistrant = Object.assign({}, registrant, {
 		Attended : false,
@@ -289,6 +307,7 @@ export function checkOutRegistrant(registrant) {
 			.then((response) => {
 				dispatch(sendNotification("Registrant checked out!", true));
 				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, false));
+				dispatch(getRegistrationStats());	
 			})
 			.catch((err) => {
 				dispatch(checkOutRegistrantError(err));
