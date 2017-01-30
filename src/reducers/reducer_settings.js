@@ -1,6 +1,6 @@
 import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR, 
 	GET_EVENT_INFORMATION_SUCCESS, GET_EVENT_INFORMATION_ERROR, 
-	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR 
+	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR
 	} from '../actions/cc_settings';
 
 const INITIAL_STATS_STATE = {
@@ -65,6 +65,7 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			};
 		case GET_EVENT_INFORMATION_ERROR:
 			return state;
+		
 
 		default:
 			return state;

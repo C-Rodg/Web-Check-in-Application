@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-const loginStyles = {
-    maxWidth: 380,
-    backgroundColor: "#fff"   
-}
+import { acquireSeat } from '../actions/cc_settings';
 
 class Login extends Component {
-    constructor(props) {
+    constructor(props, context) {
         super(props);
 
         let stationName = window.localStorage.getItem('stationName') || "";
@@ -19,16 +16,27 @@ class Login extends Component {
         this.startLogin = this.startLogin.bind(this);
         this.updateStation = this.updateStation.bind(this);
     }
-
-    startLogin() {
+    
+    startLogin(event) {
+        event.preventDefault();
+        
         if(!this.state.stationName) {
             this.setState({
                 errorText : "A station name is required..."
             });
             return false;
         }
-
-        // Acquire Seat and on success navigate to list page...
+        acquireSeat(this.state.stationName)
+            .then((response) => {
+                if(response.data.d.StationGuid){
+                    this.context.router.push('/admin/results');
+                }
+            })
+            .catch((err) => {
+                this.setState({
+                    errorText : "Sorry, we are unable to find a seat for this device..."
+                });
+            });
     }
 
     updateStation(ev) {
@@ -37,6 +45,7 @@ class Login extends Component {
 		});
 		window.localStorage.setItem('stationName', (event.target.value) || "");
     }
+
 
     render() {
         return (
@@ -63,7 +72,7 @@ class Login extends Component {
                             }                            
                         </div>	
                         </div>
-                        <button className="btn-full btn-large btn-none b-t-light btn-col-green v-a-sub p-l-0" onClick={this.startLogin} type="submit">
+                        <button className="btn-full btn-large btn-none b-t-light btn-col-green v-a-sub p-l-0" type="submit">
                             Start
                         </button>			                        
                     </form>
@@ -76,5 +85,10 @@ class Login extends Component {
         );
     }
 }
+
+Login.contextTypes = {
+	router : PropTypes.func.isRequired
+};
+
 
 export default Login;

@@ -13,7 +13,6 @@ export const GET_EVENT_INFORMATION_ERROR = 'GET_EVENT_INFORMATION_ERROR';
 export const GET_EVENT_SETTINGS_SUCCESS = 'GET_EVENT_SETTINGS_SUCCESS';
 export const GET_EVENT_SETTINGS_ERROR = 'GET_EVENT_SETTINGS_ERROR';
 
-
 //-------------------- ACTION CREATORS --------------------//
 
 // Get Registration statistics
@@ -132,17 +131,12 @@ function getEventSettingsError(err) {
 }
 
 // Acquire Seat
-export function acquireSeat(stationInformation) {
-	return function(dispatch) {
-		axios.post(`methods.asmx/AcquireSeat`, {stationInformation})
-			.then((response) => {
-				// Successfully logged in.. navigate to app
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	}
+export function acquireSeat(station) {
+	let guid = getGuidFromURL();
+	let stationInformation = `<clientInfo><application>event_${guid}</application><stationName>${station}</stationName></clientInfo>`;
+	return axios.post('methods.asmx/AcquireSeat', { stationInformation });
 }
+
 
 // Release Current Seat
 export function releaseThisSeat() {
@@ -160,7 +154,7 @@ export function releaseThisSeat() {
 }
 
 // Helper function that returns Event GUID
-function getGuidFromURL(){
+export function getGuidFromURL(){
 	let guid;
 	let path = window.location.pathname;
 	path = path.slice(0, -1);
