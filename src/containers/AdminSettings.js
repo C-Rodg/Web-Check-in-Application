@@ -125,6 +125,12 @@ class AdminSettings extends Component {
 					</div>				
 				</div>
 				<div className="settings-box col-xs-12 col-sm-6">
+					<div className="form-group station-name-group">
+						<label for="stationName">Client Guid</label>
+						<input className="form-control" type="text"	disabled value={this.props.seatGuid} />
+					</div>				
+				</div>
+				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group force-fullscreen-group">
 						<label>Return to Event List</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.returnToListView}><i className="material-icons">list</i> <span>List Events</span></button>
@@ -202,7 +208,8 @@ AdminSettings.contextTypes = {
 
 const mapStateToProps = (state) => {
 	return {
-		attendeeConfig : state.settings.configuration.AttendeeMode
+		attendeeConfig : state.settings.configuration.AttendeeMode,
+		seatGuid : state.settings.seatGuid
 	};
 };
 

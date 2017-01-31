@@ -396,6 +396,58 @@
 			background-color: rgba(0,0,0,.1);
 		}
 	}
+
+	.admin-seats {
+		.seats-title {
+			font-family: 'robotomedium', 'robotoregular', roboto, Helvetica, Arial, sans-serif;
+			margin-bottom: 3px;
+		}
+
+		.seat-count {
+			opacity: 0.8;
+			margin-bottom: 10px;
+			margin-top: 5px;
+
+			.number {
+				font-size: 24px;
+			}
+		}
+
+		.active-seats {
+			margin-bottom: 10px;
+		}
+
+		.seat-block {
+			margin-bottom: 10px;
+
+			.seat-block-container {
+				border: 1px solid rgba(0,0,0,0.1);
+				padding: 8px;
+				border-radius: 2px;
+				position: relative;
+				min-height: 84px;
+			}
+
+			.seat-icon-container {
+				position: absolute;
+				top: 2px;
+				right: 4px;
+				opacity: 0.8;
+			}
+
+			.seat-block-sub {
+				font-size: 0.9em;
+			}
+
+			.seat-block-inactive .seat-icon-container {
+				display: none;
+			}
+
+			.seat-current {
+				background-color: #f5f5f5;
+			}
+		}
+	}
 }
 
 @media (max-height: 1024px) {

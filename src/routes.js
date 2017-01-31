@@ -17,6 +17,7 @@ import AttendeeWelcome from './containers/AttendeeWelcome';
 import AttendeePassword from './containers/AttendeePassword';
 import AttendeeRegistrant from './containers/AttendeeRegistrant';
 import AdminSettings from './containers/AdminSettings';
+import AdminSeats from './containers/AdminSeats';
 
 
 export default (
@@ -29,6 +30,7 @@ export default (
 			<Route path="walkin" component={WalkInForm} />
 			<Route path="scan" component={AdminScan} />
 			<Route path="config" component={AdminSettings} />
+			<Route path="seats" component={AdminSeats} />
 			<Route path="registrant/:atGuid" component={AdminRegistrant} />
 		</Route>
 		<Route path="attendee" component={RootAttendee}>

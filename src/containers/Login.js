@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { acquireSeat } from '../actions/cc_settings';
+import { acquireSeat, setSeatGuid } from '../actions/cc_settings';
 
 class Login extends Component {
     constructor(props, context) {
@@ -17,6 +17,7 @@ class Login extends Component {
         this.updateStation = this.updateStation.bind(this);
     }
     
+    
     startLogin(event) {
         event.preventDefault();
         
@@ -28,9 +29,8 @@ class Login extends Component {
         }
         acquireSeat(this.state.stationName)
             .then((response) => {
-                if(response.data.d.StationGuid){
+                    this.props.setSeatGuid(response.data.d.StationGuid);
                     this.context.router.push('/admin/results');
-                }
             })
             .catch((err) => {
                 this.setState({
@@ -90,5 +90,10 @@ Login.contextTypes = {
 	router : PropTypes.func.isRequired
 };
 
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSeatGuid : (guid) => dispatch(setSeatGuid(guid))
+    };
+}
 
-export default Login;
+export default connect(null, mapDispatchToProps)(Login);

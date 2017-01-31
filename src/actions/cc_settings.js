@@ -13,6 +13,12 @@ export const GET_EVENT_INFORMATION_ERROR = 'GET_EVENT_INFORMATION_ERROR';
 export const GET_EVENT_SETTINGS_SUCCESS = 'GET_EVENT_SETTINGS_SUCCESS';
 export const GET_EVENT_SETTINGS_ERROR = 'GET_EVENT_SETTINGS_ERROR';
 
+export const SET_SEAT_GUID = 'SET_SEAT_GUID';
+export const CLEAR_SEAT_GUID = 'CLEAR_SEAT_GUID';
+
+export const GET_SEAT_USAGE_SUCCESS = 'GET_SEAT_USAGE_SUCCESS';
+export const GET_SEAT_USAGE_ERROR = 'GET_SEAT_USAGE_ERROR'
+
 //-------------------- ACTION CREATORS --------------------//
 
 // Get Registration statistics
@@ -137,6 +143,13 @@ export function acquireSeat(station) {
 	return axios.post('methods.asmx/AcquireSeat', { stationInformation });
 }
 
+export function setSeatGuid(guid) {
+	return {
+		type : SET_SEAT_GUID,
+		payload : guid
+	};
+}
+
 
 // Release Current Seat
 export function releaseThisSeat() {
@@ -145,11 +158,58 @@ export function releaseThisSeat() {
 			.then((response) => {
 				if(response.data.d.Fault == null){
 					// CLEAR STATION INFO...
+					dispatch(clearSeatGuid());
 				}
 			})
 			.catch((err) => {
 				
 			});
+	};
+}
+
+function clearSeatGuid() {
+	return {
+		type: CLEAR_SEAT_GUID
+	};
+}
+
+// Release Other Active Seat
+export function releaseOtherSeat(seatGuid) {
+	return function(dispatch) {
+		axios.post(`methods.asmx/RelinquishSeat`, { seatGuid })
+			.then((response) => {
+
+			})
+			.catch((err) => {
+
+			});
+	};
+}
+
+// Get Seat Usage
+export function getSeatUsage() {
+	return function(dispatch) {
+		axios.post('methods.asmx/GetSeatUsage', {})
+			.then((response) => {
+				dispatch(getSeatUsageSuccess(response.data.d));
+			})
+			.catch((err) => {
+				console.log("ERROR IN SEAT USAGE");
+			});
+	}
+}
+
+function getSeatUsageSuccess(response) {
+	return {
+		type : GET_SEAT_USAGE_SUCCESS,
+		payload : response
+	};
+}
+
+function getSeatUsageError(err) {
+	return {
+		type : GET_SEAT_USAGE_ERROR,
+		payload : err
 	};
 }
 

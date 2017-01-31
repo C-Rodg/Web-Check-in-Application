@@ -1,7 +1,16 @@
 import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR, 
 	GET_EVENT_INFORMATION_SUCCESS, GET_EVENT_INFORMATION_ERROR, 
-	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR
+	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR,
+	SET_SEAT_GUID, CLEAR_SEAT_GUID,
+	GET_SEAT_USAGE_SUCCESS, GET_SEAT_USAGE_ERROR
 	} from '../actions/cc_settings';
+
+const INITIAL_SEATS_STATE = {
+	ActiveSeats : [],
+	InactiveSeats : [],
+	MaxSeats : 0,
+	SeatsUsed : 0
+};
 
 const INITIAL_STATS_STATE = {
 	totalAttended : 0,
@@ -32,7 +41,9 @@ const INITIAL_STATE = {
 	eventName : "Validar Web Check In",
 	eventLocation : "Seattle, WA, USA",
 	eventDate : "01/01/01",
-	stats : INITIAL_STATS_STATE
+	seatGuid : null,
+	seats : INITIAL_SEATS_STATE,
+	stats : INITIAL_STATS_STATE	
 };
 
 // Settings Reducer
@@ -64,6 +75,17 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 				eventDate : action.payload.eventStartDate
 			};
 		case GET_EVENT_INFORMATION_ERROR:
+			return state;
+
+		case SET_SEAT_GUID : 
+			return {...state, seatGuid: action.payload };
+		case CLEAR_SEAT_GUID:
+			return {...state, seatGuid : ""};
+
+		case GET_SEAT_USAGE_SUCCESS:
+			return {...state, seats : action.payload};
+
+		case GET_SEAT_USAGE_ERROR:
 			return state;
 		
 
