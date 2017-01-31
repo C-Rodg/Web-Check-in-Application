@@ -401,6 +401,14 @@
 		.seats-title {
 			font-family: 'robotomedium', 'robotoregular', roboto, Helvetica, Arial, sans-serif;
 			margin-bottom: 3px;
+
+			.expand-btn {
+				cursor: pointer;
+
+				i {
+					vertical-align: middle;
+				}
+			}
 		}
 
 		.seat-count {
@@ -433,6 +441,7 @@
 				top: 2px;
 				right: 4px;
 				opacity: 0.8;
+				cursor: pointer;
 			}
 
 			.seat-block-sub {
@@ -443,7 +452,7 @@
 				display: none;
 			}
 
-			.seat-current {
+			.seat-current:not(.seat-block-inactive) {
 				background-color: #f5f5f5;
 			}
 		}

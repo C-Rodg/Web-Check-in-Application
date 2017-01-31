@@ -17,7 +17,9 @@ export const SET_SEAT_GUID = 'SET_SEAT_GUID';
 export const CLEAR_SEAT_GUID = 'CLEAR_SEAT_GUID';
 
 export const GET_SEAT_USAGE_SUCCESS = 'GET_SEAT_USAGE_SUCCESS';
-export const GET_SEAT_USAGE_ERROR = 'GET_SEAT_USAGE_ERROR'
+export const GET_SEAT_USAGE_ERROR = 'GET_SEAT_USAGE_ERROR';
+
+export const SUBTRACT_SEAT_USE = 'SUBTRACT_SEAT_USE';
 
 //-------------------- ACTION CREATORS --------------------//
 
@@ -157,8 +159,8 @@ export function releaseThisSeat() {
 		axios.post(`methods.asmx/ReleaseSeat`, {})
 			.then((response) => {
 				if(response.data.d.Fault == null){
-					// CLEAR STATION INFO...
 					dispatch(clearSeatGuid());
+					dispatch(subtractSeat());
 				}
 			})
 			.catch((err) => {
@@ -178,11 +180,17 @@ export function releaseOtherSeat(seatGuid) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/RelinquishSeat`, { seatGuid })
 			.then((response) => {
-
+				dispatch(subtractSeat());
 			})
 			.catch((err) => {
 
 			});
+	};
+}
+
+function subtractSeat() {
+	return {
+		type : SUBTRACT_SEAT_USE
 	};
 }
 
@@ -194,7 +202,7 @@ export function getSeatUsage() {
 				dispatch(getSeatUsageSuccess(response.data.d));
 			})
 			.catch((err) => {
-				console.log("ERROR IN SEAT USAGE");
+				dispatch(getSeatUsageError(err));
 			});
 	}
 }

@@ -9,7 +9,7 @@ const ActiveSeatTile = (props) => {
         <div className="seat-block col-xs-12 col-sm-6">
             <div className={"seat-block-container " + (props.active ? "" : "seat-block-inactive ") + (currentDevice ? "seat-current" : "")}>
                 <div className="seat-text-container">
-                    <div className="seat-block-title">{name} {currentDevice ? <em>(this device)</em> : ""}</div>
+                    <div className="seat-block-title">{name} {(currentDevice && props.active) ? <em>(this device)</em> : ""}</div>
                     <div className="seat-block-sub">{props.ClientGuid}</div>
                     {
                         props.active ? 

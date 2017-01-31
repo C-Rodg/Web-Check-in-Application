@@ -2,7 +2,8 @@ import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR,
 	GET_EVENT_INFORMATION_SUCCESS, GET_EVENT_INFORMATION_ERROR, 
 	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR,
 	SET_SEAT_GUID, CLEAR_SEAT_GUID,
-	GET_SEAT_USAGE_SUCCESS, GET_SEAT_USAGE_ERROR
+	GET_SEAT_USAGE_SUCCESS, GET_SEAT_USAGE_ERROR,
+	SUBTRACT_SEAT_USE
 	} from '../actions/cc_settings';
 
 const INITIAL_SEATS_STATE = {
@@ -83,11 +84,27 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 			return {...state, seatGuid : ""};
 
 		case GET_SEAT_USAGE_SUCCESS:
-			return {...state, seats : action.payload};
-
+			return {...state, seats : seatsReducer(state.seats, action)};
 		case GET_SEAT_USAGE_ERROR:
 			return state;
+
+		case SUBTRACT_SEAT_USE:
+			return {...state, seats: seatsReducer(state.seats, action)};
 		
+
+		default:
+			return state;
+	}
+}
+
+// Seats Reducer 
+function seatsReducer(state = INITIAL_SEATS_STATE, action) {
+	switch(action.type) {
+		case GET_SEAT_USAGE_SUCCESS:
+			return {...state, ...action.payload};
+		
+		case SUBTRACT_SEAT_USE: 
+			return {...state, SeatsUsed : (state.SeatsUsed -= 1) }
 
 		default:
 			return state;
