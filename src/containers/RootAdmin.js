@@ -52,7 +52,7 @@ class RootAdmin extends Component {
 						{this.props.children}
 					</div>
 				</div>
-				<AdminFooter notifyText={this.props.notifyText} notifyCounter={this.props.notifyCounter} notifyType={this.props.notifyType} />
+				<AdminFooter online={this.props.seatGuid} notifyText={this.props.notifyText} notifyCounter={this.props.notifyCounter} notifyType={this.props.notifyType} />
 			</div>
 		);
 	}
@@ -67,7 +67,8 @@ const mapStateToProps = (state) => {
 		statsRegistered : state.settings.stats.totalRegistered,
 		notifyText : state.registrant.notificationText,
 		notifyCounter : state.registrant.notificationCount,
-		notifyType : state.registrant.notificationSuccess
+		notifyType : state.registrant.notificationSuccess,
+		seatGuid : state.settings.seatGuid
 	};
 };
 

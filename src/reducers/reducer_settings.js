@@ -104,7 +104,8 @@ function seatsReducer(state = INITIAL_SEATS_STATE, action) {
 			return {...state, ...action.payload};
 		
 		case SUBTRACT_SEAT_USE: 
-			return {...state, SeatsUsed : (state.SeatsUsed -= 1) };
+			let newSeatCount = state.SeatsUsed - 1;			
+			return {...state, SeatsUsed : newSeatCount };
 
 		case REMOVE_ACTIVE_SEAT:
 			return {...state};

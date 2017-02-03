@@ -9,7 +9,7 @@ const AdminFooter = (props) => {
 			<div className="row branding">	
 				<div className="col-xs-12 text-center branding-text">						
 					<Link to="/admin/config" className="branding-settings"><i className="material-icons v-middle">settings</i></Link>
-					vCheckin
+					<span className={props.online ? "" : "offline"}>vCheckin</span>
 					<Link to="/attendee" className="branding-switch"><i className="material-icons v-middle">transfer_within_a_station</i></Link>	
 				</div>		
 			</div>

@@ -162,7 +162,6 @@ export function releaseThisSeat(guid) {
 				if(response.data.d.Fault == null){
 					dispatch(clearSeatGuid());
 					dispatch(subtractSeat());
-					dispatch(removeActiveSeat(guid));
 				}
 			})
 			.catch((err) => {
@@ -190,7 +189,6 @@ export function releaseOtherSeat(seatGuid) {
 		axios.post(`methods.asmx/RelinquishSeat`, { seatGuid })
 			.then((response) => {
 				dispatch(subtractSeat());
-				dispatch(removeActiveSeat(seatGuid));
 			})
 			.catch((err) => {
 
@@ -209,7 +207,12 @@ export function getSeatUsage() {
 	return function(dispatch) {
 		axios.post('methods.asmx/GetSeatUsage', {})
 			.then((response) => {
-				dispatch(getSeatUsageSuccess(response.data.d));
+				if(response.data.d.Fault && response.data.d.Fault.Type === "InvalidSeatFault"){
+					dispatch(clearSeatGuid());
+					dispatch(getSeatUsageError(err));
+				} else {
+					dispatch(getSeatUsageSuccess(response.data.d));
+				}				
 			})
 			.catch((err) => {
 				dispatch(getSeatUsageError(err));

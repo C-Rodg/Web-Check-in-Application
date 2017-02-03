@@ -15,22 +15,29 @@ class AdminSeats extends Component {
         this.state = {
             inactiveOpen : false
         };
+
+        this._getSeatsTimer = null;
     }   
 
     componentDidMount() {
-        console.log("Component Mounted, getSeatUsage()");
         this.props.getSeatUsage();
+
+        this._getSeatsTimer = setInterval(() => {
+            if (this.props.seatGuid) {
+                this.props.getSeatUsage();
+            }
+        }, 60000);
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps);
-        console.log("END OF NEXTPROPS");
-        //if (nextProps.seatGuid && nextProps.seats.ActiveSeats && (nextProps.seats.ActiveSeats.length !== this.props.seats.ActiveSeats.length)) {
         if (nextProps.seats.SeatsUsed !== this.props.seats.SeatsUsed) {
-            console.log("Receiving props and SeatsUsed have changed");
             nextProps.getSeatUsage();
         }
     }
+
+    componentWillUnmount() {
+		clearInterval(this._getSeatsTimer);
+	}
 
     handleRemoveSeat(guid, currentDevice) {
         if (currentDevice) {
@@ -58,33 +65,14 @@ class AdminSeats extends Component {
     renderSeats() {
         if (!this.props.seatGuid || !this.props.seats.ActiveSeats) {
             return (
-                 <div className="text-center" >
+                 <div className="text-center col-xs-12 clearfix" >
                     <button className="btn-flat border-0 inline-btn" onClick={this.acquireNewSeat}><span>Acquire New Seat?</span></button>
                 </div>
             );
         }
         return (
             <div>
-                 <div className="active-seats clearfix">
-                    <div className="col-xs-12 seats-title">Active Seats ({this.props.seats.ActiveSeats.length})</div>
-                    {this.props.seats.ActiveSeats.map((seat) => <SeatTile {...seat} active={true} removeActiveSeat={this.handleRemoveSeat} currentSeat={this.props.seatGuid} />)}
-                </div>
-                <div className="inactive-seats clearfix">
-                    <div className="col-xs-12 seats-title">Inactive Seats ({this.props.seats.InactiveSeats.length})<span className="expand-btn" onClick={() => this.setState({inactiveOpen: !this.state.inactiveOpen})}><i className="material-icons">{this.state.inactiveOpen ? 'expand_less' : 'expand_more'}</i></span></div>
-                    {
-                        this.state.inactiveOpen ? 
-                        <div>{this.props.seats.InactiveSeats.map((seat) => <SeatTile {...seat} active={false} currentSeat={this.props.seatGuid} />)}</div> :
-                        ""
-                    }                 
-                </div>
-            </div>
-        );
-    }
-
-    render() {
-        return (
-            <div className="admin-seats clearfix">
-                <div className="seat-count col-xs-12 text-center clearfix">
+                 <div className="seat-count col-xs-12 text-center clearfix">
                     <div>
                         <span className="number">{this.props.seats.SeatsUsed}/{this.props.seats.MaxSeats}</span><span className="number-title"> Seats Used</span>
                     </div>                   
@@ -93,8 +81,27 @@ class AdminSeats extends Component {
                     </div>
                 </div> 
                 <div className="seats-box clearfix">
-                    {this.renderSeats()}
-                </div>                       
+                    <div className="active-seats clearfix">
+                        <div className="col-xs-12 seats-title">Active Seats ({this.props.seats.ActiveSeats.length})</div>
+                        {this.props.seats.ActiveSeats.map((seat) => <SeatTile {...seat} active={true} removeActiveSeat={this.handleRemoveSeat} currentSeat={this.props.seatGuid} />)}
+                    </div>
+                    <div className="inactive-seats clearfix">
+                        <div className="col-xs-12 seats-title">Inactive Seats ({this.props.seats.InactiveSeats.length})<span className="expand-btn" onClick={() => this.setState({inactiveOpen: !this.state.inactiveOpen})}><i className="material-icons">{this.state.inactiveOpen ? 'expand_less' : 'expand_more'}</i></span></div>
+                        {
+                            this.state.inactiveOpen ? 
+                            <div>{this.props.seats.InactiveSeats.map((seat) => <SeatTile {...seat} active={false} currentSeat={this.props.seatGuid} />)}</div> :
+                            ""
+                        }                 
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div className="admin-seats clearfix">
+                { this.renderSeats() }
             </div>
         );
     }
