@@ -3,7 +3,7 @@ import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR,
 	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR,
 	SET_SEAT_GUID, CLEAR_SEAT_GUID,
 	GET_SEAT_USAGE_SUCCESS, GET_SEAT_USAGE_ERROR,
-	SUBTRACT_SEAT_USE
+	SUBTRACT_SEAT_USE, REMOVE_ACTIVE_SEAT
 	} from '../actions/cc_settings';
 
 const INITIAL_SEATS_STATE = {
@@ -104,7 +104,10 @@ function seatsReducer(state = INITIAL_SEATS_STATE, action) {
 			return {...state, ...action.payload};
 		
 		case SUBTRACT_SEAT_USE: 
-			return {...state, SeatsUsed : (state.SeatsUsed -= 1) }
+			return {...state, SeatsUsed : (state.SeatsUsed -= 1) };
+
+		case REMOVE_ACTIVE_SEAT:
+			return {...state};
 
 		default:
 			return state;

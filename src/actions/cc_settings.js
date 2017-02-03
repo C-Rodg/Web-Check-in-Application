@@ -20,6 +20,7 @@ export const GET_SEAT_USAGE_SUCCESS = 'GET_SEAT_USAGE_SUCCESS';
 export const GET_SEAT_USAGE_ERROR = 'GET_SEAT_USAGE_ERROR';
 
 export const SUBTRACT_SEAT_USE = 'SUBTRACT_SEAT_USE';
+export const REMOVE_ACTIVE_SEAT = 'REMOVE_ACTIVE_SEAT';
 
 //-------------------- ACTION CREATORS --------------------//
 
@@ -154,13 +155,14 @@ export function setSeatGuid(guid) {
 
 
 // Release Current Seat
-export function releaseThisSeat() {
+export function releaseThisSeat(guid) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/ReleaseSeat`, {})
 			.then((response) => {
 				if(response.data.d.Fault == null){
 					dispatch(clearSeatGuid());
 					dispatch(subtractSeat());
+					dispatch(removeActiveSeat(guid));
 				}
 			})
 			.catch((err) => {
@@ -175,12 +177,20 @@ function clearSeatGuid() {
 	};
 }
 
+function removeActiveSeat(guid) {
+	return {
+		type: REMOVE_ACTIVE_SEAT,
+		payload: guid
+	};
+}
+
 // Release Other Active Seat
 export function releaseOtherSeat(seatGuid) {
 	return function(dispatch) {
 		axios.post(`methods.asmx/RelinquishSeat`, { seatGuid })
 			.then((response) => {
 				dispatch(subtractSeat());
+				dispatch(removeActiveSeat(seatGuid));
 			})
 			.catch((err) => {
 

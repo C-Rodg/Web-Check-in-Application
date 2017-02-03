@@ -18,18 +18,23 @@ class AdminSeats extends Component {
     }   
 
     componentDidMount() {
+        console.log("Component Mounted, getSeatUsage()");
         this.props.getSeatUsage();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.seatGuid && (nextProps.seats.ActiveSeats !== this.props.seats.ActiveSeats)) {
-            this.props.getSeatUsage();
+        console.log(nextProps);
+        console.log("END OF NEXTPROPS");
+        //if (nextProps.seatGuid && nextProps.seats.ActiveSeats && (nextProps.seats.ActiveSeats.length !== this.props.seats.ActiveSeats.length)) {
+        if (nextProps.seats.SeatsUsed !== this.props.seats.SeatsUsed) {
+            console.log("Receiving props and SeatsUsed have changed");
+            nextProps.getSeatUsage();
         }
     }
 
     handleRemoveSeat(guid, currentDevice) {
         if (currentDevice) {
-            this.props.releaseThisSeat();
+            this.props.releaseThisSeat(guid);
         } else {
             this.props.releaseOtherSeat(guid);
         }

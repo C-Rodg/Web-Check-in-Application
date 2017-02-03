@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
 import { acquireSeat, setSeatGuid } from '../actions/cc_settings';
+import Loading  from '../components/Loading';
 
 class Login extends Component {
     constructor(props, context) {
@@ -10,7 +11,8 @@ class Login extends Component {
         let stationName = window.localStorage.getItem('stationName') || "";
         this.state = {
             stationName,
-            errorText : ""
+            errorText : "",
+            isLoading : false
         };
 
         this.startLogin = this.startLogin.bind(this);
@@ -27,14 +29,23 @@ class Login extends Component {
             });
             return false;
         }
+        this.setState({isLoading : true});
         acquireSeat(this.state.stationName)
             .then((response) => {
-                    this.props.setSeatGuid(response.data.d.StationGuid);
-                    this.context.router.push('/admin/results');
+                    if (!response.data.d.Fault) {
+                         this.props.setSeatGuid(response.data.d.StationGuid);
+                        this.context.router.push('/admin/results');
+                    } else {
+                        this.setState({
+                            errorText : "Sorry, we are unable to find a seat for this device...",
+                            isLoading : false
+                        });
+                    }                  
             })
             .catch((err) => {
                 this.setState({
-                    errorText : "Sorry, we are unable to find a seat for this device..."
+                    errorText : "Sorry, we are unable to find a seat for this device...",
+                    isLoading : false
                 });
             });
     }
@@ -72,8 +83,12 @@ class Login extends Component {
                             }                            
                         </div>	
                         </div>
+                        
                         <button className="btn-full btn-large btn-none b-t-light btn-col-green v-a-sub p-l-0" type="submit">
-                            Start
+                            { this.state.isLoading ? 
+                                <Loading /> :
+                                "Start"
+                            }
                         </button>			                        
                     </form>
                 </div>
