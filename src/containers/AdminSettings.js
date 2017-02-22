@@ -93,7 +93,7 @@ class AdminSettings extends Component {
 		let obj = {};
 		obj[item] = stateVal;
 		this.setState(obj);
-	}
+	} 
 
 	goToRandom() {
 		this.props.getRandomRegistrant(true).then((resp) => {
@@ -111,15 +111,16 @@ class AdminSettings extends Component {
 		this.context.router.push('/admin/seats');
 	}
 
-	checkCanAccessSeats() {
-		const seatUse = this.props.featureList.find((feature) => {
-			return feature.Accessible && feature.Feature === 'CanGetSeatUsage';
+	checkFeatureAccess(featureName) {
+		const hasFeature = this.props.featureList.find((feature) => {
+			return feature.Accessible && feature.Feature === featureName;
 		});
-		return seatUse ? true : false;
+		return hasFeature ? true : false;
 	}
 
 	render() {
-		const canAccessSeats = this.checkCanAccessSeats();
+		const canAccessSeats = this.checkFeatureAccess('CanGetSeatUsage');
+		const canFindRandom = this.checkFeatureAccess('CanListRandomRegistrant');
 
 		return (
 			<div className="admin-settings">
@@ -175,7 +176,7 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn both-btn" onClick={() => {this.setCustomSettings('searchBy', 'both')}}><span>Both</span></button>
 					</div>
 				</div>
-				<div className="settings-box col-xs-12 col-sm-6">
+				<div className={"settings-box col-xs-12 col-sm-6 " + (canFindRandom ? "" : " hidden")}>
 					<div className="form-group">
 						<label>Find a Random Registrant</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.goToRandom}><i className="material-icons">shuffle</i> <span>Random Registrant</span></button>
