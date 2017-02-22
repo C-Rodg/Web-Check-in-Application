@@ -22,6 +22,8 @@ export const GET_SEAT_USAGE_ERROR = 'GET_SEAT_USAGE_ERROR';
 export const SUBTRACT_SEAT_USE = 'SUBTRACT_SEAT_USE';
 export const REMOVE_ACTIVE_SEAT = 'REMOVE_ACTIVE_SEAT';
 
+export const LIST_GRANTED_FEATURES_SUCCESS = 'LIST_GRANTED_FEATURES_SUCCESS';
+
 //-------------------- ACTION CREATORS --------------------//
 
 // Get Registration statistics
@@ -231,6 +233,25 @@ function getSeatUsageError(err) {
 	return {
 		type : GET_SEAT_USAGE_ERROR,
 		payload : err
+	};
+}
+
+export function listGrantedFeatures() {
+	return function(dispatch) {
+		axios.post('methods.asmx/ListFeatureAccesses', {})
+			.then((response) => {
+				dispatch(listGrantedFeaturesSuccess(response.data.d.FeatureAccesses));
+			})
+			.catch((err) => {
+				// Do nothing...
+			});
+	}
+}
+
+function listGrantedFeaturesSuccess(response) {
+	return {
+		type: LIST_GRANTED_FEATURES_SUCCESS,
+		payload: response
 	};
 }
 

@@ -62,6 +62,13 @@ class AdminSeats extends Component {
         });
     }
 
+    checkCanRelinquishSeat() {
+		const seatUse = this.props.featureList.find((feature) => {
+			return feature.Accessible && feature.Feature === 'CanRelinquishSeat';
+		});
+		return seatUse ? true : false;
+	}
+
     renderSeats() {
         if (!this.props.seatGuid || !this.props.seats.ActiveSeats) {
             return (
@@ -99,8 +106,9 @@ class AdminSeats extends Component {
     }
 
     render() {
+        const canRelinquishSeat = this.checkCanRelinquishSeat();
         return (
-            <div className="admin-seats clearfix">
+            <div className={"admin-seats clearfix " + (canRelinquishSeat ? "" : "no-seat-removal")}>
                 { this.renderSeats() }
             </div>
         );
@@ -110,7 +118,8 @@ class AdminSeats extends Component {
 const mapStateToProps = (state) => {
     return {
         seatGuid : state.settings.seatGuid,
-        seats : state.settings.seats
+        seats : state.settings.seats,
+        featureList : state.settings.featureList
     };
 };
 

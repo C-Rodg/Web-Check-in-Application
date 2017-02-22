@@ -459,6 +459,10 @@
 			}
 		}
 	}
+
+	.admin-seats.no-seat-removal .seat-icon-container {
+		display: none;
+	}
 }
 
 @media (max-height: 1024px) {

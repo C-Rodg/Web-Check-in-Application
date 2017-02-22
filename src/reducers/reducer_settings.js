@@ -3,7 +3,8 @@ import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR,
 	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR,
 	SET_SEAT_GUID, CLEAR_SEAT_GUID,
 	GET_SEAT_USAGE_SUCCESS, GET_SEAT_USAGE_ERROR,
-	SUBTRACT_SEAT_USE, REMOVE_ACTIVE_SEAT
+	SUBTRACT_SEAT_USE, REMOVE_ACTIVE_SEAT,
+	LIST_GRANTED_FEATURES_SUCCESS
 	} from '../actions/cc_settings';
 
 const INITIAL_SEATS_STATE = {
@@ -44,7 +45,8 @@ const INITIAL_STATE = {
 	eventDate : "01/01/01",
 	seatGuid : null,
 	seats : INITIAL_SEATS_STATE,
-	stats : INITIAL_STATS_STATE	
+	stats : INITIAL_STATS_STATE,
+	featureList : []
 };
 
 // Settings Reducer
@@ -90,7 +92,9 @@ export const settings = ( state = INITIAL_STATE, action ) => {
 
 		case SUBTRACT_SEAT_USE:
 			return {...state, seats: seatsReducer(state.seats, action)};
-		
+
+		case LIST_GRANTED_FEATURES_SUCCESS:
+			return {...state, featureList: action.payload };		
 
 		default:
 			return state;

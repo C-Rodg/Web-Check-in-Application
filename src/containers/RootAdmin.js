@@ -5,7 +5,7 @@ import AdminHeader from '../components/AdminHeader';
 import AdminControls from './AdminControls';
 import AdminFooter from '../components/AdminFooter';
 
-import { getEventSettings, getEventInformation, getRegistrationStats } from '../actions/cc_settings';
+import { getEventSettings, getEventInformation, getRegistrationStats, listGrantedFeatures } from '../actions/cc_settings';
 import { searchRegistrants, clearAllSearching } from '../actions/cc_registrant';
 
 class RootAdmin extends Component {
@@ -20,6 +20,7 @@ class RootAdmin extends Component {
 		this.props.getEventSettings();	
 		this.props.getEventInformation();
 		this.props.getRegistrationStats();
+		this.props.listGrantedFeatures();
 
 		this._getStatsTimer = setInterval(() => {
 			this.props.getRegistrationStats();
@@ -78,7 +79,8 @@ const mapDispatchToProps = (dispatch) => {
 		getEventInformation : () => dispatch(getEventInformation()),
 		searchRegistrants : (q, f) => dispatch(searchRegistrants(q, f)),
 		getRegistrationStats : () => dispatch(getRegistrationStats()),
-		clearAllSearching : () => dispatch(clearAllSearching())
+		clearAllSearching : () => dispatch(clearAllSearching()),
+		listGrantedFeatures : () => dispatch(listGrantedFeatures())
 	};
 };
 

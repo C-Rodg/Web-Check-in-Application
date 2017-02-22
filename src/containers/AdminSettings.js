@@ -111,7 +111,16 @@ class AdminSettings extends Component {
 		this.context.router.push('/admin/seats');
 	}
 
+	checkCanAccessSeats() {
+		const seatUse = this.props.featureList.find((feature) => {
+			return feature.Accessible && feature.Feature === 'CanGetSeatUsage';
+		});
+		return seatUse ? true : false;
+	}
+
 	render() {
+		const canAccessSeats = this.checkCanAccessSeats();
+
 		return (
 			<div className="admin-settings">
 				<div className="settings-box col-xs-12 col-sm-6">
@@ -185,7 +194,7 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={()=>{window.location.reload()}}><i className="material-icons">refresh</i> <span>Restore to Default</span></button>
 					</div>
 				</div>
-				<div className="settings-box col-xs-12 col-sm-6">
+				<div className={"settings-box col-xs-12 col-sm-6 " + (canAccessSeats ? "" : " hidden")}>
 					<div className="form-group">
 						<label>Device Control</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.navigateToSeatManager} ><i className="material-icons">event_seat</i> <span>Seat Manager</span></button>
@@ -209,7 +218,8 @@ AdminSettings.contextTypes = {
 const mapStateToProps = (state) => {
 	return {
 		attendeeConfig : state.settings.configuration.AttendeeMode,
-		seatGuid : state.settings.seatGuid
+		seatGuid : state.settings.seatGuid,
+		featureList : state.settings.featureList
 	};
 };
 
