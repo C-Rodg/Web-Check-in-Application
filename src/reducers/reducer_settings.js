@@ -30,10 +30,17 @@ const INITIAL_CONFIG_ATTENDEE_STATE = {
 	WalkIns : true
 };
 
+const INITIAL_CONFIG_SMS_STATE = {
+	Enabled: false,
+	Message: "",
+	PhoneField: ""
+};
+
 const INITIAL_CONFIG_STATE = {
 	CancelledStrings : [],
 	WalkInFields : [],
-	AttendeeMode : INITIAL_CONFIG_ATTENDEE_STATE
+	AttendeeMode : INITIAL_CONFIG_ATTENDEE_STATE,
+	SMS: INITIAL_CONFIG_SMS_STATE
 };
 
 const INITIAL_STATE = {
@@ -126,13 +133,26 @@ function configReducer(state = INITIAL_CONFIG_STATE, action) {
 			return {...state, 
 				CancelledStrings : action.payload.CancelledStrings, 
 				WalkInFields : action.payload.WalkInFields,
-				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action)
+				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action),
+				SMS: configSMSReducer(state.SMS, action)
 			};
 		case GET_EVENT_SETTINGS_ERROR:
 			return {...state,
 				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action)
 			};
 		default:
+			return state;
+	}
+}
+
+// SMS Configuration Reducer (nested)
+function configSMSReducer(state = INITIAL_CONFIG_SMS_STATE, action) {
+	switch(action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:
+			return checkForOverwriteSmsSettings(state, action);
+		case GET_EVENT_SETTINGS_ERROR:
+			return checkForOverwriteSmsSettings(state, action);
+		default: 
 			return state;
 	}
 }
@@ -167,8 +187,33 @@ function statsReducer(state = {}, action){
 	}
 }
 
+function checkForOverwriteSmsSettings(state, action) {
+	let newConfig;
+	switch (action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:
+			newConfig = Object.assign({}, state, action.payload.SMS);
+			break;
+		case GET_EVENT_SETTINGS_ERROR:
+			newConfig = Object.assign({}, state);
+			break;
+		default:
+			newConfig = Object.assign({}, state);
+	}
+
+	if (window.localStorage.getItem('customSettings') === 'TRUE') {
+		let sms = window.localStorage.getItem('sms');
+
+		if (sms === 'TRUE') {
+			newConfig.Enabled = true;
+		} else if (sms === 'FALSE') {
+			newConfig.Enabled = false;
+		}
+	}
+	return newConfig;
+}
+
 // Return object with overwritten settings if needed
-function checkForOverwriteAttendeeSettings(state, action){
+function checkForOverwriteAttendeeSettings(state, action) {
 	let newConfig;
 	switch(action.type) {
 		case GET_EVENT_SETTINGS_SUCCESS:						

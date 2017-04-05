@@ -7,9 +7,9 @@
 		"WalkIns" : false
 	},
 	"SMS" : {
-		"enabled" : true,
-		"phoneField" : "qrRepNumber",
-		"msg" : "Hello, {{qrFirstName}} {{qrLastName}} has checked in from Validar Test Event."
+		"Enabled" : true,
+		"PhoneField" : "qrRepNumber",
+		"Message" : "Hello, {{qrFirstName}} {{qrLastName}} has checked in from Validar Test Event."
 	},
 	"WalkInFields" : [
 		{

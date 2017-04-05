@@ -264,3 +264,23 @@ export function getGuidFromURL(){
 	guid = path.slice(idx + 1);
 	return guid;
 }
+
+// Helper - convert message with placeholders to sms message
+export function replaceMessagePlaceholders(msg, surveyData){
+	return msg.replace(/\{\{(.*?)\}\}/g, function(match, token) {		
+		return extractXMLstring(token, surveyData);
+	});
+}
+
+// Helper - searches survey data and returns text value
+export function extractXMLstring(tag, surveyData) {
+	var str = "";
+	if(surveyData) {
+		let regex = new RegExp("<" + tag + ">(.*?)<\/" + tag + ">", "ig");
+		let match = regex.exec(surveyData);
+		if(match && match.length > 1) {
+			str = match[1];
+		} 
+	}
+	return str;
+}

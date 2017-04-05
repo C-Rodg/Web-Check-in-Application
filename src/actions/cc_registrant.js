@@ -453,3 +453,36 @@ export function Registrant() {
 	this.Uploaded = false;
 	this.WalkIn = true;
 }
+
+// Check-in registrant and send SMS 
+export function checkInWithSms(registrant, number, msg) {
+	const checkedInRegistrant = Object.assign({}, registrant, {
+		Attended : true,
+		FirstCheckInDateTime : (new Date()),
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
+	});
+
+	const inputArg = {
+		registrant : checkedInRegistrant
+	};
+
+	const phoneData = {
+		sendTo: number,
+		message: msg,
+		gatewayCode: '',
+		gatewayKeyword: ''
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				dispatch(sendNotification("Thank you for joining us!", true));
+				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+				dispatch(getRegistrationStats());										
+			})
+			.catch((err) => {
+				dispatch(checkInRegistrantError(err));
+			});
+	};
+}

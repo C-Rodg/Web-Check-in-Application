@@ -1,7 +1,20 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { loadRegistrantByAttendeeGuid, loadRegistrantByBadgeId, clearCurrentRegistrant, checkInRegistrant, checkOutRegistrant, parseXml, getTextFromXml, getPickFromXml } from '../actions/cc_registrant';
+import { 
+		loadRegistrantByAttendeeGuid, 
+		loadRegistrantByBadgeId, 
+		clearCurrentRegistrant, 
+		checkInRegistrant, 
+		checkOutRegistrant, 
+		parseXml, 
+		getTextFromXml, 
+		getPickFromXml,
+		replaceMessagePlaceholders,
+		extractXMLstring,
+		checkInWithSms
+	} from '../actions/cc_registrant';
+
 import Loading from '../components/Loading';
 
 class AdminRegistrant extends Component {
@@ -22,6 +35,7 @@ class AdminRegistrant extends Component {
 		this.checkCancelled = this.checkCancelled.bind(this);
 		this.toggleShowMoreFields = this.toggleShowMoreFields.bind(this);
 		this.viewSurveyFields = this.viewSurveyFields.bind(this);
+		this.checkInAndSendSms = this.checkInAndSendSms.bind(this);
 	}
 
 	componentDidMount() {	
@@ -48,7 +62,18 @@ class AdminRegistrant extends Component {
 	}
 
 	checkInRegistrant() {
-		this.props.checkInRegistrant(this.props.registrant);
+		if (this.props.smsEnabled && this.props.smsMessage && this.props.smsField) {
+			this.checkInAndSendSms();
+		} else {
+			this.props.checkInRegistrant(this.props.registrant);
+		}	
+	}
+
+	// Extract phone number, complete message and send sms
+	checkInAndSendSms() {
+		const number = extractXMLstring(this.props.smsField, this.props.registrant.SurveyData);
+		const msg = replaceMessagePlaceholders(this.props.smsMessage, this.props.registrant.SurveyData);
+		this.props.checkInWithSms(this.props.registrant, number, msg);
 	}
 
 	checkOutRegistrant() {
@@ -183,12 +208,16 @@ AdminRegistrant.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const {registrant, settings: { configuration } } = state;
 	return {
-		registrantError : state.registrant.currentError,
-		registrant : state.registrant.currentRegistrant,
-		returnToList : state.registrant.returnToList,
-		cancelledCheck : state.settings.configuration.CancelledStrings,
-		formFields : state.settings.configuration.WalkInFields
+		registrantError : registrant.currentError,
+		registrant : registrant.currentRegistrant,
+		returnToList : registrant.returnToList,
+		cancelledCheck : configuration.CancelledStrings,
+		formFields : configuration.WalkInFields,
+		smsEnabled : configuration.SMS.Enabled,
+		smsMessage : configuration.SMS.Message,
+		smsField : configuration.SMS.PhoneField
 	};
 }
 

@@ -14,15 +14,16 @@ class AdminSettings extends Component {
 		let scan = props.attendeeConfig.Scan;
 		let walkIns = props.attendeeConfig.WalkIns;
 		let cameraFront = window.localStorage.getItem('cameraFront');
+		let sms = props.smsEnabled;
 		this.state = {
 			stationName,
 			searchBy,
 			search,
 			scan, 
 			walkIns,
-			cameraFront
+			cameraFront,
+			sms
 		};
-
 		this.onStationChange = this.onStationChange.bind(this);
 		this.toggleFullscreenMode = this.toggleFullscreenMode.bind(this);
 		this.setCustomSettings = this.setCustomSettings.bind(this);
@@ -37,15 +38,17 @@ class AdminSettings extends Component {
 			let searchBy = nextProps.attendeeConfig.SearchBy,
 				scan = nextProps.attendeeConfig.Scan,
 				search = nextProps.attendeeConfig.Search,
-				walkIns = nextProps.attendeeConfig.WalkIns;
+				walkIns = nextProps.attendeeConfig.WalkIns,
+				sms = nextProps.smsEnabled;			
 
 				this.setState({
 					searchBy,
 					scan,
 					search,
-					walkIns
+					walkIns,
+					sms
 				});
-		}
+		}				
 	}
 
 	componentWillUnmount() {
@@ -80,6 +83,7 @@ class AdminSettings extends Component {
 	}
 
 	setCustomSettings(item, val) {
+		console.log("SETTING CUSTOM-" + item + " " + val);
 		window.localStorage.setItem('customSettings', 'TRUE');
 		window.localStorage.setItem(item, val);
 		let stateVal;
@@ -121,6 +125,7 @@ class AdminSettings extends Component {
 	render() {
 		const canAccessSeats = this.checkFeatureAccess('CanGetSeatUsage');
 		const canFindRandom = this.checkFeatureAccess('CanListRandomRegistrant');
+		const canSendSMS = this.checkFeatureAccess('CanSendSmsMessage');
 
 		return (
 			<div className="admin-settings">
@@ -189,6 +194,13 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCameraMode("FALSE")}}><span>Back</span></button>
 					</div>
 				</div>
+				<div className={"settings-box col-xs-12 col-sm-6 " + (canSendSMS ? "" : " hidden ")}>
+					<div className={"form-group settings-" + (this.state.sms ? "on" : "off")}>
+						<label>SMS alerts</label>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('sms', "TRUE")}}><span>Enabled</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('sms', "FALSE")}}><span>Disabled</span></button>
+					</div>
+				</div>
 				<div className="settings-box col-xs-12 col-sm-6">
 					<div className="form-group">
 						<label>Reset Event Settings</label>
@@ -220,7 +232,8 @@ const mapStateToProps = (state) => {
 	return {
 		attendeeConfig : state.settings.configuration.AttendeeMode,
 		seatGuid : state.settings.seatGuid,
-		featureList : state.settings.featureList
+		featureList : state.settings.featureList,
+		smsEnabled : state.settings.configuration.SMS.Enabled
 	};
 };
 
