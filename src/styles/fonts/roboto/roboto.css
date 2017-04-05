@@ -10,7 +10,7 @@
 
 }
 
-@font-face {
+/*@font-face {
     font-family: 'roboto_condensedlight';
     src: url('./fonts/roboto/RobotoCondensed-Light-webfont.eot');
     src: url('./fonts/roboto/RobotoCondensed-Light-webfont.eot?#iefix') format('embedded-opentype'),
@@ -20,7 +20,7 @@
     font-weight: normal;
     font-style: normal;
 
-}
+}*/
 
 @font-face {
     font-family: 'robotomedium';
@@ -81,7 +81,7 @@
     font-style: normal;
 
 }
-
+/*
 @font-face {
     font-family: 'roboto_condensedbold';
     src: url('./fonts/roboto/RobotoCondensed-Bold-webfont.eot');
@@ -104,5 +104,5 @@
     font-weight: normal;
     font-style: normal;
 
-}
+}*/
 
