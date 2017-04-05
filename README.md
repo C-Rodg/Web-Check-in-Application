@@ -3,7 +3,7 @@ A web registration check-in system.
 
 ## Motivation
 
-A web registration check-in system using Webpack and React.
+A web registration check-in system using Webpack, React, and Redux.
 
 
 ## Contributors
