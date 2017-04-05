@@ -1,5 +1,6 @@
 import { axios } from './utilities_httpRequest';
 import { getRegistrationStats } from './cc_settings';
+import smsObj from './secrets';
 
 //------------------------- TYPES -------------------------//
 
@@ -470,19 +471,32 @@ export function checkInWithSms(registrant, number, msg) {
 	const phoneData = {
 		sendTo: number,
 		message: msg,
-		gatewayCode: '',
-		gatewayKeyword: ''
+		gatewayCode: smsObj.code,
+		gatewayKeyword: smsObj.keyword
 	};
 
 	return function(dispatch) {
 		axios.post('methods.asmx/UpsertRegistrant', inputArg)
 			.then((response) => {
-				dispatch(sendNotification("Thank you for joining us!", true));
-				dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
-				dispatch(getRegistrationStats());										
+				sendSms(phoneData).then((phoneResponse) => {
+					console.log(phoneResponse);
+					dispatch(sendNotification("Thank you for joining us!", true));
+					dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+					dispatch(getRegistrationStats());
+				})
+				.catch((err) => {
+					dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+					dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+					dispatch(getRegistrationStats());
+				});										
 			})
 			.catch((err) => {
 				dispatch(checkInRegistrantError(err));
 			});
 	};
+}
+
+// Send SMS
+function sendSms(obj) {
+	return axios.post('methods.asmx/SendSmsMessage', JSON.stringify(obj));
 }

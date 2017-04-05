@@ -9,7 +9,7 @@
 	"SMS" : {
 		"Enabled" : true,
 		"PhoneField" : "qrRepNumber",
-		"Message" : "Hello, {{qrFirstName}} {{qrLastName}} has checked in from Validar Test Event."
+		"Message" : "Hello, {{qrFirstName}} {{qrLastName}} has checked in from {{qrCompany}}."
 	},
 	"WalkInFields" : [
 		{

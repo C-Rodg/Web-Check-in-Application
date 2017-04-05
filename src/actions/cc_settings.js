@@ -275,7 +275,8 @@ export function replaceMessagePlaceholders(msg, surveyData){
 // Helper - searches survey data and returns text value
 export function extractXMLstring(tag, surveyData) {
 	var str = "";
-	if(surveyData) {
+	if(surveyData && tag) {
+		tag = tag.trim();
 		let regex = new RegExp("<" + tag + ">(.*?)<\/" + tag + ">", "ig");
 		let match = regex.exec(surveyData);
 		if(match && match.length > 1) {

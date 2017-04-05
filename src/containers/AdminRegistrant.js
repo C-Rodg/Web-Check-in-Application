@@ -73,7 +73,11 @@ class AdminRegistrant extends Component {
 	checkInAndSendSms() {
 		const number = extractXMLstring(this.props.smsField, this.props.registrant.SurveyData);
 		const msg = replaceMessagePlaceholders(this.props.smsMessage, this.props.registrant.SurveyData);
-		this.props.checkInWithSms(this.props.registrant, number, msg);
+		if(number && msg) {
+			this.props.checkInWithSms(this.props.registrant, number, msg);
+		} else {
+			this.props.checkInRegistrant(this.props.registrant);
+		}
 	}
 
 	checkOutRegistrant() {
