@@ -1,6 +1,8 @@
 # Build files
 dist
 
+# Secrets
+src/actions/secrets.js
 
 # Dependency Directory
 node_modules
