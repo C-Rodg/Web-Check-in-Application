@@ -1,7 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { loadRegistrantByAttendeeGuid, checkInRegistrant, checkOutRegistrant } from '../actions/cc_registrant';
+import { 
+	loadRegistrantByAttendeeGuid, 
+	checkInRegistrant, 
+	checkOutRegistrant,
+	replaceMessagePlaceholders,
+	extractXMLstring,
+	checkInWithSms
+} from '../actions/cc_registrant';
 import Loading from '../components/Loading';
 import BackButton from '../components/BackButton';
 
@@ -14,6 +21,7 @@ class AttendeeRegistrant extends Component {
 		this.getActionButtons = this.getActionButtons.bind(this);
 		this.checkInRegistrant = this.checkInRegistrant.bind(this);
 		this.checkOutRegistrant = this.checkOutRegistrant.bind(this);
+		this.checkInAndSendSms = this.checkInAndSendSms.bind(this);
 	}
 
 	componentDidMount() {
@@ -27,7 +35,21 @@ class AttendeeRegistrant extends Component {
 	}	
 
 	checkInRegistrant() {
-		this.props.checkInRegistrant(this.props.registrant);
+		if (this.props.smsEnabled && this.props.smsField && this.props.smsMessage) {
+			this.checkInAndSendSms();
+		} else {
+			this.props.checkInRegistrant(this.props.registrant);
+		}		
+	}
+
+	checkInAndSendSms() {
+		const number = extractXMLstring(this.props.smsField, this.props.registrant.SurveyData);
+		const msg = replaceMessagePlaceholders(this.props.smsMessage, this.props.registrant.SurveyData);
+		if(number && msg) {
+			this.props.checkInWithSms(this.props.registrant, number, msg);
+		} else {
+			this.props.checkInRegistrant(this.props.registrant);
+		}
 	}
 
 	checkOutRegistrant() {
@@ -119,11 +141,15 @@ AttendeeRegistrant.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const { registrant, settings: { configuration } } = state;
 	return {
-		registrantError : state.registrant.currentError,
-		registrant : state.registrant.currentRegistrant,
-		returnToList : state.registrant.returnToList,
-		cancelledCheck : state.settings.configuration.CancelledStrings
+		registrantError : registrant.currentError,
+		registrant : registrant.currentRegistrant,
+		returnToList : registrant.returnToList,
+		cancelledCheck : configuration.CancelledStrings,
+		smsEnabled : configuration.SMS.Enabled,
+		smsMessage : configuration.SMS.Message,
+		smsField : configuration.SMS.PhoneField
 	};
 }
 
@@ -131,7 +157,8 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid)),
 		checkInRegistrant : (registrant) => dispatch(checkInRegistrant(registrant)),
-		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant))
+		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant)),
+		checkInWithSms : (registrant, number, msg) => dispatch(checkInWithSms(registrant, number, msg))
 	};
 }
 

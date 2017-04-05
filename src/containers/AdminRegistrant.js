@@ -231,7 +231,8 @@ const mapDispatchToProps = (dispatch) => {
 		loadRegistrantByGuid : (guid) => dispatch(loadRegistrantByAttendeeGuid(guid)),
 		clearCurrentRegistrant : () => dispatch(clearCurrentRegistrant()),
 		checkInRegistrant : (registrant) => dispatch(checkInRegistrant(registrant)),
-		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant))
+		checkOutRegistrant : (registrant) => dispatch(checkOutRegistrant(registrant)),
+		checkInWithSms : (registrant, number, msg) => dispatch(checkInWithSms(registrant, number, msg))
 	};
 };
 

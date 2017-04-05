@@ -181,6 +181,12 @@
 			"label" : "Phone",
 			"tag" : "qrPhone",
 			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "Rep Number",
+			"tag" : "qrRepNumber",
+			"req" : false
 		}
 	]
 }
