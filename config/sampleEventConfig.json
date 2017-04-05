@@ -1,0 +1,186 @@
+{
+	"CancelledStrings" : ["<qrStatus>Cancelled</qrStatus>", "<qrIsActive>False</qrIsActive>"],
+	"AttendeeMode" : {
+		"SearchBy" : "lastname", 
+		"Search" : true,
+		"Scan" : true,
+		"WalkIns" : false
+	},
+	"SMS" : {
+		"enabled" : true,
+		"phoneField" : "qrRepNumber",
+		"msg" : "Hello, {{qrFirstName}} {{qrLastName}} has checked in from Validar Test Event."
+	},
+	"WalkInFields" : [
+		{
+			"type" : "T",
+			"label" : "First Name",
+			"tag" : "qrFirstName",
+			"req" : true,
+			"disabled" : false,
+			"hint" : "FIRSTNAME"
+		},
+		{
+			"type" : "T",
+			"label" : "Last Name",
+			"tag" : "qrLastName",
+			"req" : true,
+			"disabled" : false,
+			"hint" : "LASTNAME"
+		},
+		{
+			"type" : "T",
+			"label" : "Attendee Type",
+			"tag" : "qrAttendeeType",
+			"req" : true,
+			"disabled" : false,
+			"hint" : "ATTENDEETYPE"
+		},
+		{
+			"type" : "T",
+			"label" : "Email",
+			"tag" : "qrEmail",
+			"disabled" : false,
+			"req" : true,
+			"hint" : "EMAIL"
+		},
+		{
+			"type" : "T",
+			"label" : "Company",
+			"tag" : "qrCompany",
+			"req" : false,
+			"disabled" : false,
+			"hint" : "COMPANY"
+		},
+		{
+			"type" : "TO",
+			"label" : "How many people does your company have?",
+			"tag" : "qrPeople",
+			"req" : true,
+			"responses" : [{
+				"rTag" : "1-20",
+				"rLabel" : "1-20 people",
+				"disabled" : false
+			}, {
+				"rTag" : "21-100",
+				"rLabel" : "21-100 people",
+				"disabled" : false
+			}, {
+				"rTag" : "100-1000",
+				"rLabel" : "100-1000",
+				"disabled" : false
+			}, {
+				"rTag" : "1000-2000",
+				"rLabel" : "1000-2000",
+				"disabled" : false
+			}, {
+				"rTag" : "2000+",
+				"rLabel" : "2000+ people",
+				"disabled" : false
+			}]
+		},
+		{
+			"type" : "T",
+			"label" : "Title",
+			"tag" : "qrTitle",
+			"req" : false,
+			"disabled" : false
+		},
+		{
+			"type" : "M",
+			"label" : "Bands you like?",
+			"tag" : "qrBands",
+			"req" : true,
+			"responses" : [{
+				"rTag" : "qrBands_1",
+				"rLabel" : "Beatles",
+				"disabled" : false
+			}, {
+				"rTag" : "qrBands_2",
+				"rLabel" : "ACDC",
+				"disabled" : false
+			}, {
+				"rTag" : "qrBands_3",
+				"rLabel" : "Bob Dylan",
+				"disabled" : true
+			}, {
+				"rTag" : "qrBands_4",
+				"rLabel" : "Led Zeplin",
+				"disabled" : false
+			}, {
+				"rTag" : "qrBands_5",
+				"rLabel" : "Katy Perry",
+				"disabled" : false
+			}]
+		},
+		{
+			"type" : "T",
+			"label" : "Address 1",
+			"tag" : "qrAddress1",
+			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "Address 2",
+			"tag" : "qrAddress2",
+			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "City",
+			"tag" : "qrCity",
+			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "State",
+			"tag" : "qrState",
+			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "Zip Code",
+			"tag" : "qrZip",
+			"req" : false
+		},
+		{
+			"type" : "T",
+			"label" : "Country",
+			"tag" : "qrCountry",
+			"req" : true
+		},
+		{
+			"type" : "O",
+			"label" : "What is your favorite color?",
+			"tag" : "qrColor",
+			"req" : true,
+			"responses" : [{
+				"rTag" : "qrColor_1",
+				"rLabel" : "Blue",
+				"disabled" : false
+			}, {
+				"rTag" : "qrColor_2",
+				"rLabel" : "Green",
+				"disabled" : false
+			}, {
+				"rTag" : "qrColor_3",
+				"rLabel" : "Red",
+				"disabled" : false
+			}, {
+				"rTag" : "qrColor_4",
+				"rLabel" : "Yellow",
+				"disabled" : true
+			}, {
+				"rTag" : "qrColor_5",
+				"rLabel" : "Pink",
+				"disabled" : false
+			}]
+		},
+		{
+			"type" : "T",
+			"label" : "Phone",
+			"tag" : "qrPhone",
+			"req" : false
+		}
+	]
+}

@@ -1,26 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router';
 
-const AdminHeader = (props) => {
+const AdminHeader = ({eventName, checkedInNum, registeredNum}) => {
 	return (
 		<div className="admin-header container-fluid clearfix">
-			<div className="row">
-				<div className="col-xs-12 text-center title-row">
-					<p className="event-name">{props.eventName}</p>					
+			<div className="row text-center">
+				<div className="col-xs-12 event-name">
+					{eventName}
 				</div>
-			</div>
-			<div className="row">
-				<div className="col-xs-6 text-left hidden-xs-down">
-					Checked In: {props.checkedInNum} 
-					<span><span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span></span>
-					Registered: {props.registeredNum}
-				</div>
-				<div className="col-xs-6 text-right hidden-xs-down">
-					{props.eventLocation} 
-					{ (props.eventLocation && props.eventDate) ? <span> <span className="split hidden-xs-down">||</span><span className="hidden-sm-up"><br /></span></span> : "" } 
-					{props.eventDate}
-				</div>
-			</div>			
+				<div className="col-xs-12 stats">
+					Checked In: {checkedInNum} | Registered: {registeredNum}
+				</div>							
+			</div>								
 		</div>
 	);
 };

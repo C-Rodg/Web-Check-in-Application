@@ -43,9 +43,7 @@ class RootAdmin extends Component {
 				<AdminHeader 
 					eventName={this.props.eventName} 
 					checkedInNum={this.props.statsCheckedIn || 0} 
-					registeredNum={this.props.statsRegistered || 0} 
-					eventDate={this.props.eventDate} 
-					eventLocation={this.props.eventLocation}
+					registeredNum={this.props.statsRegistered || 0} 					
 				/>
 				<div className="admin-body container-fluid clearfix">
 					<AdminControls handleSearchRegistrants={this.handleSearchRegistrants} />
@@ -53,7 +51,12 @@ class RootAdmin extends Component {
 						{this.props.children}
 					</div>
 				</div>
-				<AdminFooter online={this.props.seatGuid} notifyText={this.props.notifyText} notifyCounter={this.props.notifyCounter} notifyType={this.props.notifyType} />
+				<AdminFooter 
+					online={this.props.seatGuid} 
+					notifyText={this.props.notifyText} 
+					notifyCounter={this.props.notifyCounter} 
+					notifyType={this.props.notifyType} 
+				/>
 			</div>
 		);
 	}
@@ -61,9 +64,7 @@ class RootAdmin extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		eventName : state.settings.eventName,
-		eventDate : state.settings.eventDate,
-		eventLocation : state.settings.eventLocation,
+		eventName : state.settings.eventName,		
 		statsCheckedIn : state.settings.stats.totalAttended,
 		statsRegistered : state.settings.stats.totalRegistered,
 		notifyText : state.registrant.notificationText,
