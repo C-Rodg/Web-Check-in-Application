@@ -1,0 +1,32 @@
+T[qrContact]Registration Information
+-[qrStatus]Status 
+-[qrIsActive]Is Active 
+-[qrRepNumber]Rep SMS Number 
+-[qrFirstName:FIRSTNAME]First Name
+-[qrLastName:LASTNAME]Last Name
+-[qrAttendeeType]Attendee Type
+-[qrEmail:EMAIL]Email Address
+-[qrCompany:COMPANY]Company
+-[qrPeople]How many people does your company have?
+-[qrTitle:TITLE]Title
+-[qrAddress1:ADDRESS1]Address 1
+-[qrAddress2:ADDRESS2]Address 2
+-[qrCity:CITY]City
+-[qrState:STATE]State
+-[qrZip:POSTALCODE]Zip Code
+-[qrCountry:COUNTRY]Country
+-[qrPhone:PHONE]Phone
+
+M[qrBands]Bands you like?
+-[qrBands_1]Beatles
+-[qrBands_2]ACDC
+-[qrBands_3]Bob Dylan
+-[qrBands_4]Led Zeplin
+-[qrBands_5]Katy Perry
+
+O[qrColor]What is your favorite color?
+-[qrColor_1]Blue
+-[qrColor_2]Green
+-[qrColor_3]Red
+-[qrColor_4]Yellow
+-[qrColor_5]Pink
