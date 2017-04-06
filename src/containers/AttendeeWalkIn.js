@@ -8,10 +8,6 @@ export default class AttendeeWalkIn extends Component {
 		super(props);		
 	}
 
-	componentWillMount() {
-		
-	}
-
 	render() {
 		return (
 			<div className="attendee-walkin container-fluid">							

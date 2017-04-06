@@ -1,3 +1,4 @@
+// --------------- TYPES --------------------- //
 import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR, 
 	GET_EVENT_INFORMATION_SUCCESS, GET_EVENT_INFORMATION_ERROR, 
 	GET_EVENT_SETTINGS_SUCCESS, GET_EVENT_SETTINGS_ERROR,
@@ -7,6 +8,7 @@ import { GET_REGISTRATION_STATS_SUCCESS, GET_REGISTRATION_STATS_ERROR,
 	LIST_GRANTED_FEATURES_SUCCESS
 	} from '../actions/cc_settings';
 
+// --------------- INITIAL STATE --------------------- //
 const INITIAL_SEATS_STATE = {
 	ActiveSeats : [],
 	InactiveSeats : [],
@@ -56,7 +58,7 @@ const INITIAL_STATE = {
 	featureList : []
 };
 
-// Settings Reducer
+// --------------- REDUCERS --------------------- //
 export const settings = ( state = INITIAL_STATE, action ) => {
 	switch(action.type) {
 		case GET_REGISTRATION_STATS_SUCCESS:
@@ -187,6 +189,7 @@ function statsReducer(state = {}, action){
 	}
 }
 
+// Return object with overwritten settings if needed
 function checkForOverwriteSmsSettings(state, action) {
 	let newConfig;
 	switch (action.type) {

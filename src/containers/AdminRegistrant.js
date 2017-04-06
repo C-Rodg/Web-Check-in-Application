@@ -9,11 +9,10 @@ import {
 		checkOutRegistrant, 
 		parseXml, 
 		getTextFromXml, 
-		getPickFromXml,
-		replaceMessagePlaceholders,
-		extractXMLstring,
+		getPickFromXml,		
 		checkInWithSms
 	} from '../actions/cc_registrant';
+import { replaceMessagePlaceholders, extractXMLstring } from '../actions/cc_settings';
 
 import Loading from '../components/Loading';
 
@@ -38,19 +37,23 @@ class AdminRegistrant extends Component {
 		this.checkInAndSendSms = this.checkInAndSendSms.bind(this);
 	}
 
+	// Determine if you need to load by badgeId or Attendee Guid
 	componentDidMount() {	
-		if (this.props.location && this.props.location.hasOwnProperty('query') && this.props.location.query.badge) {
-			this.props.loadRegistrantByBadgeId(this.props.location.query.badge);
+		const { location, loadRegistrantByBadgeId, loadRegistrantByGuid } = this.props;
+		if (location && location.hasOwnProperty('query') && location.query.badge) {
+			loadRegistrantByBadgeId(this.props.location.query.badge);
 			this._returnToScan = true;
 		} else if (this.props.params.atGuid) {
-			this.props.loadRegistrantByGuid(this.props.params.atGuid);
+			loadRegistrantByGuid(this.props.params.atGuid);
 		}	
 	}
 
+	// Clear out registrant
 	componentWillUnmount() {
 		this.props.clearCurrentRegistrant();
 	}
 
+	// If registrant was successfully upserted, return to results or scan page
 	componentDidUpdate(prevProps, prevState) {
 		if(this.props.returnToList !== prevProps.returnToList){
 			if (!this._returnToScan) {
@@ -61,34 +64,40 @@ class AdminRegistrant extends Component {
 		}
 	}
 
+	// Check In Registrant, determine if SMS is needed
 	checkInRegistrant() {
-		if (this.props.smsEnabled && this.props.smsMessage && this.props.smsField) {
+		const { smsEnabled, smsMessage, smsField, checkInRegistrant } = this.props;
+		if (smsEnabled && smsMessage && smsField) {
 			this.checkInAndSendSms();
 		} else {
-			this.props.checkInRegistrant(this.props.registrant);
+			checkInRegistrant(this.props.registrant);
 		}	
 	}
 
 	// Extract phone number, complete message and send sms
 	checkInAndSendSms() {
-		const number = extractXMLstring(this.props.smsField, this.props.registrant.SurveyData);
-		const msg = replaceMessagePlaceholders(this.props.smsMessage, this.props.registrant.SurveyData);
+		const { registrant, smsField, smsMessage, checkInWithSms, checkInRegistrant } = this.props;
+		const number = extractXMLstring(smsField, registrant.SurveyData);
+		const msg = replaceMessagePlaceholders(smsMessage, registrant.SurveyData);
 		if(number && msg) {
-			this.props.checkInWithSms(this.props.registrant, number, msg);
+			checkInWithSms(registrant, number, msg);
 		} else {
-			this.props.checkInRegistrant(this.props.registrant);
+			checkInRegistrant(registrant);
 		}
 	}
 
+	// Checkout registrant
 	checkOutRegistrant() {
 		this.props.checkOutRegistrant(this.props.registrant);
 	}
 
+	// Determine if registrant is cancelled
 	checkCancelled() {
 		let isCancelled = false;
-		if (this.props.cancelledCheck && this.props.registrant) {
-			const surveyData = this.props.registrant.SurveyData;			
-			this.props.cancelledCheck.forEach((check) => {
+		const { cancelledCheck, registrant } = this.props;
+		if (cancelledCheck && registrant) {
+			const surveyData = registrant.SurveyData;			
+			cancelledCheck.forEach((check) => {
 				if(surveyData.indexOf(check) > -1) {
 					isCancelled = true;
 				}
@@ -97,6 +106,7 @@ class AdminRegistrant extends Component {
 		return isCancelled;
 	}
 
+	// Return check-out buttons, cancelled buttons, or check-in buttons
 	getButtonActions(cancelled) {
 		if(this.props.registrant.Attended){
 			return (
@@ -123,25 +133,29 @@ class AdminRegistrant extends Component {
 		);		
 	}
 
+	// Show/Hide confirmation of checking in a cancelled registrant
 	toggleConfirmMenu() {
 		this.setState({
 			showConfirm : !this.state.showConfirm
 		});
 	}
 
+	// Show/Hide extra fields
 	toggleShowMoreFields() {
 		this.setState({
 			showMoreFields : !this.state.showMoreFields
 		});
 	}
 
+	// Generate survey fields list
 	viewSurveyFields() {
-		if(this.props.registrant && this.props.registrant.SurveyData && this.props.formFields){
+		const { registrant, formFields } = this.props;
+		if(registrant && registrant.SurveyData && formFields){
 			let fullSurveyInfo = [];
-			let xmlDoc = parseXml(this.props.registrant.SurveyData);
+			let xmlDoc = parseXml(registrant.SurveyData);
 			let rootNode = xmlDoc.firstChild;
 			let responsesNode = rootNode.firstChild;
-			this.props.formFields.forEach((fieldObj) => {
+			formFields.forEach((fieldObj) => {
 				if(fieldObj.type === 'T' || fieldObj.type === 'TO') {
 					let val = getTextFromXml(responsesNode, fieldObj.tag);
 					fullSurveyInfo.push(<div className="col-xs-12 col-sm-6 more-field"><span className="more-field-title">{fieldObj.label}: </span>{val}</div>);
@@ -160,20 +174,21 @@ class AdminRegistrant extends Component {
 	}
 
 	render() {
-		if(!this.props.registrantError && !this.props.registrant) {
+		const { registrantError, registrant } = this.props;
+		if(!registrantError && !registrant) {
 			return (<Loading height={112} width={112} />);
 		}
-		if(this.props.registrantError){
+		if(registrantError){
 			return (<div className="error-text">Uh-oh! There was an issue loading that record...</div>);
 		}
 		let isCancelled = this.checkCancelled();
 		return (
-			<div className={"admin-registrant text-center " + ((isCancelled  && !this.props.registrant.Attended) ? 'admin-registrant-cancelled' : '')}>
+			<div className={"admin-registrant text-center " + ((isCancelled  && !registrant.Attended) ? 'admin-registrant-cancelled' : '')}>
 				<div className="admin-info col-xs-12">
-					<div className="registrant-name f-s-44">{this.props.registrant.FirstName + " " + this.props.registrant.LastName}</div>
-					<div className="registrant-company f-s-24 other-info">{this.props.registrant.Company}</div>
-					<div className="registrant-email f-s-24 other-info">{this.props.registrant.Email}</div>
-					<div className="registrant-atType f-s-24 other-info">{this.props.registrant.AttendeeType}</div>
+					<div className="registrant-name f-s-44">{registrant.FirstName + " " + registrant.LastName}</div>
+					<div className="registrant-company f-s-24 other-info">{registrant.Company}</div>
+					<div className="registrant-email f-s-24 other-info">{registrant.Email}</div>
+					<div className="registrant-atType f-s-24 other-info">{registrant.AttendeeType}</div>
 					{ isCancelled ? 
 						<p className="cancelled-text">This registration is marked as cancelled.</p>
 						: 

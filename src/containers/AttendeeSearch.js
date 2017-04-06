@@ -22,46 +22,54 @@ class AttendeeSearch extends Component {
 		this.generateMessageText = this.generateMessageText.bind(this);
 	}
 
+	// Load registrant
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.regList.length === 1 && nextProps.regList[0].Attended !== true) {
 			this.context.router.push('/attendee/registrant/' + nextProps.regList[0].AttendeeGuid);
 		}		
 	}
 
+	// Start searching for registrant
 	handleSearchSubmit(event) {
 		event.preventDefault();
 		let filter = 'both';
-		if(this.props.searchBy && this.props.searchBy.toUpperCase() === 'EMAIL') {
+		let { searchBy } = this.props;
+		if(searchBy && searchBy.toUpperCase() === 'EMAIL') {
 			filter = 'email';
-		} else if (this.props.searchBy && this.props.searchBy.toUpperCase() === 'LASTNAME') {
+		} else if (searchBy && searchBy.toUpperCase() === 'LASTNAME') {
 			filter = 'lastname';
 		}
 		this.props.searchRegistrants(this.state.searchTerm, filter);
 	}
 
+	// Update state of search box
 	handleInputChange(event) {
 		this.setState({
 			searchTerm : event.target.value
 		});
 	}
 
+	// Get title search text
 	getSearchTerm() {
 		let searchTerm = 'email address or last name';
-		if(this.props.searchBy){
-			if(this.props.searchBy.toUpperCase() === 'EMAIL'){
+		let { searchBy } = this.props;
+		if(searchBy){
+			if(searchBy.toUpperCase() === 'EMAIL'){
 				searchTerm = 'email address';
-			} else if (this.props.searchBy.toUpperCase() === 'LASTNAME') {
+			} else if (searchBy.toUpperCase() === 'LASTNAME') {
 				searchTerm = 'last name';
 			}
 		}
 		return searchTerm;
 	}
 
+	// Throw error if registrant is already loaded
 	registrantAlreadyLoaded(event) {
 		event.preventDefault();
 		this.props.sendNotification("It appears you have already checked-in. Please see the help desk for assistance.", false);
 	}
 
+	// Get list of registrants
 	getRegistrantList(){
 		return this.props.regList.map((registrant) => {
 			if(registrant.Attended){
@@ -88,11 +96,13 @@ class AttendeeSearch extends Component {
 		});
 	}
 
+	// Generate loading, errors text
 	generateMessageText() {
-		if(this.props.searchLoading){
+		const { searchLoading, hasSearched, searchError, regList } = this.props;
+		if(searchLoading){
 			return (<Loading height={112} width={112} color="#f5f5f5" />);
 		}
-		if(this.props.hasSearched && !this.props.searchError && this.props.regList.length === 0) {	
+		if(hasSearched && !searchError && regList.length === 0) {	
 			return (
 				<div className="msg-text m-t-15">
 					Sorry! No registrations found...
@@ -104,7 +114,7 @@ class AttendeeSearch extends Component {
 				</div>
 			);			
 		}
-		if(this.props.hasSearched && this.props.searchError) {			
+		if(hasSearched && searchError) {			
 			return (
 				<div className="msg-text m-t-15">
 					Uh-Oh! We're having some issues searching...
@@ -152,13 +162,14 @@ AttendeeSearch.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const { registrant: { registrantList, hasSearched, searchError, searchLoading }, settings: { configuration : { AttendeeMode: { WalkIns, SearchBy} }}} = state;
 	return {
-		regList : state.registrant.registrantList,
-		searchBy : state.settings.configuration.AttendeeMode.SearchBy,
-		allowWalkIns : state.settings.configuration.AttendeeMode.WalkIns,
-		hasSearched : state.registrant.hasSearched,
-		searchError : state.registrant.searchError,
-		searchLoading : state.registrant.searchLoading
+		regList : registrantList,
+		searchBy : SearchBy,
+		allowWalkIns : WalkIns,
+		hasSearched : hasSearched,
+		searchError : searchError,
+		searchLoading : searchLoading
 	};
 }
 

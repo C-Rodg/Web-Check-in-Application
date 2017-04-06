@@ -13,6 +13,7 @@ class AttendeeScan extends Component {
 		},0);
 	}
 	
+	// Load registrant
 	handleScanData(data) {
 		this.context.router.push('/attendee/registrant/loading?badge=' + data);
 	}

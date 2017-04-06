@@ -16,6 +16,7 @@ class RootAdmin extends Component {
 		this._getStatsTimer = null;
 	}
 
+	// Update event settings, event information, registration stats, granted features, continually ping for updates to stats
 	componentDidMount() {	
 		this.props.getEventSettings();	
 		this.props.getEventInformation();
@@ -27,11 +28,13 @@ class RootAdmin extends Component {
 		}, 90000);
 	}
 
+	// Clear searches and timer when leaving
 	componentWillUnmount() {
 		this.props.clearAllSearching();
 		clearInterval(this._getStatsTimer);
 	}
 
+	// Search for registrants from admin mode
 	handleSearchRegistrants(val) {
 		// Dispatch registrant search from Admin
 		this.props.searchRegistrants(val, 'all');
@@ -63,14 +66,15 @@ class RootAdmin extends Component {
 }
 
 const mapStateToProps = (state) => {
+	const { settings: { eventName, stats, seatGuid }, registrant } = state;
 	return {
-		eventName : state.settings.eventName,		
-		statsCheckedIn : state.settings.stats.totalAttended,
-		statsRegistered : state.settings.stats.totalRegistered,
-		notifyText : state.registrant.notificationText,
-		notifyCounter : state.registrant.notificationCount,
-		notifyType : state.registrant.notificationSuccess,
-		seatGuid : state.settings.seatGuid
+		eventName : eventName,		
+		statsCheckedIn : stats.totalAttended,
+		statsRegistered : stats.totalRegistered,
+		notifyText : registrant.notificationText,
+		notifyCounter : registrant.notificationCount,
+		notifyType : registrant.notificationSuccess,
+		seatGuid : seatGuid
 	};
 };
 

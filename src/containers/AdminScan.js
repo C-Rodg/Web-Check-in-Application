@@ -7,6 +7,7 @@ class AdminScan extends Component {
 		this.handleScanData = this.handleScanData.bind(this);
 	}
 
+	// Push registrant route
 	handleScanData(data) {
 		this.context.router.push('/admin/registrant/loading?badge=' + data);
 	}

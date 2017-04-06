@@ -25,6 +25,7 @@ export default class CameraBox extends Component {
 		window.OnBarCodeRead = this.parseBadgeData;		
 	}
 
+	// Parse out badge data
 	parseBadgeData(data) {
 		if(data != null){
 			let badgeId = "";
@@ -53,14 +54,17 @@ export default class CameraBox extends Component {
 		
 	}
 
+	// Recalibrate where camera box is
 	recalibrateCameraBox() {
 		this.turnOnOffCamera(true);		
 	}
 
+	// Turn on camera
 	componentDidMount() {
 		this.turnOnOffCamera(true);
 	}
 
+	// Turn off camera, disable scanning when leaving
 	componentWillUnmount(){
 		this.turnOnOffCamera(false);
 		window.removeEventListener('orientationchange', this.recalibrateCameraBox);
@@ -68,6 +72,7 @@ export default class CameraBox extends Component {
 		window.OnBarCodeRead = null;
 	}
 
+	// Turn off camera
 	turnOnOffCamera(status) {
 		try {				
 			if(!status){
@@ -84,6 +89,7 @@ export default class CameraBox extends Component {
 		}
 	}
 
+	// Rotate camera
 	switchCamera(){
 		this.setState({
 			frontCamera : !this.state.frontCamera

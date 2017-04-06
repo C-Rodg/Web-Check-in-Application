@@ -1,10 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import { Registrant } from '../actions/cc_registrant';
+import { Registrant, createWalkIn, sendNotification, generateSurveyDataXML, walkInWithSms } from '../actions/cc_registrant';
+import { replaceMessagePlaceholders, extractXMLstring } from '../actions/cc_settings';
 import InputText from '../components/InputText';
 import InputSelect from '../components/InputSelect';
-import { createWalkIn, sendNotification, generateSurveyDataXML } from '../actions/cc_registrant';
 
 class WalkInForm extends Component {
 	constructor(props, context) {
@@ -19,12 +19,15 @@ class WalkInForm extends Component {
 		this.checkInRegistrant = this.checkInRegistrant.bind(this);
 		this.checkRequired = this.checkRequired.bind(this);
 		this.assignRegistrantProps = this.assignRegistrantProps.bind(this);
+		this.checkInWithSms = this.checkInWithSms.bind(this);
 	}
 
+	// Generate new registrant
 	componentWillMount(){		
 		this._registrant = new Registrant();
 	}
 
+	// Return to attendee/admin modes after successful upload
 	componentDidUpdate(prevProps, prevState) {
 		if(prevProps.returnToList !== this.props.returnToList) {
 			if(this.context.router.isActive('/attendee/walkin')){
@@ -35,6 +38,7 @@ class WalkInForm extends Component {
 		}
 	}
 
+	// Generate walk-in form object based off of eventConfig
 	generateForm(){
 		if(!this.props.formConfig || this.props.formConfig.length === 0 ) {
 			return (
@@ -69,17 +73,19 @@ class WalkInForm extends Component {
 		return questions;
 	}
 
+	// Check for validity of required fields
 	checkRequired() {
 		let invalidField = "";
+		const { formConfig } = this.props;
 		if(this._requiredFields) {
 			for(let i = 0, j = this._requiredFields.length ; i < j; i++){
 				if(!this.state.formData[this._requiredFields[i]] || 
 					(Array.isArray(this.state.formData[this._requiredFields[i]]) && 
 					(this.state.formData[this._requiredFields[i]].length === 0 || 
 						(this.state.formData[this._requiredFields[i]].length === 1 && !this.state.formData[this._requiredFields[i]][0]) ) ) ){
-					for(let a = 0, b = this.props.formConfig.length; a < b; a++) {
-						if(this._requiredFields[i] === this.props.formConfig[a].tag){
-							invalidField = this.props.formConfig[a].label;
+					for(let a = 0, b = formConfig.length; a < b; a++) {
+						if(this._requiredFields[i] === formConfig[a].tag){
+							invalidField = formConfig[a].label;
 							break;
 						}
 					}
@@ -90,6 +96,7 @@ class WalkInForm extends Component {
 		return invalidField;
 	}
 
+	// Assign hinted values to registrant object
 	assignRegistrantProps() {
 		this.props.formConfig.forEach((fieldObj) => {			
 			if(fieldObj.hasOwnProperty('hint') && fieldObj.hasOwnProperty('type') && fieldObj.hasOwnProperty('tag') && fieldObj.hint){
@@ -132,12 +139,13 @@ class WalkInForm extends Component {
 		});
 	}
 
+	// Check-in walk-in, determine if SMS is needed
 	checkInRegistrant() {
-
+		const { sendNotification, smsEnabled, smsMessage, smsField, upsertRegistrant } = this.props;
 		// Check required fields
 		let invalidText = this.checkRequired();
 		if(invalidText) {
-			this.props.sendNotification(`${invalidText} is a required field.`, false);
+			sendNotification(`${invalidText} is a required field.`, false);
 			return false;
 		}		
 
@@ -147,10 +155,27 @@ class WalkInForm extends Component {
 		// Assign properties to the registrant object
 		this.assignRegistrantProps();
 
-		// Upload
-		this.props.upsertRegistrant(this._registrant);
+		// Upload and/or send SMS
+		if (smsEnabled && smsMessage && smsField) {
+			this.checkInWithSms();
+		} else {
+			upsertRegistrant(this._registrant);
+		}		
 	}
 
+	// Check-in with SMS
+	checkInWithSms() {
+		const { smsField, smsMessage, upsertRegistrant, walkInWithSms } = this.props;
+		const number = extractXMLstring(smsField, this._registrant.SurveyData);
+		const message = replaceMessagePlaceholders(smsMessage, this._registrant.SurveyData);
+		if (number && message) {
+			walkInWithSms(this._registrant, number, message);
+		} else {
+			upsertRegistrant(this._registrant);
+		}
+	}
+
+	// Update form object
 	updateFormData(value, tag) {
 		let newDefinitionObj = Object.assign({}, this.state.formData);
 		newDefinitionObj[tag] = value;
@@ -184,14 +209,19 @@ WalkInForm.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const { registrant, settings: { configuration } } = state;
 	return {
-		formConfig : state.settings.configuration.WalkInFields,
-		returnToList : state.registrant.returnToList
+		formConfig : configuration.WalkInFields,
+		returnToList : registrant.returnToList,
+		smsEnabled : configuration.SMS.Enabled,
+		smsMessage : configuration.SMS.Message,
+		smsField : configuration.SMS.PhoneField
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
+		walkInWithSms : (registrant, num, msg) => dispatch(walkInWithSms(registrant, num, msg)),
 		upsertRegistrant : (registrant) => dispatch(createWalkIn(registrant)),
 		sendNotification : (msg, isSuccess) => dispatch(sendNotification(msg, isSuccess))
 	};

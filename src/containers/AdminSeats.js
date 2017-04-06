@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { getSeatUsage, releaseOtherSeat, releaseThisSeat, acquireSeat, setSeatGuid } from '../actions/cc_settings';
 import { sendNotification } from '../actions/cc_registrant';
-
 import SeatTile from '../components/SeatTile';
 
 class AdminSeats extends Component {
@@ -19,6 +18,7 @@ class AdminSeats extends Component {
         this._getSeatsTimer = null;
     }   
 
+    // Continually check for changes in seats
     componentDidMount() {
         this.props.getSeatUsage();
 
@@ -29,16 +29,19 @@ class AdminSeats extends Component {
         }, 60000);
     }
 
+    // Update view if deleting/creating seats
     componentWillReceiveProps(nextProps) {
         if (nextProps.seats.SeatsUsed !== this.props.seats.SeatsUsed) {
             nextProps.getSeatUsage();
         }
     }
 
+    // Stop checking for seat changes
     componentWillUnmount() {
 		clearInterval(this._getSeatsTimer);
 	}
 
+    // Release your seat, or another devices seat
     handleRemoveSeat(guid, currentDevice) {
         if (currentDevice) {
             this.props.releaseThisSeat(guid);
@@ -47,6 +50,7 @@ class AdminSeats extends Component {
         }
     }
 
+    // Acquire new seat
     acquireNewSeat() {
         let station = window.localStorage.getItem('stationName');
         acquireSeat(station).then((response) => {
@@ -62,6 +66,7 @@ class AdminSeats extends Component {
         });
     }
 
+    // Check if this app can release seats
     checkCanRelinquishSeat() {
 		const seatUse = this.props.featureList.find((feature) => {
 			return feature.Accessible && feature.Feature === 'CanRelinquishSeat';
@@ -69,8 +74,10 @@ class AdminSeats extends Component {
 		return seatUse ? true : false;
 	}
 
+    // Display the current seats
     renderSeats() {
-        if (!this.props.seatGuid || !this.props.seats.ActiveSeats) {
+        const { seatGuid, seats } = this.props;
+        if (!seatGuid || !seats.ActiveSeats) {
             return (
                  <div className="text-center col-xs-12 clearfix" >
                     <button className="btn-flat border-0 inline-btn" onClick={this.acquireNewSeat}><span>Acquire New Seat?</span></button>
@@ -81,7 +88,7 @@ class AdminSeats extends Component {
             <div>
                  <div className="seat-count col-xs-12 text-center clearfix">
                     <div>
-                        <span className="number">{this.props.seats.SeatsUsed}/{this.props.seats.MaxSeats}</span><span className="number-title"> Seats Used</span>
+                        <span className="number">{seats.SeatsUsed}/{seats.MaxSeats}</span><span className="number-title"> Seats Used</span>
                     </div>                   
                     <div>
                         <em>Note:  Removing an active seat will cause that specific device to no longer function</em>
@@ -90,13 +97,13 @@ class AdminSeats extends Component {
                 <div className="seats-box clearfix">
                     <div className="active-seats clearfix">
                         <div className="col-xs-12 seats-title">Active Seats ({this.props.seats.ActiveSeats.length})</div>
-                        {this.props.seats.ActiveSeats.map((seat) => <SeatTile {...seat} active={true} removeActiveSeat={this.handleRemoveSeat} currentSeat={this.props.seatGuid} />)}
+                        {seats.ActiveSeats.map((seat) => <SeatTile {...seat} active={true} removeActiveSeat={this.handleRemoveSeat} currentSeat={seatGuid} />)}
                     </div>
                     <div className="inactive-seats clearfix">
-                        <div className="col-xs-12 seats-title">Inactive Seats ({this.props.seats.InactiveSeats.length})<span className="expand-btn" onClick={() => this.setState({inactiveOpen: !this.state.inactiveOpen})}><i className="material-icons">{this.state.inactiveOpen ? 'expand_less' : 'expand_more'}</i></span></div>
+                        <div className="col-xs-12 seats-title">Inactive Seats ({seats.InactiveSeats.length})<span className="expand-btn" onClick={() => this.setState({inactiveOpen: !this.state.inactiveOpen})}><i className="material-icons">{this.state.inactiveOpen ? 'expand_less' : 'expand_more'}</i></span></div>
                         {
                             this.state.inactiveOpen ? 
-                            <div>{this.props.seats.InactiveSeats.map((seat) => <SeatTile {...seat} active={false} currentSeat={this.props.seatGuid} />)}</div> :
+                            <div>{seats.InactiveSeats.map((seat) => <SeatTile {...seat} active={false} currentSeat={seatGuid} />)}</div> :
                             ""
                         }                 
                     </div>
@@ -116,10 +123,11 @@ class AdminSeats extends Component {
 }
 
 const mapStateToProps = (state) => {
+    const { settings : { seatGuid, seats, featureList } } = state;
     return {
-        seatGuid : state.settings.seatGuid,
-        seats : state.settings.seats,
-        featureList : state.settings.featureList
+        seatGuid : seatGuid,
+        seats : seats,
+        featureList : featureList
     };
 };
 

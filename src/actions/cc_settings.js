@@ -1,7 +1,6 @@
 import { axios } from './utilities_httpRequest';
 const moment = require('moment');
 
-
 //------------------------- TYPES -------------------------//
 
 export const GET_REGISTRATION_STATS_SUCCESS = 'GET_REGISTRATION_STATS_SUCCESS';
@@ -148,6 +147,7 @@ export function acquireSeat(station) {
 	return axios.post('methods.asmx/AcquireSeat', { stationInformation });
 }
 
+// Set Seat Guid
 export function setSeatGuid(guid) {
 	return {
 		type : SET_SEAT_GUID,
@@ -236,6 +236,7 @@ function getSeatUsageError(err) {
 	};
 }
 
+// Get granted features
 export function listGrantedFeatures() {
 	return function(dispatch) {
 		axios.post('methods.asmx/ListFeatureAccesses', {})

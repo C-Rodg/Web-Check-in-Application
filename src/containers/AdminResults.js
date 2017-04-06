@@ -30,6 +30,7 @@ class AdminResults extends Component {
 		this.handleChangeSortDirection = this.handleChangeSortDirection.bind(this);
 	}
 
+	// Reset to sort by first name if new reg list comes through
 	componentWillReceiveProps(nextProps) {
 		if(this.props.registrantList !== nextProps.registrantList){			
 			this.setState({
@@ -39,6 +40,7 @@ class AdminResults extends Component {
 		}
 	}
 
+	// Build the registrant list table
 	getRegistrantList(){
 		let dir = (this.state.sortDirection === 'down' ? true : false);
 		let field;
@@ -69,6 +71,7 @@ class AdminResults extends Component {
 		});
 	}
 
+	// Change the sort direction
 	handleChangeSortDirection(direction) {
 		const newDirection = (direction === 'down' ? 'up' : 'down');
 		this.setState({
@@ -76,6 +79,7 @@ class AdminResults extends Component {
 		});
 	}
 
+	// Change the sort value, reset to down
 	handleChangeSort(event) {		
 		this.setState({
 			sort : event.target.id,
@@ -83,17 +87,19 @@ class AdminResults extends Component {
 		});
 	}
 
+	// Build the table title
 	getTableTitleText(){
-		if(this.props.searchLoading) {
+		const { searchLoading, searchError, hasSearched, registrantList } = this.props;
+		if(searchLoading) {
 			return (<tr><th><Loading height={112} width={112} /></th></tr>);
 		}
-		if(this.props.searchError) {
+		if(searchError) {
 			return (<tr><th>Uh-oh! There was an issue searching...</th></tr>);
 		}
-		if(!this.props.hasSearched) {
+		if(!hasSearched) {
 			return (<tr><th>Ready to begin searching...</th></tr>);
 		}
-		if(this.props.hasSearched && this.props.registrantList.length === 0){
+		if(hasSearched && registrantList.length === 0){
 			return (<tr><th>No registrants found...</th></tr>);
 		}
 		return (
@@ -129,11 +135,12 @@ class AdminResults extends Component {
 }
 
 const mapStateToProps = (state) => {
+	const { registrant: { registrantList, hasSearched, searchError, searchLoading }} = state;
 	return {
-		registrantList : state.registrant.registrantList,
-		hasSearched : state.registrant.hasSearched,
-		searchError : state.registrant.searchError,
-		searchLoading : state.registrant.searchLoading
+		registrantList,
+		hasSearched,
+		searchError,
+		searchLoading
 	};
 };
 

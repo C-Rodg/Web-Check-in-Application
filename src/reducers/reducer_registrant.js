@@ -1,5 +1,6 @@
 import _ from 'lodash';
 
+// --------------- TYPES --------------------- //
 import { 	
 	LOAD_REGISTRANT_ATTENDEEGUID_START, LOAD_REGISTRANT_ATTENDEEGUID_SUCCESS, LOAD_REGISTRANT_ATTENDEEGUID_ERROR, 
 	SEARCH_REGISTRANTS_START, SEARCH_REGISTRANTS_SUCCESS, SEARCH_REGISTRANTS_ERROR, 
@@ -12,6 +13,7 @@ import {
 	SEND_NOTIFICATION
 } from '../actions/cc_registrant';
 
+// --------------- INITIAL STATE --------------------- //
 const INITIAL_STATE = {
 	currentRegistrant : null,
 	currentError : false,
@@ -25,6 +27,7 @@ const INITIAL_STATE = {
 	notificationSuccess : false
 };
 
+// --------------- REDUCER --------------------- //
 export const registrant = ( state = INITIAL_STATE, action ) => {
 	switch(action.type) {	
 
@@ -85,6 +88,7 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 	}
 }
 
+// Mark cached list of registrants as attended/not attended
 function registrantListReducer(state = [], action) {
 	switch(action.type) {
 		case UPDATE_REGISTRANT_LIST:

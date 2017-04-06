@@ -11,6 +11,7 @@ export default class AdminControls extends Component {
 		this.onSearchRegistrant = this.onSearchRegistrant.bind(this);
 	}
 
+	// Search for registrants
 	onSearchRegistrant(event){
 		event.preventDefault();		
 		this.props.handleSearchRegistrants(this.state.searchQuery);
@@ -22,6 +23,7 @@ export default class AdminControls extends Component {
 		});
 	}
 
+	// Update searchbox value
 	handleInputChange(event){
 		this.setState({ searchQuery : event.target.value });
 	}

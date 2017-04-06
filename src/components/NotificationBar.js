@@ -5,12 +5,14 @@ export default class NotificationBar extends Component {
 		super(props);
 	}
 
+	// Determine if notification should be shown
 	shouldComponentUpdate(nextProps, nextState){
 		if(this.props.counter !== nextProps.counter){
 			return true;
 		}
 	}
 
+	// Show notification, then remove
 	componentDidUpdate(){
 		this.refs.errorBox.classList.add('in');
 		this._timeout = setTimeout(() => {
@@ -20,6 +22,7 @@ export default class NotificationBar extends Component {
 		}, this.props.time);
 	}
 
+	// remove timeout
 	componentWillUnmount(){		
 		this._timeout = null;
 	}

@@ -6,24 +6,26 @@ import DonutChart from '../components/DonutChart';
 
 class AdminStats extends Component {
 
+	// Check for new stats
 	componentDidMount() {
 		this.props.checkRegistrationStats();
 	}
 
 	render(){
+		const { totalAttended, totalRegistered, preRegisteredAttended, preRegisteredTotal, walkInsAttended, walkInsRegistered } = this.props;
 		return (
 			<div className="col-xs-12 text-center admin-stats m-t-15 m-b-15">
 				<div>
-					<DonutChart donutLabel={"here"} value={(Math.round(this.props.totalAttended / this.props.totalRegistered * 100)) || 0 } />
+					<DonutChart donutLabel={"here"} value={(Math.round(totalAttended / totalRegistered * 100)) || 0 } />
 				</div>
 				<div className="m-t-15 total">
-					<span className="stats-number">{this.props.totalAttended}/{this.props.totalRegistered}</span><span className="stats-label"> attended</span>
+					<span className="stats-number">{totalAttended}/{totalRegistered}</span><span className="stats-label"> attended</span>
 				</div>				
 				<div className="sub-number">
-					<span className="stats-number">{this.props.preRegisteredAttended}/{this.props.preRegisteredTotal}</span><span className="stats-label"> registered</span>
+					<span className="stats-number">{preRegisteredAttended}/{preRegisteredTotal}</span><span className="stats-label"> registered</span>
 				</div>
 				<div className="sub-number">
-					<span className="stats-number">{this.props.walkInsAttended}/{this.props.walkInsRegistered}</span><span className="stats-label"> walk ins</span>
+					<span className="stats-number">{walkInsAttended}/{walkInsRegistered}</span><span className="stats-label"> walk ins</span>
 				</div>
 			</div>
 		);
@@ -31,13 +33,14 @@ class AdminStats extends Component {
 }
 
 const mapStateToProps = (state) => {
+	const { stats: { totalAttended, totalRegistered, preRegisteredAttended, preRegisteredTotal, walkInsAttended, walkInsRegistered } } = state.settings;
 	return {
-		totalAttended : state.settings.stats.totalAttended,
-		totalRegistered : state.settings.stats.totalRegistered,
-		preRegisteredAttended : state.settings.stats.preRegisteredAttended,
-		preRegisteredTotal : state.settings.stats.preRegisteredTotal,
-		walkInsAttended : state.settings.stats.walkInsAttended,
-		walkInsRegistered : state.settings.stats.walkInsRegistered
+		totalAttended,
+		totalRegistered,
+		preRegisteredAttended,
+		preRegisteredTotal,
+		walkInsAttended,
+		walkInsRegistered
 	};
 };
 

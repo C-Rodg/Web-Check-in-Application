@@ -10,6 +10,7 @@ export default class InputSelect extends Component {
 		this.handlePickMany = this.handlePickMany.bind(this);
 	}
 
+	// Alert form of pickone change
 	handlePickOne(event) {
 		if(this.props.exportAsText){
 			this.props.onUpdateFormData(event.target.value, this.props.tagName);			
@@ -21,6 +22,7 @@ export default class InputSelect extends Component {
 		});
 	}
 
+	// Alert form of pickmany change
 	handlePickMany(event) {		
 		let options =  event.target.options;
 		let value = [];
@@ -40,16 +42,17 @@ export default class InputSelect extends Component {
 			return (
 				<option value={response.rTag} disabled={response.disabled}>{response.rLabel}</option>
 			);
-		})
+		});
+		const { isRequired, tagName, questionPrompt, isDisabled, isPickMany } = this.props;
 		return (
 			<div className="col-xs-12 col-sm-6">
-				<div className={"form-group " + (this.props.isRequired ? "req" : "")}>
-					<label for={this.props.tagName}>{this.props.questionPrompt}</label>
-					{ !this.props.isPickMany ? 
+				<div className={"form-group " + (isRequired ? "req" : "")}>
+					<label for={tagName}>{questionPrompt}</label>
+					{ !isPickMany ? 
 
 						<select className="form-control"
-							id={this.props.tagName}
-							disabled={this.props.isDisabled}							
+							id={tagName}
+							disabled={isDisabled}							
 							onChange={this.handlePickOne}
 						>
 							<option value="">- Select -</option>
@@ -59,8 +62,8 @@ export default class InputSelect extends Component {
 						:
 
 						<select className="form-control"
-							id={this.props.tagName}
-							disabled={this.props.isDisabled}
+							id={tagName}
+							disabled={isDisabled}
 							multiple="true"
 							onChange={this.handlePickMany}
 						>

@@ -11,15 +11,16 @@ export default class InputText extends Component {
 	}
 
 	render() {
+		const { isRequired, questionPrompt, tagName, isDisabled} = this.props;
 		return (
 			<div className="col-xs-12 col-sm-6">
-				<div className={"form-group" + (this.props.isRequired ? " req" : "")}>
-					<label for={this.props.tagName}>{this.props.questionPrompt}</label>
+				<div className={"form-group" + (isRequired ? " req" : "")}>
+					<label for={tagName}>{questionPrompt}</label>
 					<input className="form-control"
-						id={this.props.tagName}
+						id={tagName}
 						type="text"
-						disabled={this.props.isDisabled}
-						placeholder={"Enter " + this.props.questionPrompt}
+						disabled={isDisabled}
+						placeholder={"Enter " + questionPrompt}
 						onChange={this.handleChange}
 					/>
 				</div>

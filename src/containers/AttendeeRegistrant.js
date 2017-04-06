@@ -4,11 +4,10 @@ import { connect } from 'react-redux';
 import { 
 	loadRegistrantByAttendeeGuid, 
 	checkInRegistrant, 
-	checkOutRegistrant,
-	replaceMessagePlaceholders,
-	extractXMLstring,
+	checkOutRegistrant,	
 	checkInWithSms
 } from '../actions/cc_registrant';
+import { replaceMessagePlaceholders, extractXMLstring } from '../actions/cc_settings';
 import Loading from '../components/Loading';
 import BackButton from '../components/BackButton';
 
@@ -24,43 +23,52 @@ class AttendeeRegistrant extends Component {
 		this.checkInAndSendSms = this.checkInAndSendSms.bind(this);
 	}
 
+	// Load Registrant by attendee guid
 	componentDidMount() {
 		this.props.loadRegistrantByGuid(this.props.params.atGuid);
 	}
 
+	// Navigate back to attendee welcome page
 	componentDidUpdate(prevProps, prevState) {
 		if(this.props.returnToList !== prevProps.returnToList) {
 			this.context.router.push('/attendee/welcome');
 		}
 	}	
 
+	// Check in registrant, see if SMS is needed
 	checkInRegistrant() {
-		if (this.props.smsEnabled && this.props.smsField && this.props.smsMessage) {
+		const { registrant, smsEnabled, smsField, smsMessage, checkInRegistrant } = this.props;
+		if (smsEnabled && smsField && smsMessage) {
 			this.checkInAndSendSms();
 		} else {
-			this.props.checkInRegistrant(this.props.registrant);
+			checkInRegistrant(registrant);
 		}		
 	}
 
+	// Check in with SMS
 	checkInAndSendSms() {
-		const number = extractXMLstring(this.props.smsField, this.props.registrant.SurveyData);
-		const msg = replaceMessagePlaceholders(this.props.smsMessage, this.props.registrant.SurveyData);
+		const { smsField, registrant, smsMessage } = this.props;
+		const number = extractXMLstring(smsField, registrant.SurveyData);
+		const msg = replaceMessagePlaceholders(smsMessage, registrant.SurveyData);
 		if(number && msg) {
-			this.props.checkInWithSms(this.props.registrant, number, msg);
+			this.props.checkInWithSms(registrant, number, msg);
 		} else {
-			this.props.checkInRegistrant(this.props.registrant);
+			this.props.checkInRegistrant(registrant);
 		}
 	}
 
+	// Check-out registrant
 	checkOutRegistrant() {
 		this.props.checkOutRegistrant(this.props.registrant);
 	}
 
+	// Check if registrant is marked as cancelled
 	checkCancelled() {
 		let isCancelled = false;
-		if (this.props.cancelledCheck && this.props.registrant) {
-			const surveyData = this.props.registrant.SurveyData;			
-			this.props.cancelledCheck.forEach((check) => {
+		const { cancelledCheck, registrant } = this.props;
+		if (cancelledCheck && registrant) {
+			const surveyData = registrant.SurveyData;			
+			cancelledCheck.forEach((check) => {
 				if(surveyData.indexOf(check) > -1) {
 					isCancelled = true;
 				}
@@ -69,11 +77,13 @@ class AttendeeRegistrant extends Component {
 		return isCancelled;
 	}
 
+	// Get title text
 	getTitleText(cancelled) {
-		if(!this.props.registrantError && !this.props.registrant){
+		const { registrantError, registrant } = this.props;
+		if(!registrantError && !registrant){
 			return (<Loading height={112} width={112} color="#f5f5f5" />);
 		}
-		if(this.props.registrantError) {
+		if(registrantError) {
 			return("Uh-oh! There was an issue loading that record...");
 		}
 		if(cancelled) {
@@ -82,6 +92,7 @@ class AttendeeRegistrant extends Component {
 		return ("Please confirm your information to continue checking in.");
 	}
 
+	// Get check-in, check-out, cancelled buttons
 	getActionButtons(cancelled) {
 		if(cancelled) {
 			return ("");
@@ -108,6 +119,7 @@ class AttendeeRegistrant extends Component {
 
 	render() {
 		let isCancelled = this.checkCancelled();
+		const { registrant } = this.props;
 		return (
 			<div className="attendee-registrant container-fluid">
 				<BackButton />
@@ -116,14 +128,14 @@ class AttendeeRegistrant extends Component {
 						{ this.getTitleText(isCancelled) }
 					</div>
 				</div>
-				{ (!this.props.registrantError && this.props.registrant) ?
+				{ (!this.props.registrantError && registrant) ?
 					<div className="row">
 						<div className="attendee-info card-container m-t-15 clearfix text-center">
 							<div className="attendee-fields col-xs-12 m-b-15">
-								<div className="registrant-name f-s-44">{this.props.registrant.FirstName + " " + this.props.registrant.LastName}</div>
-								<div className="registrant-company f-s-24 other-info">{this.props.registrant.Company}</div>
-								<div className="registrant-email f-s-24 other-info">{this.props.registrant.Email}</div>
-								<div className="registrant-atType f-s-24 other-info">{this.props.registrant.AttendeeType}</div>
+								<div className="registrant-name f-s-44">{registrant.FirstName + " " + registrant.LastName}</div>
+								<div className="registrant-company f-s-24 other-info">{registrant.Company}</div>
+								<div className="registrant-email f-s-24 other-info">{registrant.Email}</div>
+								<div className="registrant-atType f-s-24 other-info">{registrant.AttendeeType}</div>
 							</div>
 							{ this.getActionButtons(isCancelled) }
 						</div>

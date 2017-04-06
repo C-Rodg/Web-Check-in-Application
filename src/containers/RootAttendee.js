@@ -10,10 +10,12 @@ class RootAttendee extends Component {
 		super(props);
 	}
 
+	// Try to update event settings
 	componentDidMount() {
 		this.props.getEventSettings();
 	}
 
+	// Clear searches when leaving
 	componentWillUnmount() {
 		this.props.clearAllSearching();
 	}
@@ -36,10 +38,11 @@ class RootAttendee extends Component {
 }
 
 const mapStateToProps = (state) => {
+	const { notificationText, notificationCount, notificationSuccess } = state.registrant;
 	return {
-		notifyText : state.registrant.notificationText,
-		notifyCount : state.registrant.notificationCount,
-		notifyType : state.registrant.notificationSuccess
+		notifyText : notificationText,
+		notifyCount : notificationCount,
+		notifyType : notificationSuccess
 	};
 };
 

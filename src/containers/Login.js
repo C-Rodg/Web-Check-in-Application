@@ -19,7 +19,7 @@ class Login extends Component {
         this.updateStation = this.updateStation.bind(this);
     }
     
-    
+    // Start Logging into web check-in
     startLogin(event) {
         event.preventDefault();
         
@@ -50,6 +50,7 @@ class Login extends Component {
             });
     }
 
+    // Update station name state
     updateStation(ev) {
         this.setState({
 			stationName: event.target.value

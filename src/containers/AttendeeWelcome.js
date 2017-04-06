@@ -9,11 +9,13 @@ class AttendeeWelcome extends Component {
 		super(props);
 	}
 
+	// Clear all searches
 	componentWillMount(){		
 		this.props.clearAllSearching();
 	}
 
 	render() {
+		const { attendeeConfig } = this.props;
 		return (
 			<div className="attendee-welcome container-fluid">
 
@@ -26,12 +28,12 @@ class AttendeeWelcome extends Component {
 						Please select your method of checking in.
 					</div>
 				</div>
-				<div className={"row " + ((this.props.attendeeConfig && !this.props.attendeeConfig.Search && !this.props.attendeeConfig.Scan) ? "invisible" : "")}>
+				<div className={"row " + ((attendeeConfig && !attendeeConfig.Search && !attendeeConfig.Scan) ? "invisible" : "")}>
 					<div className="col-xs-12 col-sm-6 offset-sm-3">
 						<div className="select-entry-method text-center">
 							{
-								(this.props.attendeeConfig && this.props.attendeeConfig.Search) ?
-								<Link to="/attendee/search" className={"method-search " + ((this.props.attendeeConfig && this.props.attendeeConfig.Scan) ? "" : "one-method")}>
+								(attendeeConfig && attendeeConfig.Search) ?
+								<Link to="/attendee/search" className={"method-search " + ((attendeeConfig && attendeeConfig.Scan) ? "" : "one-method")}>
 									<div className="method-icon">
 										<i className="material-icons">search</i>
 									</div>
@@ -42,8 +44,8 @@ class AttendeeWelcome extends Component {
 								""
 							}							
 							{
-								(this.props.attendeeConfig && this.props.attendeeConfig.Scan) ? 
-								<Link to="/attendee/scan" className={"method-scan " + ((this.props.attendeeConfig && this.props.attendeeConfig.Search) ? "" : "one-method")}>
+								(attendeeConfig && attendeeConfig.Scan) ? 
+								<Link to="/attendee/scan" className={"method-scan " + ((attendeeConfig && attendeeConfig.Search) ? "" : "one-method")}>
 									<div className="method-icon">
 										<i className="material-icons">filter_center_focus</i>
 									</div>
@@ -57,7 +59,7 @@ class AttendeeWelcome extends Component {
 					</div>
 				</div>
 				{
-					(this.props.attendeeConfig && this.props.attendeeConfig.WalkIns) ?
+					(attendeeConfig && attendeeConfig.WalkIns) ?
 					<div className="row">
 						<div className="col-xs-12 col-sm-6 offset-sm-3 method-walkin text-center">
 							<Link to="/attendee/walkin">
@@ -82,6 +84,6 @@ const mapDispatchToProps = (dispatch) => {
 	return {
 		clearAllSearching : () => dispatch(clearAllSearching())
 	};
-}
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(AttendeeWelcome);

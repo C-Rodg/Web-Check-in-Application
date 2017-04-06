@@ -14,12 +14,14 @@ export default class AttendeePassword extends Component {
 		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
+	// Update passwords state
 	handleChange(event) {
 		this.setState({
 			pass : event.target.value
 		});
 	}
 
+	// Handle submission of password
 	handleSubmit(event) {
 		event.preventDefault();
 		

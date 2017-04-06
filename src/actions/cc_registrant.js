@@ -427,6 +427,104 @@ export function getPickFromXml(responsesElement, elementId) {
 	return false;
 }
 
+// Check-in registrant and send SMS 
+export function checkInWithSms(registrant, number, msg) {
+	const checkedInRegistrant = Object.assign({}, registrant, {
+		Attended : true,
+		FirstCheckInDateTime : (new Date()),
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
+	});
+
+	const inputArg = {
+		registrant : checkedInRegistrant
+	};
+
+	const phoneData = {
+		sendTo: number,
+		message: msg,
+		gatewayCode: smsObj.code,
+		gatewayKeyword: smsObj.keyword
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				sendSms(phoneData).then((phoneResponse) => {
+					if (!phoneResponse.data.d.Fault) {
+						dispatch(sendNotification("Thank you for joining us!", true));
+						dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+						dispatch(getRegistrationStats());
+					} else {
+						dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+						dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+						dispatch(getRegistrationStats());
+					}				
+				})
+				.catch((err) => {
+					dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+					dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+					dispatch(getRegistrationStats());
+				});										
+			})
+			.catch((err) => {
+				dispatch(checkInRegistrantError(err));
+			});
+	};
+}
+
+// Create Walk-in and send SMS
+export function walkInWithSms(registrant, number, msg) {	
+
+	const checkedInRegistrant = Object.assign({}, registrant, {
+		Attended : true,
+		FirstCheckInDateTime : (new Date()),
+		OnSiteModifiedDateTime : (new Date()),
+		StationName : (window.localStorage.getItem('stationName'))
+	});
+
+	const inputArg = {
+		registrant : checkedInRegistrant
+	};
+
+	const phoneData = {
+		sendTo: number,
+		message: msg,
+		gatewayCode: smsObj.code,
+		gatewayKeyword: smsObj.keyword
+	};
+
+	return function(dispatch) {
+		axios.post('methods.asmx/UpsertRegistrant', inputArg)
+			.then((response) => {
+				sendSms(phoneData).then((phoneResponse) => {
+					if (!phoneResponse.data.d.Fault) {
+						dispatch(sendNotification("Thank you for joining us today!", true));
+						dispatch(createWalkInSuccess());	
+						dispatch(getRegistrationStats());
+					} else {
+						dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+						dispatch(createWalkInSuccess());	
+						dispatch(getRegistrationStats());
+					}
+				})
+				.catch((err) => {
+					dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+					dispatch(createWalkInSuccess());	
+					dispatch(getRegistrationStats());
+				})											
+			})
+			.catch((err) => {
+				dispatch(checkInRegistrantError(err));
+			});
+	};
+}
+
+// Send SMS
+function sendSms(obj) {
+	return axios.post('methods.asmx/SendSmsMessage', obj);
+}
+
 // Walk-in Registrant Factory
 export function Registrant() {
 	this.Attended = false;
@@ -453,50 +551,4 @@ export function Registrant() {
 	this.UploadGuid = null;
 	this.Uploaded = false;
 	this.WalkIn = true;
-}
-
-// Check-in registrant and send SMS 
-export function checkInWithSms(registrant, number, msg) {
-	const checkedInRegistrant = Object.assign({}, registrant, {
-		Attended : true,
-		FirstCheckInDateTime : (new Date()),
-		OnSiteModifiedDateTime : (new Date()),
-		StationName : (window.localStorage.getItem('stationName'))
-	});
-
-	const inputArg = {
-		registrant : checkedInRegistrant
-	};
-
-	const phoneData = {
-		sendTo: number,
-		message: msg,
-		gatewayCode: smsObj.code,
-		gatewayKeyword: smsObj.keyword
-	};
-
-	return function(dispatch) {
-		axios.post('methods.asmx/UpsertRegistrant', inputArg)
-			.then((response) => {
-				sendSms(phoneData).then((phoneResponse) => {
-					console.log(phoneResponse);
-					dispatch(sendNotification("Thank you for joining us!", true));
-					dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
-					dispatch(getRegistrationStats());
-				})
-				.catch((err) => {
-					dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
-					dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
-					dispatch(getRegistrationStats());
-				});										
-			})
-			.catch((err) => {
-				dispatch(checkInRegistrantError(err));
-			});
-	};
-}
-
-// Send SMS
-function sendSms(obj) {
-	return axios.post('methods.asmx/SendSmsMessage', JSON.stringify(obj));
 }

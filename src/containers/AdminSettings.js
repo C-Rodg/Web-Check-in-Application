@@ -8,7 +8,7 @@ class AdminSettings extends Component {
 	constructor(props, context) {
 		super(props);
 
-		let stationName = window.localStorage.getItem('stationName') || "";
+		let stationName = window.localStorage.getItem('stationName') || "";		
 		let searchBy = props.attendeeConfig.SearchBy;
 		let search = props.attendeeConfig.Search;
 		let scan = props.attendeeConfig.Scan;
@@ -33,6 +33,7 @@ class AdminSettings extends Component {
 		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
 	}
 
+	// If receiveing an event config, update the UI
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.attendeeConfig) {
 			let searchBy = nextProps.attendeeConfig.SearchBy,
@@ -51,10 +52,12 @@ class AdminSettings extends Component {
 		}				
 	}
 
+	// Update/save event settings
 	componentWillUnmount() {
 		this.props.getEventSettings();
 	}
 
+	// Update station name
 	onStationChange(event) {
 		this.setState({
 			stationName: event.target.value
@@ -62,6 +65,7 @@ class AdminSettings extends Component {
 		window.localStorage.setItem('stationName', (event.target.value) || "");
 	}
 
+	// Toggle fullscreen mode
 	toggleFullscreenMode() {
 		let doc = window.document;
 		let docEl = doc.documentElement;
@@ -75,6 +79,7 @@ class AdminSettings extends Component {
 		}
 	}
 
+	// Set camera mode
 	setCameraMode(val) {
 		window.localStorage.setItem('cameraFront', val);
 		this.setState({
@@ -82,8 +87,8 @@ class AdminSettings extends Component {
 		});
 	}
 
+	// Set custom settings
 	setCustomSettings(item, val) {
-		console.log("SETTING CUSTOM-" + item + " " + val);
 		window.localStorage.setItem('customSettings', 'TRUE');
 		window.localStorage.setItem(item, val);
 		let stateVal;
@@ -99,6 +104,7 @@ class AdminSettings extends Component {
 		this.setState(obj);
 	} 
 
+	// Go to random registrant
 	goToRandom() {
 		this.props.getRandomRegistrant(true).then((resp) => {
 			this.context.router.push('/admin/registrant/' + resp.data.d.Registrants[0].AttendeeGuid );
@@ -107,14 +113,17 @@ class AdminSettings extends Component {
 		});
 	}
 
+	// Go back to list view
 	returnToListView() {
 		this.props.navigateToListView();
 	}
 
+	// Go to Seat Manager
 	navigateToSeatManager() {
 		this.context.router.push('/admin/seats');
 	}
 
+	// Check if this app has feature
 	checkFeatureAccess(featureName) {
 		const hasFeature = this.props.featureList.find((feature) => {
 			return feature.Accessible && feature.Feature === featureName;
@@ -229,11 +238,12 @@ AdminSettings.contextTypes = {
 };
 
 const mapStateToProps = (state) => {
+	const { settings, settings: { configuration } } = state;
 	return {
-		attendeeConfig : state.settings.configuration.AttendeeMode,
-		seatGuid : state.settings.seatGuid,
-		featureList : state.settings.featureList,
-		smsEnabled : state.settings.configuration.SMS.Enabled
+		attendeeConfig : configuration.AttendeeMode,
+		seatGuid : settings.seatGuid,
+		featureList : settings.featureList,
+		smsEnabled : configuration.SMS.Enabled
 	};
 };
 
