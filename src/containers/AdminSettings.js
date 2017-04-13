@@ -107,7 +107,11 @@ class AdminSettings extends Component {
 	// Go to random registrant
 	goToRandom() {
 		this.props.getRandomRegistrant(true).then((resp) => {
-			this.context.router.push('/admin/registrant/' + resp.data.d.Registrants[0].AttendeeGuid );
+			if (resp.data.d.Registrants.length > 0) {
+				this.context.router.push('/admin/registrant/' + resp.data.d.Registrants[0].AttendeeGuid );
+			} else {
+				this.props.sendNotification("It seems no registrants are currently checked-in.", false);
+			}	
 		}).catch((err) => {
 			this.props.sendNotification("There was an issue finding a random registrant.", false);
 		});
@@ -192,7 +196,7 @@ class AdminSettings extends Component {
 				</div>
 				<div className={"settings-box col-xs-12 col-sm-6 " + (canFindRandom ? "" : " hidden")}>
 					<div className="form-group">
-						<label>Find a Random Registrant</label>
+						<label>Find a Random Check-in</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.goToRandom}><i className="material-icons">shuffle</i> <span>Random Registrant</span></button>
 					</div>
 				</div>	
