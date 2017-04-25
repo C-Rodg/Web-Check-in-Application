@@ -31,7 +31,9 @@ class AdminSettings extends Component {
 		this.returnToListView = this.returnToListView.bind(this);			
 		this.setCameraMode = this.setCameraMode.bind(this);
 		this.navigateToSeatManager = this.navigateToSeatManager.bind(this);
-	}
+
+		this._isiOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+	}	
 
 	// If receiveing an event config, update the UI
 	componentWillReceiveProps(nextProps) {
@@ -164,7 +166,12 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.returnToListView}><i className="material-icons">list</i> <span>List Events</span></button>
 					</div>
 				</div>
-											
+				<div className="settings-box col-xs-12 col-sm-6">
+					<div className="form-group logout-group">
+						<label>Leave Application</label>
+						<button className="btn-flat border-0 settings-btn inline-btn" onClick={() => window.location = 'logout'} ><i className="material-icons">input</i> <span>Logout</span></button>
+					</div>
+				</div>							
 				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.search ? "on" : "off")}>
 						<label>Searching - Attendee Mode</label>
@@ -226,12 +233,12 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.navigateToSeatManager} ><i className="material-icons">event_seat</i> <span>Seat Manager</span></button>
 					</div>
 				</div>				
-				<div className="settings-box col-xs-12 col-sm-6">
+				<div className={"settings-box col-xs-12 col-sm-6 " + (this._isiOS ? "hidden" : "")}>
 					<div className="form-group force-fullscreen-group">
 						<label>Toggle Fullscreen (non-iOS)</label>
 						<button className="btn-flat border-0 settings-btn inline-btn" onClick={this.toggleFullscreenMode} ><i className="material-icons">zoom_out_map</i> <span>Fullscreen Mode</span></button>
 					</div>
-				</div>				
+				</div>								
 			</div>
 		);
 	}
