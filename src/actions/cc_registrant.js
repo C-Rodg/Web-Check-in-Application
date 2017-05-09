@@ -1,5 +1,5 @@
 import { axios } from './utilities_httpRequest';
-import { getRegistrationStats } from './cc_settings';
+import { getRegistrationStats, replaceMessagePlaceholders, extractXMLstring } from './cc_settings';
 import smsObj from './secrets';
 
 //------------------------- TYPES -------------------------//
@@ -25,6 +25,9 @@ export const CLEAR_ALL_SEARCHING = 'CLEAR_ALL_SEARCHING';
 
 export const SEND_NOTIFICATION = 'SEND_NOTIFICATION';
 export const RETURN_TO_LIST = 'RETURN_TO_LIST';
+
+export const START_SEARCH_LOADING = 'START_SEARCH_LOADING';
+export const END_SEARCH_LOADING = 'END_SEARCH_LOADING';
 
 
 //-------------------- ACTION CREATORS --------------------//
@@ -547,8 +550,145 @@ export function Registrant() {
 	this.ServerGuid = null;
 	this.ServerName = null;
 	this.StationName = null;
-	this.SurveyDate = null;
+	this.SurveyData = null;
 	this.UploadGuid = null;
 	this.Uploaded = false;
 	this.WalkIn = true;
+}
+
+// Quick check-out registrant 
+export function quickCheckAttendeeOut(attendeeGuid) {
+	return function(dispatch) {
+		dispatch({type: START_SEARCH_LOADING});
+		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {attendeeGuid})
+			.then((response) => {
+				const checkedOutRegistrant = Object.assign({}, response.data.d.Registrant, {
+					Attended : false,
+					FirstCheckInDateTime : null,
+					OnSiteModifiedDateTime : (new Date()),
+					StationName : (window.localStorage.getItem('stationName'))
+				});
+
+				const inputArg = {
+					registrant : checkedOutRegistrant
+				};
+
+				axios.post('methods.asmx/UpsertRegistrant', inputArg)
+					.then((response) => {
+						dispatch(sendNotification("Registrant checked out!", true));
+						dispatch(updateRegistrantList(response.data.d.AttendeeGuid, false));
+						dispatch({ type: END_SEARCH_LOADING });
+						dispatch(getRegistrationStats());	
+					})
+					.catch((err) => {
+						dispatch(checkOutRegistrantError(err));
+						dispatch({ type: END_SEARCH_LOADING });
+					});
+			})
+			.catch((err) => {
+				dispatch(sendNotification('Uh-oh! Not able to currently check this person out.'));
+				dispatch({ type: END_SEARCH_LOADING });
+			});
+	};
+}
+
+// Quick Check-in registrant
+export function quickCheckAttendeeIn(config) {
+	return function(dispatch) {
+		dispatch({ type: START_SEARCH_LOADING });
+		axios.post(`methods.asmx/LoadRegistrantWithAttendeeGuid`, {attendeeGuid: config.guid })
+			.then((response) => {
+				const checkedInRegistrant = Object.assign({}, response.data.d.Registrant, {
+					Attended : true,
+					FirstCheckInDateTime : (new Date()),
+					OnSiteModifiedDateTime : (new Date()),
+					StationName : (window.localStorage.getItem('stationName'))
+				});
+				const inputArg = {
+					registrant: checkedInRegistrant
+				};
+				if (config.cancel && config.cancel.length > 0) {
+					const isCancelled = checkCancelled(checkedInRegistrant.SurveyData, config);
+					if (isCancelled) {
+						dispatch(sendNotification('Uh-oh! Unfortunately, this registrant is marked as cancelled.'))
+						dispatch({ type: END_SEARCH_LOADING });
+						return;
+					}
+				}
+				if (config.smsEnabled && config.smsMessage && config.smsField) {
+					const number = extractXMLstring(config.smsField, checkedInRegistrant.SurveyData);
+					const msg = replaceMessagePlaceholders(config.smsMessage, checkedInRegistrant.SurveyData);
+					if (msg && number) {
+						const phoneData = {
+							sendTo: number,
+							message: msg,
+							gatewayCode: smsObj.code,
+							gatewayKeyword: smsObj.keyword
+						};
+						axios.post('methods.asmx/UpsertRegistrant', inputArg)
+							.then((response) => {
+								sendSms(phoneData).then((phoneResponse) => {
+									if (!phoneResponse.data.d.Fault) {
+										dispatch(sendNotification("Thank you for joining us!", true));
+										dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+										dispatch(getRegistrationStats());
+										dispatch({ type: END_SEARCH_LOADING });
+									} else {
+										dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+										dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+										dispatch(getRegistrationStats());
+										dispatch({ type: END_SEARCH_LOADING });
+									}
+								})
+								.catch((err) => {
+									dispatch(sendNotification("Checked-in, but unable to send SMS...", false));
+									dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+									dispatch(getRegistrationStats());
+									dispatch({ type: END_SEARCH_LOADING });
+								});
+							})
+							.catch((err) => {
+								dispatch(checkInRegistrantError(err));
+								dispatch({ type: END_SEARCH_LOADING });
+							});
+					} else {
+						quickUpsert(dispatch, inputArg);
+					}					
+				} else {
+					quickUpsert(dispatch, inputArg);
+				}
+			})
+			.catch((err) => {
+				dispatch(sendNotification('Uh-oh! Not able to currently check this person in.'));
+				dispatch({ type: END_SEARCH_LOADING });
+			});
+	}
+}
+
+// Upsert registrant
+function quickUpsert(dispatch, inputArg) {
+	axios.post('methods.asmx/UpsertRegistrant', inputArg)
+		.then((response) => {
+			dispatch(sendNotification("Thank you for joining us!", true));
+			dispatch(updateRegistrantList(response.data.d.AttendeeGuid, true));	
+			dispatch(getRegistrationStats());	
+			dispatch({ type: END_SEARCH_LOADING });									
+		})
+		.catch((err) => {
+			dispatch(checkInRegistrantError(err));
+			dispatch({ type: END_SEARCH_LOADING });
+		});
+}
+
+// Helper function - check if registrant is cancelled
+function checkCancelled(surveyData, cancelArray) {
+	let isCancelled = false;
+	if (cancelArray && surveyData) {
+		cancelArray.forEach((c) => {
+			if (surveyData.indexOf(c) > -1) {
+				isCancelled = true;
+			}
+		});
+	}
+	return isCancelled;
 }

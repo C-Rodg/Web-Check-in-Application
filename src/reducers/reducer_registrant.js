@@ -10,7 +10,8 @@ import {
 	CLEAR_CURRENT_REGISTRANT,
 	CLEAR_ALL_SEARCHING,
 	RETURN_TO_LIST,
-	SEND_NOTIFICATION
+	SEND_NOTIFICATION,
+	START_SEARCH_LOADING, END_SEARCH_LOADING
 } from '../actions/cc_registrant';
 
 // --------------- INITIAL STATE --------------------- //
@@ -81,7 +82,12 @@ export const registrant = ( state = INITIAL_STATE, action ) => {
 			return {...state, registrantList : [], currentRegistrant : null, searchError : true, hasSearched : true, searchLoading : false};
 
 		case RETURN_TO_LIST:
-			return {...state, returnToList : (state.returnToList + 1)};					
+			return {...state, returnToList : (state.returnToList + 1)};		
+
+		case START_SEARCH_LOADING:
+			return {...state, searchLoading: true};
+		case END_SEARCH_LOADING:
+			return {...state, searchLoading: false};			
 
 		default : 
 			return state;

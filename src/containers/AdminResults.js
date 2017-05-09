@@ -6,6 +6,8 @@ import TableSort from '../components/TableSort';
 import Loading from '../components/Loading';
 import CheckinTile from '../components/CheckinTile';
 
+import { quickCheckAttendeeOut, quickCheckAttendeeIn } from '../actions/cc_registrant';
+
 // NOTE - reverse true = A-Z, reverse false = Z-A
 function advancedSort(field, reverse, primer){
 	let key = function(x) {
@@ -44,6 +46,9 @@ class AdminResults extends Component {
 
 	// Build the registrant list table
 	getRegistrantList(){
+		if (this.props.searchLoading) {
+			return "";
+		}
 		let dir = (this.state.sortDirection === 'down' ? true : false);
 		let field;
 		if(this.state.sort === 'First Name'){
@@ -90,8 +95,25 @@ class AdminResults extends Component {
 		}	
 	}
 
-	handleRegistrantClick(reg) {
-		console.log(reg);
+	// Quick Check-in mode is on, check-in/out registrant
+	handleRegistrantClick(ev, reg) {
+		ev.preventDefault();
+		ev.stopPropagation();
+		// Check out registrant
+		if(reg.checkedIn) {
+			this.props.quickCheckAttendeeOut(reg.guid);			
+		}
+		// Check in registrant 
+		else {
+			const configObj = {
+				guid: reg.guid,
+				smsEnabled: this.props.smsEnabled,
+				smsMessage: this.props.smsMessage,
+				smsField: this.props.smsField,
+				cancel: this.props.cancelledCheck
+			};
+			this.props.quickCheckAttendeeIn(configObj);
+		}
 	}
 
 	// Change the sort direction
@@ -158,14 +180,25 @@ class AdminResults extends Component {
 }
 
 const mapStateToProps = (state) => {
-	const { registrant: { registrantList, hasSearched, searchError, searchLoading }} = state;
+	const { registrant: { registrantList, hasSearched, searchError, searchLoading }, settings: { configuration }} = state;
 	return {
 		registrantList,
 		hasSearched,
 		searchError,
 		searchLoading,
-		quickCheckIn: state.settings.configuration.QuickCheckin
+		quickCheckIn: configuration.QuickCheckin,
+		cancelledCheck: configuration.CancelledStrings,
+		smsEnabled : configuration.SMS.Enabled,
+		smsMessage : configuration.SMS.Message,
+		smsField : configuration.SMS.PhoneField
 	};
 };
 
-export default connect(mapStateToProps)(AdminResults);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		quickCheckAttendeeOut: (guid) => dispatch(quickAttendeeCheckOut(guid)),
+		quickCheckAttendeeIn: (configObj) => dispatch(quickAttendeeCheckIn(configObj))
+	};
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(AdminResults);
