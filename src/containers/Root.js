@@ -12,6 +12,7 @@ export default class Root extends Component {
 		window.localStorage.removeItem('scan');
 		window.localStorage.removeItem('search');
 		window.localStorage.removeItem('sms');
+		window.localStorage.removeItem('quickCheckin');
 		window.localStorage.setItem('cameraFront', 'FALSE');
 
 		const { store, history } = this.props;

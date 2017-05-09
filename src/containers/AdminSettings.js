@@ -13,6 +13,7 @@ class AdminSettings extends Component {
 		let search = props.attendeeConfig.Search;
 		let scan = props.attendeeConfig.Scan;
 		let walkIns = props.attendeeConfig.WalkIns;
+		let quickCheckin = props.quickCheckin;
 		let cameraFront = window.localStorage.getItem('cameraFront');
 		let sms = props.smsEnabled;
 		this.state = {
@@ -22,7 +23,8 @@ class AdminSettings extends Component {
 			scan, 
 			walkIns,
 			cameraFront,
-			sms
+			sms,
+			quickCheckin
 		};
 		this.onStationChange = this.onStationChange.bind(this);
 		this.toggleFullscreenMode = this.toggleFullscreenMode.bind(this);
@@ -42,14 +44,16 @@ class AdminSettings extends Component {
 				scan = nextProps.attendeeConfig.Scan,
 				search = nextProps.attendeeConfig.Search,
 				walkIns = nextProps.attendeeConfig.WalkIns,
-				sms = nextProps.smsEnabled;			
+				sms = nextProps.smsEnabled,
+				quickCheckin = nextProps.quickCheckin;		
 
 				this.setState({
 					searchBy,
 					scan,
 					search,
 					walkIns,
-					sms
+					sms,
+					quickCheckin
 				});
 		}				
 	}
@@ -201,6 +205,13 @@ class AdminSettings extends Component {
 						<button className="btn-flat border-0 settings-btn inline-btn both-btn" onClick={() => {this.setCustomSettings('searchBy', 'both')}}><span>Both</span></button>
 					</div>
 				</div>
+				<div className="settings-box col-xs-12 col-sm-6">
+					<div className={"form-group settings-" + (this.state.quickCheckin ? "on" : "off")}>
+						<label>Quick Check-in - Admin Mode</label>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('quickCheckin', 'TRUE')}}><span>Enable</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('quickCheckin', 'FALSE')}}><span>Disable</span></button>
+					</div>
+				</div>
 				<div className={"settings-box col-xs-12 col-sm-6 " + (canFindRandom ? "" : " hidden")}>
 					<div className="form-group">
 						<label>Find a Random Check-in</label>
@@ -252,6 +263,7 @@ const mapStateToProps = (state) => {
 	const { settings, settings: { configuration } } = state;
 	return {
 		attendeeConfig : configuration.AttendeeMode,
+		quickCheckin: configuration.QuickCheckin,
 		seatGuid : settings.seatGuid,
 		featureList : settings.featureList,
 		smsEnabled : configuration.SMS.Enabled

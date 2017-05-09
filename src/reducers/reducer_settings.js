@@ -39,6 +39,7 @@ const INITIAL_CONFIG_SMS_STATE = {
 };
 
 const INITIAL_CONFIG_STATE = {
+	QuickCheckin: false,
 	CancelledStrings : [],
 	WalkInFields : [],
 	AttendeeMode : INITIAL_CONFIG_ATTENDEE_STATE,
@@ -136,11 +137,14 @@ function configReducer(state = INITIAL_CONFIG_STATE, action) {
 				CancelledStrings : action.payload.CancelledStrings, 
 				WalkInFields : action.payload.WalkInFields,
 				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action),
-				SMS: configSMSReducer(state.SMS, action)
+				SMS: configSMSReducer(state.SMS, action),
+				QuickCheckin: configQuickCheckReducer(action.payload.QuickCheckin, action)
 			};
 		case GET_EVENT_SETTINGS_ERROR:
 			return {...state,
-				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action)
+				AttendeeMode : configAttendeeReducer(state.AttendeeMode, action),
+				QuickCheckin: configQuickCheckReducer(state.QuickCheckin, action),
+				SMS: configSMSReducer(state.SMS, action)
 			};
 		default:
 			return state;
@@ -157,6 +161,30 @@ function configSMSReducer(state = INITIAL_CONFIG_SMS_STATE, action) {
 		default: 
 			return state;
 	}
+}
+
+// Quick Check-in Reducer
+function configQuickCheckReducer(state = false, action) {
+	let quick;
+	switch(action.type) {
+		case GET_EVENT_SETTINGS_SUCCESS:
+			quick = state;
+			break;
+		case GET_EVENT_SETTINGS_ERROR:
+			quick = state;
+			break;
+		default: 
+			return state;
+	}
+	if (window.localStorage.getItem('customSettings') === 'TRUE') {
+		const quickCheckin = window.localStorage.getItem('quickCheckin');
+		if ( quickCheckin === 'TRUE') {
+			quick = true;
+		} else if (quickCheckin === 'FALSE') {
+			quick = false;
+		}
+	}
+	return quick;
 }
 
 // Attendee Mode Configuration Reducer (nested)

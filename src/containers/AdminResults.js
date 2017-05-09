@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import AttendeeTile from '../components/AttendeeTile';
 import TableSort from '../components/TableSort';
 import Loading from '../components/Loading';
+import CheckinTile from '../components/CheckinTile';
 
 // NOTE - reverse true = A-Z, reverse false = Z-A
 function advancedSort(field, reverse, primer){
@@ -28,6 +29,7 @@ class AdminResults extends Component {
 		this.getTableTitleText = this.getTableTitleText.bind(this);
 		this.handleChangeSort = this.handleChangeSort.bind(this);
 		this.handleChangeSortDirection = this.handleChangeSortDirection.bind(this);
+		this.handleRegistrantClick = this.handleRegistrantClick.bind(this);
 	}
 
 	// Reset to sort by first name if new reg list comes through
@@ -56,19 +58,40 @@ class AdminResults extends Component {
 			field = this.state.sort;
 		}
 		let sortedArray = this.props.registrantList.concat().sort(advancedSort(field, dir, (a) => { return String(a).toUpperCase(); }));
-		return sortedArray.map((registrant) => {
-			return (
-				<AttendeeTile key={registrant.AttendeeGuid} 
-					checkedIn={registrant.Attended}
-					firstName={registrant.FirstName}
-					lastName={registrant.LastName}
-					company={registrant.Company}
-					email={registrant.Email}
-					attendeeType={registrant.AttendeeType}					
-					guid={registrant.AttendeeGuid}
-				/>
-			);
-		});
+		if (!this.props.quickCheckIn) {
+			return sortedArray.map((registrant) => {
+				return (
+					<AttendeeTile key={registrant.AttendeeGuid} 
+						checkedIn={registrant.Attended}
+						firstName={registrant.FirstName}
+						lastName={registrant.LastName}
+						company={registrant.Company}
+						email={registrant.Email}
+						attendeeType={registrant.AttendeeType}					
+						guid={registrant.AttendeeGuid}
+					/>
+				);
+			});
+		} else {
+			return sortedArray.map((registrant) => {
+				return (
+					<CheckinTile key={registrant.AttendeeGuid}
+						checkedIn={registrant.Attended}
+						firstName={registrant.FirstName}
+						lastName={registrant.LastName}
+						company={registrant.Company}
+						email={registrant.Email}
+						attendeeType={registrant.AttendeeType}					
+						guid={registrant.AttendeeGuid}
+						onRegClick={this.handleRegistrantClick}
+					/>
+				);
+			});
+		}	
+	}
+
+	handleRegistrantClick(reg) {
+		console.log(reg);
 	}
 
 	// Change the sort direction
@@ -140,7 +163,8 @@ const mapStateToProps = (state) => {
 		registrantList,
 		hasSearched,
 		searchError,
-		searchLoading
+		searchLoading,
+		quickCheckIn: state.settings.configuration.QuickCheckin
 	};
 };
 

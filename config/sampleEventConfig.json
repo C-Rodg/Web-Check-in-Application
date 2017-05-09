@@ -1,5 +1,6 @@
 {
 	"CancelledStrings" : ["<qrStatus>Cancelled</qrStatus>", "<qrIsActive>False</qrIsActive>"],
+	"QuickCheckin" : false,
 	"AttendeeMode" : {
 		"SearchBy" : "lastname", 
 		"Search" : true,

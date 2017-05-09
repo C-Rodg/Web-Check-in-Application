@@ -239,6 +239,17 @@
 		tbody tr:hover, tbody tr:focus, tbody tr:active {
 			background-color: $white-hover;
 		}
+
+		tbody .table-a-row.check-in-tile {
+
+			i.not-here {
+				color: rgba(217,217,217,0.5);
+			}
+
+			td:first-child {
+				cursor: pointer;
+			}
+		}
 	}
 
 	.admin-stats {	
