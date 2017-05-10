@@ -608,7 +608,7 @@ export function quickCheckAttendeeIn(config) {
 					registrant: checkedInRegistrant
 				};
 				if (config.cancel && config.cancel.length > 0) {
-					const isCancelled = checkCancelled(checkedInRegistrant.SurveyData, config);
+					const isCancelled = checkCancelled(checkedInRegistrant.SurveyData, config.cancel);
 					if (isCancelled) {
 						dispatch(sendNotification('Uh-oh! Unfortunately, this registrant is marked as cancelled.'))
 						dispatch({ type: END_SEARCH_LOADING });

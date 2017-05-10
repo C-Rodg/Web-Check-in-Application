@@ -196,8 +196,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		quickCheckAttendeeOut: (guid) => dispatch(quickAttendeeCheckOut(guid)),
-		quickCheckAttendeeIn: (configObj) => dispatch(quickAttendeeCheckIn(configObj))
+		quickCheckAttendeeOut: (guid) => dispatch(quickCheckAttendeeOut(guid)),
+		quickCheckAttendeeIn: (configObj) => dispatch(quickCheckAttendeeIn(configObj))
 	};
 };
 

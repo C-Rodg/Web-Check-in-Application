@@ -208,8 +208,8 @@ class AdminSettings extends Component {
 				<div className="settings-box col-xs-12 col-sm-6">
 					<div className={"form-group settings-" + (this.state.quickCheckin ? "on" : "off")}>
 						<label>Quick Check-in - Admin Mode</label>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('quickCheckin', 'TRUE')}}><span>Enable</span></button>
-						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('quickCheckin', 'FALSE')}}><span>Disable</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-on" onClick={() => {this.setCustomSettings('quickCheckin', 'TRUE')}}><span>Enabled</span></button>
+						<button className="btn-flat border-0 settings-btn inline-btn btn-off" onClick={() => {this.setCustomSettings('quickCheckin', 'FALSE')}}><span>Disabled</span></button>
 					</div>
 				</div>
 				<div className={"settings-box col-xs-12 col-sm-6 " + (canFindRandom ? "" : " hidden")}>
